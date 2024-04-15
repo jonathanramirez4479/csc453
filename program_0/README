@@ -1,0 +1,29 @@
+Jonathan Ramirez
+
+CSC 453
+Program 0
+
+Part 0: Forks
+Output: 0Yo!1Yo!Yo!2Yo!Yo!Yo!3Yo!Yo!Yo!Yo!4Yo!Yo!Yo!Yo!Yo!5Yo!Yo!Yo!Yo!Yo!5
+This output occurs because printf(“Yo!”) does not contain a newline so the stdout buffer is not flushed.  Thus, each Yo! accrues to the next iteration.
+In gdb:
+[Detaching after fork from child process 3284]
+0[Detaching after fork from child process 3285]
+Yo!1[Detaching after fork from child process 3286]
+Yo!Yo!2[Detaching after fork from child process 3287]
+Yo!Yo!Yo!3[Detaching after fork from child process 3288]
+Yo!Yo!Yo!Yo!4[Detaching after fork from child process 3289]
+Yo!Yo!Yo!Yo!Yo!5Yo!Yo!Yo!Yo!Yo!5[Inferior 1 (process 3280) exited normally]
+It still seems like the stdout buffer for the parent isn’t flushed after every “Yo!” thus accumulating to the next iteration.
+
+Part 1:
+When using the write() version of the program with 1 second of sleep before each write, I observe “parentchild” gets printed more times than “childparent”, thus the parent prints first a majority of the times.  
+Using printf() only, it seems like every iteration is printing “child parent [i]\n”
+Using printf() with fflush(), most iterations are printing “parent child [i]\n”.
+When using the write() version with 0.1 second of sleep, I still observe “parentchild” getting printed most of the times.
+
+Part 2:
+The result of running pmap on a process ID appears to be the virtual memory image of that process.  Therefore, this includes the stack, the heap, environment variables and so forth.  Some of the memory is anonymous and can’t be identified.  I presume this is for security reasons.
+
+Special instructions:
+I removed the -Werror flag from the makefile because there were some unused variables in source files being marked as errors.
