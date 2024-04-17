@@ -14,12 +14,12 @@ typedef unsigned long long ptr_int_t;
 #endif
 #endif
 
-
-typedef struct context_st {
-  unsigned long pid;            /* lightweight process id  */
-  ptr_int_t *stack;         /* pointer to stack returned by malloc() */
-  unsigned long stacksize;      /* Size of allocated stack */
-  ptr_int_t *sp;            /* current stack pointer   */
+typedef struct context_st
+{
+  unsigned long pid;       /* lightweight process id  */
+  ptr_int_t *stack;        /* pointer to stack returned by malloc() */
+  unsigned long stacksize; /* Size of allocated stack */
+  ptr_int_t *sp;           /* current stack pointer   */
   /*  .... other things if necessary ... */
 } lwp_context;
 
@@ -34,18 +34,17 @@ typedef struct context_st {
  *   (Not really.  A better way would be to have the user supply a comparison
  *    function, but that would make the scheduler much more complicated.)
  */
-extern lwp_context lwp_ptable[];/* the process table           */
-extern int lwp_procs;           /* the current number of LWPs  */
-extern int lwp_running;         /* the index of the currently running LWP */
-
+extern lwp_context lwp_ptable[]; /* the process table           */
+extern int lwp_procs;            /* the current number of LWPs  */
+extern int lwp_running;          /* the index of the currently running LWP */
 
 typedef void (*lwpfun)(void *); /* type for lwp function */
-typedef int  (*schedfun)(void); /* type for scheduler function */
+typedef int (*schedfun)(void);  /* type for scheduler function */
 
 /* lwp functions */
-extern int  new_lwp(lwpfun,void *,size_t);
+extern int new_lwp(lwpfun, void *, size_t);
 extern void lwp_exit();
-extern int  lwp_getpid();
+extern int lwp_getpid();
 extern void lwp_yield();
 extern void lwp_start();
 extern void lwp_stop();
@@ -68,77 +67,75 @@ extern void lwp_set_scheduler(schedfun sched);
  * These macros should ONLY be used as the very first or very last
  * act of a function.
  */
-#ifdef __i386         /* X86 only code */
+#ifdef __i386 /* X86 only code */
 
 #define BAILSIGNAL SIGSTKFLT
 
-#define SAVE_STATE() \
-  asm("pushl %%eax":: );\
-  asm("pushl %%ebx":: );\
-  asm("pushl %%ecx":: );\
-  asm("pushl %%edx":: );\
-  asm("pushl %%esi":: );\
-  asm("pushl %%edi":: );\
-  asm("pushl %%ebp":: )
+#define SAVE_STATE()     \
+  asm("pushl %%eax" ::); \
+  asm("pushl %%ebx" ::); \
+  asm("pushl %%ecx" ::); \
+  asm("pushl %%edx" ::); \
+  asm("pushl %%esi" ::); \
+  asm("pushl %%edi" ::); \
+  asm("pushl %%ebp" ::)
 
+#define GetSP(sp) asm("movl  %%esp,%0" : "=r"(sp) :)
 
-#define GetSP(sp)  asm("movl  %%esp,%0": "=r" (sp) : )
+#define SetSP(sp) asm("movl  %0,%%esp" : : "r"(sp))
 
-#define SetSP(sp)  asm("movl  %0,%%esp":           : "r" (sp)  )
-
-#define RESTORE_STATE() \
-  asm("popl  %%ebp":: );\
-  asm("popl  %%edi":: );\
-  asm("popl  %%esi":: );\
-  asm("popl  %%edx":: );\
-  asm("popl  %%ecx":: );\
-  asm("popl  %%ebx":: );\
-  asm("popl  %%eax":: );\
-  asm("movl  %%ebp,%%esp":: )  /* restore esp in case leave is not used */
+#define RESTORE_STATE()  \
+  asm("popl  %%ebp" ::); \
+  asm("popl  %%edi" ::); \
+  asm("popl  %%esi" ::); \
+  asm("popl  %%edx" ::); \
+  asm("popl  %%ecx" ::); \
+  asm("popl  %%ebx" ::); \
+  asm("popl  %%eax" ::); \
+  asm("movl  %%ebp,%%esp" ::) /* restore esp in case leave is not used */
 
 #else /* END x86 only code */
 #ifdef __x86_64
 #define BAILSIGNAL SIGSTKFLT
 
-#define SAVE_STATE() \
-  asm("pushq %%rax":: );\
-  asm("pushq %%rbx":: );\
-  asm("pushq %%rcx":: );\
-  asm("pushq %%rdx":: );\
-  asm("pushq %%rsi":: );\
-  asm("pushq %%rdi":: );\
-  asm("pushq %%r8":: );\
-  asm("pushq %%r9":: );\
-  asm("pushq %%r10":: );\
-  asm("pushq %%r11":: );\
-  asm("pushq %%r12":: );\
-  asm("pushq %%r13":: );\
-  asm("pushq %%r14":: );\
-  asm("pushq %%r15":: );\
-  asm("pushq %%rbp":: )
+#define SAVE_STATE()     \
+  asm("pushq %%rax" ::); \
+  asm("pushq %%rbx" ::); \
+  asm("pushq %%rcx" ::); \
+  asm("pushq %%rdx" ::); \
+  asm("pushq %%rsi" ::); \
+  asm("pushq %%rdi" ::); \
+  asm("pushq %%r8" ::);  \
+  asm("pushq %%r9" ::);  \
+  asm("pushq %%r10" ::); \
+  asm("pushq %%r11" ::); \
+  asm("pushq %%r12" ::); \
+  asm("pushq %%r13" ::); \
+  asm("pushq %%r14" ::); \
+  asm("pushq %%r15" ::); \
+  asm("pushq %%rbp" ::)
 
-#define GetSP(sp)  asm("movq  %%rsp,%0": "=r" (sp) : )
+#define GetSP(sp) asm("movq  %%rsp,%0" : "=r"(sp) :)
 
-#define SetSP(sp)  asm("movq  %0,%%rsp":           : "r" (sp)  )
+#define SetSP(sp) asm("movq  %0,%%rsp" : : "r"(sp))
 
-#define RESTORE_STATE() \
-  asm("popq  %%rbp":: );\
-  asm("popq  %%r15":: );\
-  asm("popq  %%r14":: );\
-  asm("popq  %%r13":: );\
-  asm("popq  %%r12":: );\
-  asm("popq  %%r11":: );\
-  asm("popq  %%r10":: );\
-  asm("popq  %%r9":: );\
-  asm("popq  %%r8":: );\
-  asm("popq  %%rdi":: );\
-  asm("popq  %%rsi":: );\
-  asm("popq  %%rdx":: );\
-  asm("popq  %%rcx":: );\
-  asm("popq  %%rbx":: );\
-  asm("popq  %%rax":: );\
-  asm("movq  %%rbp,%%rsp":: )  /* restore esp in case leave is not used */
-
+#define RESTORE_STATE()  \
+  asm("popq  %%rbp" ::); \
+  asm("popq  %%r15" ::); \
+  asm("popq  %%r14" ::); \
+  asm("popq  %%r13" ::); \
+  asm("popq  %%r12" ::); \
+  asm("popq  %%r11" ::); \
+  asm("popq  %%r10" ::); \
+  asm("popq  %%r9" ::);  \
+  asm("popq  %%r8" ::);  \
+  asm("popq  %%rdi" ::); \
+  asm("popq  %%rsi" ::); \
+  asm("popq  %%rdx" ::); \
+  asm("popq  %%rcx" ::); \
+  asm("popq  %%rbx" ::); \
+  asm("popq  %%rax" ::); \
+  asm("movq  %%rbp,%%rsp" ::) /* restore esp in case leave is not used */
 
 #else
 #error "This stack manipulation code can only be compiled on an x86 or x86_64"
