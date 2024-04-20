@@ -13,6 +13,7 @@ int test_fun(int x)
 int main()
 {
     void* arg = (void *)5;
+    
     // ptr_int_t *sp = (ptr_int_t *)malloc(8192);
 
     // sp += 2048;
@@ -39,7 +40,7 @@ int main()
 
     int res = new_lwp((lwpfun)test_fun, arg, 2048);
 
-
+    printf("result: %d\n", res);
     
     // free(sp);
 

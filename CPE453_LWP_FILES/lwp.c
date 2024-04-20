@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "lwp.h"
 #include "stdlib.h"
+#include "errno.h"
 
 const unsigned int WORD_SIZE = 4;
 lwp_context lwp_ptable[LWP_PROC_LIMIT];
@@ -33,19 +34,25 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
             break;
         }
 
+    // populate lwp struct member variables
     lwp_ptable[free_thread_index].pid = free_thread_index + 1;
     lwp_ptable[free_thread_index].stacksize = stack_size;
 
     lwp_ptable[free_thread_index].stack = (ptr_int_t*)malloc(stack_size * WORD_SIZE);
 
+    // check if memory allocation failed
+    if(lwp_ptable[free_thread_index].stack == NULL)
+    {
+        fprintf(stderr, "Error: Unable to allocate memory for stack: %s\n", strerror(errno));
+        return -1;
+    }
+
+    // populate the thread stack
     ptr_int_t* sp = lwp_ptable[free_thread_index].stack;
     lwp_ptable[free_thread_index].sp = sp;
     sp += (stack_size * WORD_SIZE);
 
-    printf("made it this far\n");
-    printf("the value of *arg: %d\n", (ptr_int_t*)arg);
-
-    *sp = *(ptr_int_t*)(arg);
+    *sp = (ptr_int_t*)(arg);
     sp--;
 
     *sp = (ptr_int_t) exit;
@@ -61,9 +68,11 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
 
     *sp = (ptr_int_t) bp;
 
-    SetSP(sp);
-    RESTORE_STATE();
+    // increment the number of ready threads in the pool
+    lwp_procs++;
 
-    return EXIT_SUCCESS;
+    SAVE_STATE();
+
+    return lwp_ptable[free_thread_index].pid;
 
 }
