@@ -42,7 +42,10 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     lwp_ptable[free_thread_index].sp = sp;
     sp += (stack_size * WORD_SIZE);
 
-    *sp = (ptr_int_t*)(arg);
+    printf("made it this far\n");
+    printf("the value of *arg: %d\n", (ptr_int_t*)arg);
+
+    *sp = *(ptr_int_t*)(arg);
     sp--;
 
     *sp = (ptr_int_t) exit;

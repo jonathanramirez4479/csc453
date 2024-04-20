@@ -12,7 +12,7 @@ int test_fun(int x)
 
 int main()
 {
-    int arg[] = {5};
+    void* arg = (void *)5;
     // ptr_int_t *sp = (ptr_int_t *)malloc(8192);
 
     // sp += 2048;
@@ -37,7 +37,7 @@ int main()
     // SetSP(sp);
     // RESTORE_STATE();
 
-    int res = new_lwp((lwpfun)test_fun, (void*) arg, 2048);
+    int res = new_lwp((lwpfun)test_fun, arg, 2048);
 
 
     
