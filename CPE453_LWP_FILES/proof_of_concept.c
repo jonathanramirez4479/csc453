@@ -40,6 +40,8 @@ int main()
 
     int res = new_lwp((lwpfun)test_fun, (void*) arg, 2048);
 
+    printf("make it here\n");
+
     
     // free(sp);
 

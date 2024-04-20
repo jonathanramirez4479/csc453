@@ -42,7 +42,7 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     lwp_ptable[free_thread_index].sp = sp;
     sp += (stack_size * WORD_SIZE);
 
-    *sp = (ptr_int_t)arg;
+    *sp = (ptr_int_t)5;
     sp--;
 
     *sp = (ptr_int_t) exit;
@@ -61,6 +61,6 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     SetSP(sp);
     RESTORE_STATE();
 
-    return 5;
+    return EXIT_SUCCESS;
 
 }
