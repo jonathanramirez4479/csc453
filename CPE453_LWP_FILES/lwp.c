@@ -6,6 +6,8 @@
 const unsigned int WORD_SIZE = 4;
 lwp_context lwp_ptable[LWP_PROC_LIMIT];
 int lwp_procs = 0;
+schedfun current_scheduler;
+int lwp_running = 29;
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
 {
@@ -35,7 +37,7 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
         }
 
     // populate lwp struct member variables
-    lwp_ptable[free_thread_index].pid = free_thread_index + 1;
+    lwp_ptable[free_thread_index].pid = free_thread_index;
     lwp_ptable[free_thread_index].stacksize = stack_size;
 
     lwp_ptable[free_thread_index].stack = (ptr_int_t*)malloc(stack_size * WORD_SIZE);
@@ -74,5 +76,31 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     SAVE_STATE();
 
     return lwp_ptable[free_thread_index].pid;
+}
+
+int round_robin()
+{
+    if(lwp_running == 29)
+        lwp_running = 0;
+    else
+        lwp_running++;
+
+    return lwp_running
+}
+
+void lwp_set_scheduler(schedfun sched)
+{
+    if(sched)
+        current_scheduler = sched;
+    else
+        current_scheduler = round_robin;
+}
+
+void lwp_start()
+{
+    // start the schedular
+    lwp_running = current_scheduler();
+
+    // run until no more threads
 
 }
