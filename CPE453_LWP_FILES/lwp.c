@@ -85,12 +85,12 @@ int round_robin()
     else
         lwp_running++;
 
-    return lwp_running
+    return lwp_running;
 }
 
 void lwp_set_scheduler(schedfun sched)
 {
-    if(sched)
+    if(sched != NULL)
         current_scheduler = sched;
     else
         current_scheduler = round_robin;
@@ -98,9 +98,10 @@ void lwp_set_scheduler(schedfun sched)
 
 void lwp_start()
 {
-    // start the schedular
-    lwp_running = current_scheduler();
+    // run lwp until no more threads
+    while(lwp_procs > 0)
+    {
 
-    // run until no more threads
-
+    }
+    
 }
