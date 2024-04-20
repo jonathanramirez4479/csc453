@@ -8,6 +8,8 @@ lwp_context lwp_ptable[LWP_PROC_LIMIT];
 int lwp_procs = 0;
 schedfun current_scheduler;
 int lwp_running = 29;
+ptr_int_t* main_sp;
+GetSP(main_sp);
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
 {
@@ -35,6 +37,8 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
             free_thread_index = i;
             break;
         }
+
+    lwp_context* ptr_lwp = &lwp_ptable[free_thread_index];
 
     // populate lwp struct member variables
     lwp_ptable[free_thread_index].pid = free_thread_index;
@@ -99,9 +103,14 @@ void lwp_set_scheduler(schedfun sched)
 void lwp_start()
 {
     // run lwp until no more threads
+
+    SAVE_STATE(); // save state of main thread
+    
+    
     while(lwp_procs > 0)
     {
-
+        lwp_running = current_scheduler();
+        RESTORE_STATE();
     }
     
 }

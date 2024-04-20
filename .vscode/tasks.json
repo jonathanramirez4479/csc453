@@ -11,7 +11,7 @@
                 "${workspaceFolder}/CPE453_LWP_FILES/proof_of_concept.c",
                 "${workspaceFolder}/CPE453_LWP_FILES/lwp.c",
                 "-o",
-                "${workspaceFolder}/a.exe"
+                "${workspaceFolder}/CPE453_LWP_FILES/db"
             ],
             "options": {
                 "cwd": "${fileDirname}"
