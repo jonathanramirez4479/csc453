@@ -4,11 +4,11 @@
 #include "errno.h"
 
 const unsigned int WORD_SIZE = 4;
-lwp_context lwp_ptable[LWP_PROC_LIMIT];
+lwp_context lwp_ptable[LWP_PROC_LIMIT]; // table of ready threads
 int lwp_procs = 0;
-schedfun current_scheduler;
-int lwp_running = 29;
-lwp_context main_context;
+schedfun current_scheduler;  // current scheduler function (either specified by user program or defaulted to round robin)
+int lwp_running = 29; // set to 29 for round robin (this way round robin simply returns the next process)
+lwp_context main_context;  // main thread's context (used to restore main thread after lwp's have finished executing)
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
 {
@@ -107,9 +107,8 @@ void lwp_start()
     Notes:
     - save the main thread as a context (globally) in order to return to main context
     */
-    GetSP(main_sp);
-   
 
+    
     SAVE_STATE(); // save state of main thread
     
     
