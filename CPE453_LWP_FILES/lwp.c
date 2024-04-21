@@ -8,8 +8,7 @@ lwp_context lwp_ptable[LWP_PROC_LIMIT];
 int lwp_procs = 0;
 schedfun current_scheduler;
 int lwp_running = 29;
-ptr_int_t* main_sp;
-GetSP(main_sp);
+lwp_context main_context;
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
 {
@@ -102,7 +101,14 @@ void lwp_set_scheduler(schedfun sched)
 
 void lwp_start()
 {
-    // run lwp until no more threads
+    /* Called by the user program. Starts (or resumes) the LWP system. Saves the original context and stack pointer
+     (for lwp_stop or lwp_exit to use later), schedules an LWP, and starts it running. Returns immediately if there are no LWPs.
+    
+    Notes:
+    - save the main thread as a context (globally) in order to return to main context
+    */
+    GetSP(main_sp);
+   
 
     SAVE_STATE(); // save state of main thread
     

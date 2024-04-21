@@ -38,9 +38,7 @@ int main()
     // SetSP(sp);
     // RESTORE_STATE();
 
-    int res = new_lwp((lwpfun)test_fun, arg, 2048);
 
-    printf("result: %d\n", res);
     
     // free(sp);
 
