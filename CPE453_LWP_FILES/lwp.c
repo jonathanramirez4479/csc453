@@ -7,7 +7,7 @@ const unsigned int WORD_SIZE = 4;
 lwp_context lwp_ptable[LWP_PROC_LIMIT]; // table of ready threads
 int lwp_procs = 0;
 schedfun current_scheduler;  // current scheduler function (either specified by user program or defaulted to round robin)
-int lwp_running = 29; // set to 29 for round robin (this way round robin simply returns the next process)
+int lwp_running = 29;
 lwp_context main_context;  // main thread's context (used to restore main thread after lwp's have finished executing)
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
@@ -54,13 +54,13 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
 
     // populate the thread stack
     ptr_int_t* sp = lwp_ptable[free_thread_index].stack;
-    lwp_ptable[free_thread_index].sp = sp;
     sp += (stack_size * WORD_SIZE);
 
-    *sp = (ptr_int_t*)(arg);
+    *sp = (ptr_int_t) arg;
     sp--;
 
     *sp = (ptr_int_t) exit;
+    // lwp_ptable[free_thread_index].return_address = sp;
     sp--;
 
     *sp = (ptr_int_t) func;
@@ -73,10 +73,19 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
 
     *sp = (ptr_int_t) bp;
 
+    lwp_ptable[free_thread_index].sp = sp;
+
+    SetSP(lwp_ptable[free_thread_index].sp);
+    RESTORE_STATE();
+
+    printf("made it here\n");
+
+    // Use this to test that a new lwp is created correctly and can run
+    // SetSP(lwp_ptable[free_thread_index].sp);
+    // RESTORE_STATE();
+
     // increment the number of ready threads in the pool
     lwp_procs++;
-
-    SAVE_STATE();
 
     return lwp_ptable[free_thread_index].pid;
 }
@@ -107,15 +116,23 @@ void lwp_start()
     Notes:
     - save the main thread as a context (globally) in order to return to main context
     */
+    ptr_int_t* main_sp = NULL;
 
-    
-    SAVE_STATE(); // save state of main thread
-    
     
     while(lwp_procs > 0)
     {
-        lwp_running = current_scheduler();
+        // GetSP(main_sp);
+        // main_context.sp = main_sp;
+        // SAVE_STATE(); // save state of main thread
+
+        SetSP(lwp_ptable[0].sp);
         RESTORE_STATE();
+
+        lwp_procs--;
     }
-    
+
+    printf("made it to the end of lwp_start\n");
+
+    // SetSP(main_context.sp);
+    // RESTORE_STATE();
 }
