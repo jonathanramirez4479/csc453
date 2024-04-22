@@ -6,10 +6,8 @@
 
 int test_fun(int x)
 {
-    printf("processes left: %d\n", lwp_procs);
     x = x + 20;
     printf("what did i get? %d\n", x);
-    return 0;
 }
 
 int main()
@@ -42,7 +40,11 @@ int main()
 
 
 
-    int* threads[5];
+    // int res = new_lwp(test_fun, arg, 2048);
+
+
+
+    int* threads[2];
 
     int i;
     int threads_size = sizeof(threads) / sizeof(threads[0]);
@@ -57,6 +59,7 @@ int main()
     lwp_set_scheduler(NULL);
 
     lwp_start();
+
 
     printf("returned to main\n");
     

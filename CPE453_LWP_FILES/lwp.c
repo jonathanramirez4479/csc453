@@ -8,7 +8,6 @@ lwp_context lwp_ptable[LWP_PROC_LIMIT]; // table of ready threads
 int lwp_procs = 0;
 schedfun current_scheduler;  // current scheduler function (either specified by user program or defaulted to round robin)
 int lwp_running = 29;
-lwp_context main_context;  // main thread's context (used to restore main thread after lwp's have finished executing)
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
 {
@@ -76,6 +75,7 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     // increment the number of ready threads in the pool
     lwp_procs++;
 
+
     // Use this to test that a new lwp is created correctly and can run
     // SetSP(lwp_ptable[free_thread_index].sp);
     // RESTORE_STATE();
@@ -109,8 +109,9 @@ void lwp_start()
     Notes:
     - save the main thread as a context (globally) in order to return to main context
     */
-    GetSP(main_context.sp);
     SAVE_STATE();
+    ptr_int_t* main_sp;
+    GetSP(main_sp);
 
     if (lwp_procs == 0)
     {
@@ -121,15 +122,10 @@ void lwp_start()
         while(lwp_procs > 0)
         {
             lwp_running = current_scheduler();
-            lwp_procs--;
-            printf("thread pid: %d\n", lwp_ptable[lwp_running].pid);
+            printf("running thread pid: %d\n", lwp_ptable[lwp_running].pid);
             SetSP(lwp_ptable[lwp_running].sp);
             RESTORE_STATE();
+            lwp_procs--;
         }
     }
-
-    // SetSP(main_context.sp);
-    // RESTORE_STATE();
-
-    printf("made it to the end of lwp_start\n");
 }
