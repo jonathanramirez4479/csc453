@@ -37,8 +37,6 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
             break;
         }
 
-    lwp_context* ptr_lwp = &lwp_ptable[free_thread_index];
-
     // populate lwp struct member variables
     lwp_ptable[free_thread_index].pid = free_thread_index;
     lwp_ptable[free_thread_index].stacksize = stack_size;
@@ -55,12 +53,12 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     // populate the thread stack
     ptr_int_t* sp = lwp_ptable[free_thread_index].stack;
     sp += (stack_size * WORD_SIZE);
+    sp--;
 
     *sp = (ptr_int_t) arg;
     sp--;
 
     *sp = (ptr_int_t) exit;
-    // lwp_ptable[free_thread_index].return_address = sp;
     sp--;
 
     *sp = (ptr_int_t) func;
@@ -75,17 +73,12 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
 
     lwp_ptable[free_thread_index].sp = sp;
 
-    SetSP(lwp_ptable[free_thread_index].sp);
-    RESTORE_STATE();
-
-    printf("made it here\n");
+    // increment the number of ready threads in the pool
+    lwp_procs++;
 
     // Use this to test that a new lwp is created correctly and can run
     // SetSP(lwp_ptable[free_thread_index].sp);
     // RESTORE_STATE();
-
-    // increment the number of ready threads in the pool
-    lwp_procs++;
 
     return lwp_ptable[free_thread_index].pid;
 }
@@ -116,23 +109,27 @@ void lwp_start()
     Notes:
     - save the main thread as a context (globally) in order to return to main context
     */
-    ptr_int_t* main_sp = NULL;
+    GetSP(main_context.sp);
+    SAVE_STATE();
 
-    
-    while(lwp_procs > 0)
+    if (lwp_procs == 0)
     {
-        // GetSP(main_sp);
-        // main_context.sp = main_sp;
-        // SAVE_STATE(); // save state of main thread
-
-        SetSP(lwp_ptable[0].sp);
         RESTORE_STATE();
-
-        lwp_procs--;
     }
-
-    printf("made it to the end of lwp_start\n");
+    else
+    {
+        while(lwp_procs > 0)
+        {
+            lwp_running = current_scheduler();
+            lwp_procs--;
+            printf("thread pid: %d\n", lwp_ptable[lwp_running].pid);
+            SetSP(lwp_ptable[lwp_running].sp);
+            RESTORE_STATE();
+        }
+    }
 
     // SetSP(main_context.sp);
     // RESTORE_STATE();
+
+    printf("made it to the end of lwp_start\n");
 }

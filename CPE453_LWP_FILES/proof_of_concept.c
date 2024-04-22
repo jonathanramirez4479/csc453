@@ -6,15 +6,15 @@
 
 int test_fun(int x)
 {
+    printf("processes left: %d\n", lwp_procs);
     x = x + 20;
     printf("what did i get? %d\n", x);
+    return 0;
 }
 
 int main()
 {
     void* arg = (void *)5;
-    
-
 
     // ptr_int_t *sp = (ptr_int_t *)malloc(8192);
 
@@ -42,27 +42,23 @@ int main()
 
 
 
-    // int* threads[5];
+    int* threads[5];
 
-    // int i;
-    // int threads_size = sizeof(threads) / sizeof(threads[0]);
+    int i;
+    int threads_size = sizeof(threads) / sizeof(threads[0]);
 
-    // for(i = 0; i <= threads_size; i++) 
-    // {
-    //     threads[i] = new_lwp(test_fun, arg, 2048);
-    // }
+    for(i = 0; i < threads_size; i++) 
+    {
+        threads[i] = new_lwp(test_fun, arg, 2048);
+    }
 
+    printf("at the start there are %d processes\n", lwp_procs);
 
+    lwp_set_scheduler(NULL);
 
-    int pid = new_lwp(test_fun, arg, 2048);
+    lwp_start();
 
-    // lwp_set_scheduler(NULL);
-
-    // lwp_start();
-
-    printf("returned back to main\n");
+    printf("returned to main\n");
     
-    // free(sp);
-
     return 0;
 }

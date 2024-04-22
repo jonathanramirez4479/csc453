@@ -20,7 +20,6 @@ typedef struct context_st
   ptr_int_t *stack;        /* pointer to stack returned by malloc() */
   unsigned long stacksize; /* Size of allocated stack */
   ptr_int_t *sp;           /* current stack pointer   */
-  // ptr_int_t *return_address; /* point to return address of stack */
   /*  .... other things if necessary ... */
 } lwp_context;
 
