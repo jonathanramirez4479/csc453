@@ -8,7 +8,7 @@ lwp_context lwp_ptable[LWP_PROC_LIMIT]; // table of ready threads
 int lwp_procs = 0;
 schedfun current_scheduler;  // current scheduler function (either specified by user program or defaulted to round robin)
 int pid_start = 1000; // starting pid value for the threads
-int lwp_running = 0;
+int lwp_running = (LWP_PROC_LIMIT - 1);
 ptr_int_t* main_sp;
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
@@ -74,9 +74,22 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     return new_thread->pid;
 }
 
+void lwp_yield()
+{
+
+    SAVE_STATE();  // save the current thread's context on its stack
+    GetSP(lwp_ptable[lwp_running].sp);  // store the current thread's sp
+    
+    int next_thread_index = round_robin(); // get the next thread index and update lwp_running
+    ptr_int_t next_thread_sp = lwp_ptable[next_thread_index].sp;
+
+    SetSP(next_thread_sp);
+    RESTORE_STATE();
+}
+
 int round_robin()
 {
-    if(lwp_running == (LWP_PROC_LIMIT - 1) || lwp_running == 0)
+    if(lwp_running == (LWP_PROC_LIMIT - 1))
         lwp_running = 0;
     else
         lwp_running++;

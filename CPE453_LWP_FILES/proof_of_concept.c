@@ -8,6 +8,8 @@ int test_fun(int x)
 {
     x = x + 20;
     printf("what did i get? %d\n", x);
+
+    lwp_yield();
 }
 
 int main()
@@ -44,7 +46,7 @@ int main()
 
 
 
-    int threads[2];
+    int threads[5];
 
     int i;
     int threads_size = sizeof(threads) / sizeof(threads[0]);
