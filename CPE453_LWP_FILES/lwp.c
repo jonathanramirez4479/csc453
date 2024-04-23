@@ -8,7 +8,7 @@ lwp_context lwp_ptable[LWP_PROC_LIMIT]; // table of ready threads
 int lwp_procs = 0;
 schedfun current_scheduler;  // current scheduler function (either specified by user program or defaulted to round robin)
 int pid_start = 1000; // starting pid value for the threads
-int lwp_running = (LWP_PROC_LIMIT - 1);
+int lwp_running = -1;
 ptr_int_t* main_sp;
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
@@ -89,10 +89,11 @@ void lwp_yield()
 
 int round_robin()
 {
-    if(lwp_running == (LWP_PROC_LIMIT - 1))
+    lwp_running++;
+
+    if(lwp_running == lwp_procs)
         lwp_running = 0;
-    else
-        lwp_running++;
+    
 
     return lwp_running;
 }
@@ -124,8 +125,49 @@ void lwp_start()
     
     lwp_running = current_scheduler();
     printf("running thread pid: %d\n", lwp_ptable[lwp_running].pid);
-    lwp_procs--;
 
     SetSP(lwp_ptable[lwp_running].sp);
     RESTORE_STATE();
+}
+
+int lwp_getpid()
+{
+    return lwp_running;
+}
+
+void lwp_exit()
+{
+    // remove a thread from the process table and move all other's up in the table
+    // if no threads remain, it should restore the current stack point and return to that context
+
+    //1. reset the lwp context (mainly just free the stack)
+    lwp_context current_lwp = lwp_ptable[lwp_running];
+
+    free(current_lwp.stack);
+
+    // 2. move up the other threads in the table
+
+    // 2.1 if current thread is last thread, don't move up anything
+    if(lwp_running == LWP_PROC_LIMIT - 1)
+    {
+        current_lwp.pid = 0;
+        current_lwp.sp = NULL;
+        current_lwp.stacksize = 0;
+    }
+    
+    // 2.2 else move up all other threads and remove the last thread
+    else
+    {
+        int i;
+        for(i = lwp_running; i <= lwp_procs - 1; i++)
+        {
+            lwp_ptable[lwp_running] = lwp_ptable[lwp_running + 1];
+        }
+
+        lwp_ptable[lwp_procs - 1].pid = 0;
+        lwp_ptable[lwp_procs - 1].sp = NULL;
+        lwp_ptable[lwp_procs - 1].stacksize = 0;
+        free(lwp_ptable[lwp_procs - 1].stack);
+    }
+
 }

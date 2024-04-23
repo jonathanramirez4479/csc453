@@ -7,9 +7,10 @@
 int test_fun(int x)
 {
     x = x + 20;
-    printf("what did i get? %d\n", x);
+    printf("pid: %d, result: %d\n", lwp_getpid(), x);
 
     lwp_yield();
+    lwp_exit();
 }
 
 int main()
