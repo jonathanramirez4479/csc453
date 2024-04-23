@@ -7,7 +7,9 @@ const unsigned int WORD_SIZE = 4;
 lwp_context lwp_ptable[LWP_PROC_LIMIT]; // table of ready threads
 int lwp_procs = 0;
 schedfun current_scheduler;  // current scheduler function (either specified by user program or defaulted to round robin)
-int lwp_running = 29;
+int pid_start = 1000; // starting pid value for the threads
+int lwp_running = 0;
+ptr_int_t* main_sp;
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
 {
@@ -24,34 +26,24 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
    {
     return -1;
    }
-
-   int free_thread_index;
-   int i;
     
-    // find an unused thread in the thread pool
-    for(i = 0; i <= LWP_PROC_LIMIT; i++)
-        if(lwp_ptable[i].stack == NULL)
-        {
-            free_thread_index = i;
-            break;
-        }
-
-    // populate lwp struct member variables
-    lwp_ptable[free_thread_index].pid = free_thread_index;
-    lwp_ptable[free_thread_index].stacksize = stack_size;
-
-    lwp_ptable[free_thread_index].stack = (ptr_int_t*)malloc(stack_size * WORD_SIZE);
+    lwp_context* new_thread  = &lwp_ptable[lwp_procs];
+    new_thread->pid = pid_start;
+    new_thread->stacksize = stack_size;
+    new_thread->stack = (ptr_int_t*)malloc(stack_size * WORD_SIZE);
 
     // check if memory allocation failed
-    if(lwp_ptable[free_thread_index].stack == NULL)
+    if(new_thread->stack == NULL)
     {
         fprintf(stderr, "Error: Unable to allocate memory for stack: %s\n", strerror(errno));
         return -1;
     }
 
+    pid_start++;
+
     // populate the thread stack
-    ptr_int_t* sp = lwp_ptable[free_thread_index].stack;
-    sp += (stack_size * WORD_SIZE);
+    ptr_int_t* sp = new_thread->stack;
+    sp += stack_size;
     sp--;
 
     *sp = (ptr_int_t) arg;
@@ -70,22 +62,21 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
 
     *sp = (ptr_int_t) bp;
 
-    lwp_ptable[free_thread_index].sp = sp;
+    new_thread->sp = sp;
 
     // increment the number of ready threads in the pool
     lwp_procs++;
-
 
     // Use this to test that a new lwp is created correctly and can run
     // SetSP(lwp_ptable[free_thread_index].sp);
     // RESTORE_STATE();
 
-    return lwp_ptable[free_thread_index].pid;
+    return new_thread->pid;
 }
 
 int round_robin()
 {
-    if(lwp_running == 29)
+    if(lwp_running == (LWP_PROC_LIMIT - 1) || lwp_running == 0)
         lwp_running = 0;
     else
         lwp_running++;
@@ -110,22 +101,18 @@ void lwp_start()
     - save the main thread as a context (globally) in order to return to main context
     */
     SAVE_STATE();
-    ptr_int_t* main_sp;
     GetSP(main_sp);
 
     if (lwp_procs == 0)
     {
         RESTORE_STATE();
+        return;
     }
-    else
-    {
-        while(lwp_procs > 0)
-        {
-            lwp_running = current_scheduler();
-            printf("running thread pid: %d\n", lwp_ptable[lwp_running].pid);
-            SetSP(lwp_ptable[lwp_running].sp);
-            RESTORE_STATE();
-            lwp_procs--;
-        }
-    }
+    
+    lwp_running = current_scheduler();
+    printf("running thread pid: %d\n", lwp_ptable[lwp_running].pid);
+    lwp_procs--;
+
+    SetSP(lwp_ptable[lwp_running].sp);
+    RESTORE_STATE();
 }

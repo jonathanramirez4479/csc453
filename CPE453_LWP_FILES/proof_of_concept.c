@@ -44,7 +44,7 @@ int main()
 
 
 
-    int* threads[2];
+    int threads[2];
 
     int i;
     int threads_size = sizeof(threads) / sizeof(threads[0]);
