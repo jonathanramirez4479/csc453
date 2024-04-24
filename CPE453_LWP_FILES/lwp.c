@@ -153,6 +153,7 @@ void lwp_exit()
         current_lwp.pid = 0;
         current_lwp.sp = NULL;
         current_lwp.stacksize = 0;
+        lwp_procs--;
     }
     
     // 2.2 else move up all other threads and remove the last thread
@@ -168,6 +169,12 @@ void lwp_exit()
         lwp_ptable[lwp_procs - 1].sp = NULL;
         lwp_ptable[lwp_procs - 1].stacksize = 0;
         free(lwp_ptable[lwp_procs - 1].stack);
+        lwp_procs--;
     }
 
+    int next_thread_index = round_robin(); // get the next thread index and update lwp_running
+    ptr_int_t next_thread_sp = lwp_ptable[next_thread_index].sp;
+
+    SetSP(next_thread_sp);
+    RESTORE_STATE();
 }

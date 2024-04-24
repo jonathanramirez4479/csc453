@@ -10,6 +10,9 @@ int test_fun(int x)
     printf("pid: %d, result: %d\n", lwp_getpid(), x);
 
     lwp_yield();
+
+    printf("pid: %d is leaving...\n", lwp_getpid());
+    
     lwp_exit();
 }
 
