@@ -76,7 +76,6 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
 
 void lwp_yield()
 {
-
     SAVE_STATE();  // save the current thread's context on its stack
     GetSP(lwp_ptable[lwp_running].sp);  // store the current thread's sp
     
@@ -132,7 +131,7 @@ void lwp_start()
 
 int lwp_getpid()
 {
-    return lwp_running;
+    return lwp_ptable[lwp_running].pid;
 }
 
 void lwp_exit()
@@ -140,41 +139,52 @@ void lwp_exit()
     // remove a thread from the process table and move all other's up in the table
     // if no threads remain, it should restore the current stack point and return to that context
 
-    //1. reset the lwp context (mainly just free the stack)
-    lwp_context current_lwp = lwp_ptable[lwp_running];
+    lwp_context* current_lwp = &lwp_ptable[lwp_running];
 
-    free(current_lwp.stack);
+    int next_thread_index = lwp_running;
 
-    // 2. move up the other threads in the table
-
-    // 2.1 if current thread is last thread, don't move up anything
     if(lwp_running == LWP_PROC_LIMIT - 1)
     {
-        current_lwp.pid = 0;
-        current_lwp.sp = NULL;
-        current_lwp.stacksize = 0;
-        lwp_procs--;
+        current_lwp->pid = 0;
+        current_lwp->sp = NULL;
+        current_lwp->stacksize = 0;
+        free(current_lwp->stack);
+        current_lwp->stack = NULL;
+        
+        next_thread_index = round_robin();
     }
-    
-    // 2.2 else move up all other threads and remove the last thread
     else
     {
+        current_lwp->pid = 0;
+        current_lwp->sp = NULL;
+        current_lwp->stacksize = 0;
+        free(current_lwp->stack);
+        current_lwp->stack = NULL;
         int i;
-        for(i = lwp_running; i <= lwp_procs - 1; i++)
+
+        for(i = lwp_running; i < lwp_procs - 1; i++)
         {
-            lwp_ptable[lwp_running] = lwp_ptable[lwp_running + 1];
+            lwp_ptable[i] = lwp_ptable[i + 1];
         }
 
-        lwp_ptable[lwp_procs - 1].pid = 0;
-        lwp_ptable[lwp_procs - 1].sp = NULL;
-        lwp_ptable[lwp_procs - 1].stacksize = 0;
-        free(lwp_ptable[lwp_procs - 1].stack);
-        lwp_procs--;
+        lwp_ptable[lwp_procs-1].pid = 0;
+        lwp_ptable[lwp_procs-1].sp = NULL;
+        lwp_ptable[lwp_procs-1].stack = NULL;
+        lwp_ptable[lwp_procs-1].stacksize = 0;
     }
 
-    int next_thread_index = round_robin(); // get the next thread index and update lwp_running
-    ptr_int_t next_thread_sp = lwp_ptable[next_thread_index].sp;
+    lwp_procs--;
 
-    SetSP(next_thread_sp);
-    RESTORE_STATE();
+    if(lwp_procs == 0)
+    {
+        SetSP(main_sp);
+        RESTORE_STATE();
+    }
+    else
+    {
+        ptr_int_t next_thread_sp = lwp_ptable[next_thread_index].sp;
+
+        SetSP(next_thread_sp);
+        RESTORE_STATE();
+    }
 }
