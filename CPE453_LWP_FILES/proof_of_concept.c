@@ -6,16 +6,26 @@
 
 int test_fun(int x)
 {
-    int y = 20;
     x = x + 20;
     printf("pid: %d, result: %d\n", lwp_getpid(), x);
-    printf("y = %d\n", y);
 
     lwp_yield();
 
-    printf("pid: %d is leaving...\n", lwp_getpid());
-    printf("y = %d\n", y);
-    
+    if(lwp_getpid() == 1)
+    {
+        printf("\npid 1 is stopping the lwp system\n\n");
+        lwp_stop();
+    }   
+
+    printf("pid: %d is leaving...\n", lwp_getpid()); 
+    lwp_exit();
+}
+
+int func(int x)
+{
+    printf("pid: %d made it to func not test_fun\n", lwp_getpid());
+    lwp_yield();
+    printf("pid: %d is leaving func...\n");
     lwp_exit();
 }
 
@@ -30,7 +40,10 @@ int main()
 
     for(i = 0; i < threads_size; i++) 
     {
-        threads[i] = new_lwp(test_fun, arg, 2048);
+        if(i == 2)
+            threads[i] = new_lwp(func, (void*)i, 2048);
+        else
+            threads[i] = new_lwp(test_fun, (void*)i, 2048);
     }
 
     printf("at the start there are %d processes\n", lwp_procs);
@@ -39,7 +52,11 @@ int main()
 
     lwp_start();
 
-    printf("returned to main\n");
+    printf("returned to main once\n");
+
+    lwp_start();
+
+    printf("returned to main for the last time\n");
     
     return 0;
 }

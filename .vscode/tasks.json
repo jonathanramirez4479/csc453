@@ -8,7 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-m32",
                 "-g",
-                "${workspaceFolder}/CPE453_LWP_FILES/proof_of_concept.c",
+                "${workspaceFolder}/CPE453_LWP_FILES/numbersmain.c",
                 "${workspaceFolder}/CPE453_LWP_FILES/lwp.c",
                 "-o",
                 "${workspaceFolder}/CPE453_LWP_FILES/db"

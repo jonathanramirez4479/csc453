@@ -7,9 +7,10 @@ const unsigned int WORD_SIZE = 4;
 lwp_context lwp_ptable[LWP_PROC_LIMIT]; // table of ready threads
 int lwp_procs = 0;
 schedfun current_scheduler;  // current scheduler function (either specified by user program or defaulted to round robin)
-int pid_start = 1000; // starting pid value for the threads
+int pid_start = 0; // starting pid value for the threads
 int lwp_running = -1;
-ptr_int_t* main_sp;
+lwp_context main_context;
+void* og_sp = NULL;
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
 {
@@ -30,7 +31,7 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     lwp_context* new_thread  = &lwp_ptable[lwp_procs];
     new_thread->pid = pid_start;
     new_thread->stacksize = stack_size;
-    new_thread->stack = (ptr_int_t*)malloc(stack_size * WORD_SIZE);
+    new_thread->stack = (ptr_int_t*)malloc(stack_size * sizeof(ptr_int_t));
 
     // check if memory allocation failed
     if(new_thread->stack == NULL)
@@ -84,6 +85,7 @@ void lwp_yield()
 
     SetSP(next_thread_sp);
     RESTORE_STATE();
+    return;
 }
 
 int round_robin()
@@ -114,7 +116,7 @@ void lwp_start()
     - save the main thread as a context (globally) in order to return to main context
     */
     SAVE_STATE();
-    GetSP(main_sp);
+    GetSP(og_sp);
 
     if (lwp_procs == 0)
     {
@@ -123,10 +125,10 @@ void lwp_start()
     }
     
     lwp_running = current_scheduler();
-    printf("running thread pid: %d\n", lwp_ptable[lwp_running].pid);
 
     SetSP(lwp_ptable[lwp_running].sp);
     RESTORE_STATE();
+    return;
 }
 
 int lwp_getpid()
@@ -177,8 +179,9 @@ void lwp_exit()
 
     if(lwp_procs == 0)
     {
-        SetSP(main_sp);
+        SetSP(og_sp);
         RESTORE_STATE();
+        return;
     }
     else
     {
@@ -186,5 +189,13 @@ void lwp_exit()
 
         SetSP(next_thread_sp);
         RESTORE_STATE();
+        return;
     }
+}
+
+void lwp_stop()
+{
+    SAVE_STATE();
+    SetSP(og_sp);
+    RESTORE_STATE();
 }

@@ -5,7 +5,9 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/CPE453_LWP_FILES/db",
-            "args": [],
+            "args": [
+                "-z"
+            ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
