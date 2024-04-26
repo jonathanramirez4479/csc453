@@ -7,10 +7,9 @@ const unsigned int WORD_SIZE = 4;
 lwp_context lwp_ptable[LWP_PROC_LIMIT]; // table of ready threads
 int lwp_procs = 0;
 schedfun current_scheduler;  // current scheduler function (either specified by user program or defaulted to round robin)
-int pid_start = 0; // starting pid value for the threads
+int pid_start = 1000; // starting pid value for the threads
 int lwp_running = -1;
-lwp_context main_context;
-void* og_sp = NULL;
+void* original_sp = NULL;
 
 int new_lwp(lwpfun func, void *arg, size_t stack_size)
 {
@@ -33,13 +32,6 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
     new_thread->stacksize = stack_size;
     new_thread->stack = (ptr_int_t*)malloc(stack_size * sizeof(ptr_int_t));
 
-    // check if memory allocation failed
-    if(new_thread->stack == NULL)
-    {
-        fprintf(stderr, "Error: Unable to allocate memory for stack: %s\n", strerror(errno));
-        return -1;
-    }
-
     pid_start++;
 
     // populate the thread stack
@@ -58,7 +50,7 @@ int new_lwp(lwpfun func, void *arg, size_t stack_size)
 
     *sp = (ptr_int_t) 0xFEEDBEEF;
 
-    ptr_int_t* bp = (ptr_int_t) sp;
+    ptr_int_t* bp = sp;
     sp -= 7;
 
     *sp = (ptr_int_t) bp;
@@ -80,8 +72,8 @@ void lwp_yield()
     SAVE_STATE();  // save the current thread's context on its stack
     GetSP(lwp_ptable[lwp_running].sp);  // store the current thread's sp
     
-    int next_thread_index = round_robin(); // get the next thread index and update lwp_running
-    ptr_int_t next_thread_sp = lwp_ptable[next_thread_index].sp;
+    int next_thread_index = current_scheduler(); // get the next thread index and update lwp_running
+    ptr_int_t* next_thread_sp = lwp_ptable[next_thread_index].sp;
 
     SetSP(next_thread_sp);
     RESTORE_STATE();
@@ -92,7 +84,7 @@ int round_robin()
 {
     lwp_running++;
 
-    if(lwp_running == lwp_procs)
+    if(lwp_running >= lwp_procs)
         lwp_running = 0;
     
 
@@ -116,7 +108,10 @@ void lwp_start()
     - save the main thread as a context (globally) in order to return to main context
     */
     SAVE_STATE();
-    GetSP(og_sp);
+    GetSP(original_sp);
+
+    if(current_scheduler == NULL)
+        current_scheduler = round_robin;
 
     if (lwp_procs == 0)
     {
@@ -145,15 +140,16 @@ void lwp_exit()
 
     int next_thread_index = lwp_running;
 
-    if(lwp_running == LWP_PROC_LIMIT - 1)
+    if(lwp_running == (lwp_procs - 1))
     {
         current_lwp->pid = 0;
         current_lwp->sp = NULL;
         current_lwp->stacksize = 0;
         free(current_lwp->stack);
         current_lwp->stack = NULL;
+
+        next_thread_index = current_scheduler();
         
-        next_thread_index = round_robin();
     }
     else
     {
@@ -173,19 +169,22 @@ void lwp_exit()
         lwp_ptable[lwp_procs-1].sp = NULL;
         lwp_ptable[lwp_procs-1].stack = NULL;
         lwp_ptable[lwp_procs-1].stacksize = 0;
+
+        if(current_scheduler != round_robin)
+            lwp_running = current_scheduler();
     }
 
     lwp_procs--;
 
     if(lwp_procs == 0)
     {
-        SetSP(og_sp);
+        SetSP(original_sp);
         RESTORE_STATE();
         return;
     }
     else
     {
-        ptr_int_t next_thread_sp = lwp_ptable[next_thread_index].sp;
+        ptr_int_t* next_thread_sp = lwp_ptable[next_thread_index].sp;
 
         SetSP(next_thread_sp);
         RESTORE_STATE();
@@ -196,6 +195,7 @@ void lwp_exit()
 void lwp_stop()
 {
     SAVE_STATE();
-    SetSP(og_sp);
+    GetSP(lwp_ptable[lwp_running].sp);
+    SetSP(original_sp);
     RESTORE_STATE();
 }
