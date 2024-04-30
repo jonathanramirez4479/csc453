@@ -1,0 +1,7 @@
+Jonathan Ramirez
+
+How is this LWP library different from a real thread management library?
+A: This LWP library is different from a real thread management library like POSIX threads simply because it doesn't utilize concurrent execution.  This LWP library API can be improved by implementing true concurrency.  Another way this API can be improved is by implementing the functionality to abort a thread's function and swap it for a different function.
+
+Special Instructions/Notes:
+    The ncurses library was not found on the UNIX machines, so I was not able to run the hungrymain and snake programs with my library.  Also, I did not create my own Makefile as it seemed the given Makefile already compiled the library lwp.c. 

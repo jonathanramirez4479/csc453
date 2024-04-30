@@ -23,7 +23,7 @@ int test_fun(int x)
 
 int func(int x)
 {
-    printf("pid: %d made it to func not test_fun with arg %d\n", lwp_getpid());
+    printf("pid: %d made it to func not test_fun with arg %d\n", lwp_getpid(), x);
     lwp_yield();
     printf("pid: %d is leaving func...\n");
     lwp_exit();
@@ -40,23 +40,17 @@ int main()
 
     for(i = 0; i < threads_size; i++) 
     {
-        if(i == 2)
-            threads[i] = new_lwp(func, (void*)i, INITIALSTACK);
-        else
-            threads[i] = new_lwp(test_fun, (void*)i, INITIALSTACK);
+        threads[i] = new_lwp(test_fun, (void*)(i + 24), INITIALSTACK);
     }
 
-    printf("at the start there are %d processes\n", lwp_procs);
-
-    lwp_set_scheduler(NULL);
-
     lwp_start();
 
-    printf("returned to main once\n\n");
+    printf("returned to main\n");
+
+    printf("let's add a new thread and start the processes again\n");
+    new_lwp(func, (void*)54, INITIALSTACK);
 
     lwp_start();
-
-    printf("returned to main for the last time\n");
     
     return 0;
 }
