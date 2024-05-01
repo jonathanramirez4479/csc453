@@ -25,16 +25,11 @@ def fifo(jobs):
 def calculate_average_wait_time(jobs):
     total_burst_time = 0
     for index, job in enumerate(jobs):
-        if index == 0:
-            job.wait_time = 0
-            job.turnaround_time = (total_burst_time + job.burst_time) - job.arrival_time
-            job.completion_time = job.arrival_time + job.burst_time + job.wait_time
-        else:
-            job.turnaround_time = (total_burst_time + job.burst_time) - job.arrival_time
-            job.wait_time = job.turnaround_time - job.burst_time
-            job.completion_time = job.arrival_time + job.burst_time + job.wait_time
+        job.completion_time = total_burst_time + job.burst_time
+        job.turnaround_time = (job.completion_time - job.arrival_time)
+        job.wait_time = max(0, job.turnaround_time - job.burst_time)
         total_burst_time += job.burst_time
-        #print(f'{index}: {total_burst_time}')
+    #print(f'{index}: {total_burst_time}')
     average_wait_time = total_burst_time / len(jobs)
     return average_wait_time
 
