@@ -7,9 +7,6 @@ def update_wait_times(jobs, curr_job_num, curr_burst, curr_cyle):
                 job.wait_time += (curr_burst)
 
 
-
-
-
 def simulate_round_robin(jobs, quantum):
     if len(jobs) == 0:
         print("No jobs to schedule\n")
@@ -49,4 +46,48 @@ def simulate_round_robin(jobs, quantum):
 
     return jobs_finished
 
+def get_shortest_time_remaining(job):
+    return job.burst_time
+
+def simulate_srtn(jobs):
+    if len(jobs) == 0:
+        print("No jobs to schedule\n")
+        exit
+
+    num_jobs = len(jobs)
+    jobs_finished = []
+    jobs_started = []
+    jobs_to_remove = []
+    
+    cycle = 0
+    i = 0
+    while len(jobs_finished) < num_jobs:
+        for job in jobs:
+            if i == job.arrival_time:
+                jobs_started.append(job)
+                jobs_to_remove.append(job)
+
+        for job in jobs_to_remove:
+            jobs.remove(job)
+
+        jobs_to_remove.clear()
         
+        if len(jobs_started) == 0:
+            i += 1
+            continue
+        
+        job = min(jobs_started, key=get_shortest_time_remaining)
+        job.burst_time -= 1
+
+        if job.burst_time == 0:
+            job.completion_time = i + 1
+            job.turnaround_time = job.completion_time - job.arrival_time
+            jobs_finished.append(job)
+            jobs_started.remove(job)
+        
+    
+        i += 1
+        update_wait_times(jobs=jobs_started, curr_job_num=job.job_number,
+                          curr_burst=1, curr_cyle=i)
+
+    return jobs_finished
