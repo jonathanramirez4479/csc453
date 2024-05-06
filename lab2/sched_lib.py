@@ -98,9 +98,12 @@ def print_job_metrics(jobs):
     """ A function to print out the job number, turnaround time, and wait time
     for each job in a list of jobs"""
 
-    print("Process\twait\tturn-around")
     for job in jobs:
-        print(f"P{job.job_number}\t{job.turnaround_time}\t{job.wait_time}")
+        print(f"Job {job.job_number} -- {job.turnaround_time}" + 
+              f"  {job.wait_time}")
+
+    print(f"Average -- {sum(job.wait_time for job in jobs) / len(jobs)}"
+          + f"  {sum(job.turnaround_time for job in jobs) / len(jobs)}")
 
 
 def simulate_round_robin(jobs, quantum):
@@ -193,7 +196,7 @@ def simulate_srtn(jobs):
     return jobs_finished
 
 
-def get_avg_wait_fifo(jobs):
+def calculate_avg_wait_fifo(jobs):
     """ This function calculates the average wait time from a list of jobs 
     scheduled according to the FIFO algorithm; and updates member variables 
     accordingly """
@@ -210,7 +213,7 @@ def get_avg_wait_fifo(jobs):
 
 
 # can only use this if wait time has been calculated first
-def get_avg_turnaround_fifo(jobs):
+def calculate_avg_turnaround_fifo(jobs):
     """ This function calculates the average turnaround time from a list of 
     jobs scheduled according to the FIFO algorithm """
 
