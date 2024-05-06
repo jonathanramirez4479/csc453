@@ -50,13 +50,19 @@ def main():
     print(f"algorithm: {algorithm}\nquantum: {quantum}")
     jobs = slib.read_jobs(job_file)
     jobs_finished = []
+    avg_wait = 0
+    avg_turnaround = 0
 
     if algorithm == "RR":
         jobs_finished = slib.simulate_round_robin(jobs=jobs, quantum=quantum)
     elif algorithm == "SRTN":
         jobs_finished = slib.simulate_srtn(jobs=jobs)
+    elif algorithm == "FIFO":
+        slib.calculate_avg_wait_fifo(jobs=jobs)
+        slib.calculate_avg_turnaround_fifo(jobs=jobs)
 
-    slib.print_job_metrics(jobs=jobs_finished)
+
+    slib.print_job_metrics(jobs=jobs)
 
 if __name__ == "__main__":
     main()
