@@ -7,11 +7,10 @@
       "program": "${file}",
       "console": "integratedTerminal",
       "args": [
-        "${workspaceFolder}/lab2/testRR.txt",
+        "${workspaceFolder}/lab2/testSRTN.txt",
         "-p",
-        "RR",
-        "-q",
-        "4",
+        "SRTN",
+        
       ]
     },
     {

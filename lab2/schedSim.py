@@ -9,7 +9,6 @@ class Job:
         self.turnaround_time = 0
         self.completion_time = 0
         self.job_number = job_number
-        self.last_block = 0
 
 
 def sort_jobs(job):
@@ -140,15 +139,14 @@ def main():
     print(f"algorithm: {algorithm}\nquantum: {quantum}")
     jobs = read_jobs(job_file)
 
-    jobs_finished = slib.simulate_round_robin(jobs=jobs, quantum=quantum)
-    
+    print("before execution:")
+    print_jobs(jobs)    
+
+    jobs_finished = slib.simulate_srtn(jobs=jobs)
     jobs_finished.sort(key=sort_jobs)
-    print_job_metrics(jobs=jobs_finished)
-    # print(f"\nAverage Wait Time: {calculate_average_wait_time(jobs)}")
 
-    # print(f"\nAverage Turnaround Time: {calculate_average_turnaround_time(jobs)}")
-
-    
+    print("\nafter execution:")
+    print_jobs(jobs_finished)
 
 if __name__ == "__main__":
     main()
