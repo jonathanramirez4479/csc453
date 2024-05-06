@@ -47,7 +47,6 @@ def main():
     else:
         raise ValueError("Error: not enough or wrongly formatted arguments to run schedSim\n")
 
-    print(f"algorithm: {algorithm}\nquantum: {quantum}")
     jobs = slib.read_jobs(job_file)
     jobs_finished = []
     avg_wait = 0
