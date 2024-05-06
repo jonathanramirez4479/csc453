@@ -57,8 +57,8 @@ def main():
         jobs_finished = slib.simulate_round_robin(jobs=jobs, quantum=quantum)
         slib.print_job_metrics(jobs=jobs_finished)
     elif algorithm == "SRTN":
-        slib.print_job_metrics(jobs=jobs_finished)
         jobs_finished = slib.simulate_srtn(jobs=jobs_finished)
+        slib.print_job_metrics(jobs=jobs_finished)
     elif algorithm == "FIFO":
         slib.calculate_avg_wait_fifo(jobs=jobs)
         slib.calculate_avg_turnaround_fifo(jobs=jobs)

@@ -98,6 +98,10 @@ def print_job_metrics(jobs):
     """ A function to print out the job number, turnaround time, and wait time
     for each job in a list of jobs"""
 
+    if len(jobs) == 0:
+        print("no jobs to evaluate")
+        return
+
     for job in jobs:
         print(f"Job {job.job_number} -- {job.turnaround_time}" + 
               f"  {job.wait_time}")
