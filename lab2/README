@@ -5,5 +5,30 @@ Answers:
 1. When workloads arrive with incrementally increasing burst sizes, then no job would be preempted,
 therefore scheduling jobs like the FIFO algorithm.
 
-2. If we have a quantum length greater than or equal to the jobs' burst times, then RR will have similar response times
+2. If we have a quantum length greater than or equal to the largest job's burst time, then RR will have similar response times
  to SRTN having jobs with similar burst sizes.
+
+3. As job lengths increase, the response time increases.  This was shown through the simulator as turnaround time and
+ wait time would increase.  This makes sense because jobs would take longer to finish.
+
+Job 0 -- Turnaround 1 Wait  0
+Job 1 -- Turnaround 2 Wait  0
+Job 2 -- Turnaround 4 Wait  1
+Job 3 -- Turnaround 7 Wait  3
+Job 4 -- Turnaround 11 Wait  6
+Average --  Turnaround 5.0  Wait 2.0
+
+
+Job 0 -- Turnaround 2 Wait  0
+Job 1 -- Turnaround 4 Wait  0
+Job 2 -- Turnaround 8 Wait  2
+Job 3 -- Turnaround 14 Wait  6
+Job 4 -- Turnaround 22 Wait  12
+Average --  Turnaround 10.0  Wait 4.0
+
+4. As quantum lengths increase, so does response time.  
+R = (N - 1) * q
+N = number of jobs
+q = quantum length 
+
+N - 1 signifies the first process to run has a response time of 0.
