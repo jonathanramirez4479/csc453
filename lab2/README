@@ -1,0 +1,9 @@
+Names: Jonathan Ramirez and Christian Bird
+
+Answers:
+
+1. When workloads arrive with incrementally increasing burst sizes, then no job would be preempted,
+therefore scheduling jobs like the FIFO algorithm.
+
+2. If we have a quantum length greater than or equal to the jobs' burst times, then RR will have similar response times
+ to SRTN having jobs with similar burst sizes.
