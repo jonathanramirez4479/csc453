@@ -103,11 +103,11 @@ def print_job_metrics(jobs):
         return
 
     for job in jobs:
-        print(f"Job {job.job_number} -- {job.turnaround_time}" + 
-              f"  {job.wait_time}")
+        print(f"Job {job.job_number} -- Turnaround {job.turnaround_time}" + 
+              f" Wait  {job.wait_time}")
 
-    print(f"Average -- {sum(job.wait_time for job in jobs) / len(jobs)}"
-          + f"  {sum(job.turnaround_time for job in jobs) / len(jobs)}")
+    print(f"Average --  Turnaround {sum(job.turnaround_time for job in jobs) / len(jobs)}"
+          + f"  Wait {sum(job.wait_time for job in jobs) / len(jobs)}")
 
 
 def simulate_round_robin(jobs, quantum):
