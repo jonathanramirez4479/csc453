@@ -1,0 +1,20 @@
+
+€
+java:S1105"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿJ$ce1682b8-7dbb-4949-90d5-b28604237ad6
+€
+java:S1105
+"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿJ$4344154f-e4b3-469f-9b85-55335d46520f
+€
+java:S1105"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿJ$487e7508-26c5-4302-abf9-ed3bf2c58931
+³
+java:S1120	"wMake this line start after 4 spaces instead of 0 in order to indent the code consistently. (Indentation level is at 4.)(½»¹åJ$15347550-218b-4d98-9cbc-fb90b6da5c1f
+•
+java:S1104"TMake validBit a static final constant or non-public and provide accessors if needed.(Ç…ÃªÿÿÿÿÿJ$bda849e8-0d8d-47a6-91a3-9121240ec574
+—
+java:S1104"VMake pageNumber a static final constant or non-public and provide accessors if needed.(üª€ÌıÿÿÿÿJ$21be06f8-fa46-4411-825d-f506f1e5bb7f
+½
+java:S1186	"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(½»¹åJ$e846f321-9ade-4825-8cce-1df9ead41b02
+½
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(à¬ÁúJ$db1d6471-5dcc-4b6d-926e-71aa10fd4c3f
+m
+java:S1068",Remove this unused "pageSize" private field.(‚ÉìüÿÿÿÿJ$e00e18ae-f783-467c-98f6-d85831b00747

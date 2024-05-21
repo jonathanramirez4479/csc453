@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+
 public class MemSim {
 
     private HashMap<Integer, TLB_Process> TLB = new HashMap<>();
