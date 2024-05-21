@@ -9,9 +9,12 @@ public void setPage(int pageNumber)
 {
 
 }
-public void getPage()
+public void getPage(int pageNumber)
 {
-
+    // perform lookup in pageTable
+}
+public void loadPage(){
+    // load from backing store
 }
 
 }
