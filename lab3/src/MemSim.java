@@ -1,14 +1,15 @@
 package src;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
 public class MemSim {
 
-    private HashMap<Integer, TLB_Process> TLB = new HashMap<>();
-    private HashMap<Integer, PageTable> pageTable = new HashMap<>();
+    private List<TLB_Process> TLB = new ArrayList<TLB_Process>();
+    private List<PageTable> pageTable = new ArrayList<PageTable>();
     
     private byte frameSize = (byte) 256;
     
