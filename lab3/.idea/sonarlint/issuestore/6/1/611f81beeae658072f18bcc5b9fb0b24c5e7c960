@@ -1,0 +1,19 @@
+
+Z
+java:S1105"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ
+Z
+java:S1105	"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ
+Z
+java:S1105"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ
+
+java:S1120"wMake this line start after 4 spaces instead of 0 in order to indent the code consistently. (Indentation level is at 4.)(½»¹å
+o
+java:S1104"TMake validBit a static final constant or non-public and provide accessors if needed.(Ç…Ãªÿÿÿÿÿ
+q
+java:S1104"VMake pageNumber a static final constant or non-public and provide accessors if needed.(üª€Ìıÿÿÿÿ
+—
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(½»¹å
+—
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(à¬Áú
+G
+java:S1068",Remove this unused "pageSize" private field.(‚Éìüÿÿÿÿ
