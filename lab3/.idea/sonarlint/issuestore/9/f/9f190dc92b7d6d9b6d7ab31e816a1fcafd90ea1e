@@ -1,6 +1,0 @@
-
-	java:S116"WRename this field "TLB_MAX_SIZE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÈÑ¤üÿÿÿÿ8¹ôŠú1J$bb9ef1aa-6a4d-4956-b453-8cc8a1e743dc
-i
-java:S1170"!Make this final field static too.(ÈÑ¤üÿÿÿÿ8‘¹ôŠú1J$af52c9f1-b7c5-45d4-a471-101af94b6fbd
-x
-java:S1068"0Remove this unused "TLB_MAX_SIZE" private field.(ÈÑ¤üÿÿÿÿ8¢¹ôŠú1J$f9a22940-a029-492b-917f-dc65132bf06b
