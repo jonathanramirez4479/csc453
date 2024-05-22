@@ -1,0 +1,10 @@
+
+	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(ò¸ÑĞùÿÿÿÿJ$769be79c-f3a2-4fa6-874b-2ef0db81eaeb
+–	java:S116"VRename this field "page_number" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Á©›ıÿÿÿÿJ$32aa35db-d07b-40a9-8d46-0c03617c2e2c
+—	java:S116"WRename this field "frame_number" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(²Ç–‹ûÿÿÿÿJ$f83a41ab-2f47-468b-bc58-e173d66114ae
+p
+java:S1068"/Remove this unused "page_number" private field.(Á©›ıÿÿÿÿJ$c002a98d-fdb5-479f-aca3-5fb5cbd71b05
+q
+java:S1068"0Remove this unused "frame_number" private field.(²Ç–‹ûÿÿÿÿJ$37146c26-4546-4b34-b756-4b75b40847ff
+g
+java:S1068",Remove this unused "position" private field.(•È?J$2979a62c-ba2a-46ad-88eb-64747875ab67
