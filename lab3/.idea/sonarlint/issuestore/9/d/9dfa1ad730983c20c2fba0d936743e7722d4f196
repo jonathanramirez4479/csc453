@@ -1,18 +1,18 @@
 
-o	java:S116"NRename this field "TLB" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ö†¡Êøÿÿÿÿ8÷ øù1
-_
-java:S1854'"=Remove this useless assignment to local variable "algorithm".(¤Œóùûÿÿÿÿ8Ÿ÷ øù1
-\
-java:S1854&":Remove this useless assignment to local variable "frames".(ËÊÿÄûÿÿÿÿ8¯÷ øù1
-M
-java:S1481&"+Remove this unused "frames" local variable.(ËÊÿÄûÿÿÿÿ8¿÷ øù1
-P
-java:S1481'".Remove this unused "algorithm" local variable.(¤Œóùûÿÿÿÿ8¿÷ øù1
-I
-java:S1068"'Remove this unused "TLB" private field.(Ö†¡Êøÿÿÿÿ8Ë÷ øù1
-J
-java:S1068"-Remove this unused "pageTable" private field.(Åò²¤8Ë÷ øù1
-J
-java:S1068"-Remove this unused "frameSize" private field.(æ‚‰Û8Ë÷ øù1
-Q
-java:S1068"/Remove this unused "physicalMem" private field.(Ê§†èıÿÿÿÿ8Ë÷ øù1
+™
+java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8¶©¥‘ú1J$b09acfb3-7844-43a7-9d82-0bb2e0def742
+
+java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8º©¥‘ú1J$a0158d0c-b467-4d5d-a5c4-853822964259
+~
+java:S1854,"<Remove this useless assignment to local variable "filePath".(ªİ(8Ã©¥‘ú1J$f04c3ebf-b034-4b05-ac01-8d2c347aa440
+o
+java:S1481,"-Remove this unused "filePath" local variable.(ªİ(8Î©¥‘ú1J$152c4958-86d7-4cef-9f7f-f0dfe6bdac3c
+~	java:S125/"<This block of commented-out lines of code should be removed.(š¢öƒ8Ğ©¥‘ú1J$22f67305-18c8-4dfc-aab3-65f78a79890d
+p
+java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8î©¥‘ú1J$129f24f9-e607-4a0e-963f-bff2d86f3310
+x
+java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8ı©¥‘ú1J$9603d0b6-744c-4e41-acf5-134d630858b2
+r
+java:S1068"*Remove this unused "memory" private field.(ùÎˆÄşÿÿÿÿ8ş©¥‘ú1J$374a7f8a-90c2-40fe-9f97-4781df7b1367
+v
+java:S1144F".Remove this unused private "printData" method.(·Éıÿÿÿÿ8€ª¥‘ú1J$6356394b-99f1-4caf-95eb-faad25b0ee1f

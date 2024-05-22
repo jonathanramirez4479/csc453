@@ -1,4 +1,18 @@
 
-•	java:S116"NRename this field "TLB" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ö†¡Êøÿÿÿÿ8ö½™çù1J$3c05e453-1b9b-4070-ad75-377bd9a5757c
+™
+java:S1128	"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8Äòú1J$98684e65-5ae3-43d4-a995-203bb684bb1d
+~
+java:S1854)"<Remove this useless assignment to local variable "filePath".(ªİ(8ÿú1J$a7a66149-fdaf-473c-9e28-f99162d1c91a
+…
+java:S1854%"=Remove this useless assignment to local variable "framesArr".(Í‘¤Æÿÿÿÿÿ8Äòú1J$757d4575-e029-4e37-b3a7-8cc541f21aff
+v
+java:S1481%".Remove this unused "framesArr" local variable.(Í‘¤Æÿÿÿÿÿ8’Äòú1J$54e69d43-f78b-49a8-b786-b95a4471f98d
 o
-java:S1068"'Remove this unused "TLB" private field.(Ö†¡Êøÿÿÿÿ8’¾™çù1J$afafd2de-4296-4e11-a803-396ed846f937
+java:S1481)"-Remove this unused "filePath" local variable.(ªİ(8©ÿú1J$6efeee84-667e-4daa-af35-6ff557d22f52
+~	java:S125,"<This block of commented-out lines of code should be removed.(š¢öƒ8«ÿú1J$8bd7d002-282a-4da3-8a75-4c5aed95fda8
+p
+java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8±Äòú1J$f7a67b87-6478-41b3-8fb2-593edc950754
+x
+java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8±Äòú1J$9245b51a-f0d3-48f2-b30f-c5523bae2059
+v
+java:S1144>".Remove this unused private "printData" method.(·Éıÿÿÿÿ8Äÿú1J$c5700e80-99b7-4c88-9cd3-f07244727190

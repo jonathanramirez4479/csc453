@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
+import java.lang.Math;
 
 /**
  * This class represents a virtual memory simulator that contains a
@@ -18,14 +18,12 @@ import java.util.Scanner;
 public class MemSim {
 
     private static final int BLOCK_SIZE = 256;
+    private static final int TLB_LENGTH = 16;
+    private static final int PAGE_TABLE_LENGTH = (int) Math.pow(2, 8);
+    private static final int PAGE_SIZE = 256;
 
-    private HashMap<Integer, TLB_Process> TLB = new HashMap<>();
-    private HashMap<Integer, PageTable> pageTable = new HashMap<>();
-
-    
-    private byte frameSize = (byte) 256;
-    
-    private byte physicalMem = (byte) 256;
+    private static TLB tlb = new TLB();
+    private static PhysicalMemory memory;
 
     /**
      * Driver function for virtual memory simulator
@@ -35,19 +33,32 @@ public class MemSim {
     public static void main(String[] args) throws IOException {
         // mod to get offset
         // divide to get page number
-        int frames = 256;
-        String algorithm = "FIFO";
+        int numOfFrames = 10;
 
+        memory = new PhysicalMemory(numOfFrames); // init memory structure with number of frames passed in
 
-
+        // read byte address accesses and store them in a list
         File file = new File(args[0]);
         ArrayList<Integer> addresses =  readAddresses(file);
+
         String filePath = "./src/BACKING_STORE.bin";
 
         for(int address : addresses) {
-            printData(address, filePath);
+//            printData(address, filePath);
+            Integer pageNumber = address / PAGE_SIZE;
+            Page page = new Page(pageNumber, null, null);
+
+            page.setTlbAccessed(1);
+            tlb.updateAllAccesses(page);
+
+            if (!tlb.containsPageNumber(pageNumber)) {
+                tlb.addPageToTLB(page);
+            }
         }
+
+        tlb.printTLB();
     }
+
 
     /**
      * Prints the data in the frame of the physical memory, formatted per the
@@ -56,7 +67,7 @@ public class MemSim {
      * @param address The byte address to reference
      * @param filePath The string path of the backing store (always "./src/BACKING_STORE.bin")
      */
-    private static void printData(int address, String filePath) {
+    private void printData(int address, String filePath) {
 
         byte valueAtAddress = 0;
         byte[] frameData = new byte[BLOCK_SIZE];
@@ -64,7 +75,6 @@ public class MemSim {
             raf.seek(address);
             valueAtAddress = raf.readByte();
 
-            System.out.println("value at byte address: " + address + " = " + valueAtAddress);
 
             int frameStartPos = (address / BLOCK_SIZE) * BLOCK_SIZE;
 
@@ -80,6 +90,7 @@ public class MemSim {
             String hexString = String.format("%02X", b);
             System.out.print(hexString);
         }
+        System.out.println();
 
     }
     

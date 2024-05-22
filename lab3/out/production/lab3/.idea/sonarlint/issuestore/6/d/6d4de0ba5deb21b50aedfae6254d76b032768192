@@ -1,10 +1,9 @@
 
-”	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(ò¸ÑĞùÿÿÿÿ8ÆĞ“çù1J$24283e95-0986-40d4-9163-287ff9128837
-	java:S116"VRename this field "page_number" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Á©›ıÿÿÿÿ8©Îçù1J$64264214-02c9-494d-a361-b992cbf6c316
-	java:S116"WRename this field "frame_number" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(²Ç–‹ûÿÿÿÿ8¶×çù1J$c8562ea9-4519-460b-8d29-6e95922c776e
-w
-java:S1068"/Remove this unused "page_number" private field.(Á©›ıÿÿÿÿ8¾Îçù1J$ae1cde0a-8f64-4681-a0cb-fbd62dca8f4e
-x
-java:S1068"0Remove this unused "frame_number" private field.(²Ç–‹ûÿÿÿÿ8É×çù1J$463e6f5a-16a0-453d-9c91-70991a72dc9d
-n
-java:S1068",Remove this unused "position" private field.(•È?8Ê×çù1J$d5e5330b-4a9c-4014-a019-62062f4fcb16
+¿
+java:S1120"wMake this line start after 8 spaces instead of 7 in order to indent the code consistently. (Indentation level is at 4.)(˜ñØÌÿÿÿÿÿ8šé¾ú1J$bc5daf2f-8c56-4d90-b512-18b2f57c1fcc
+Á
+java:S1120"yMake this line start after 12 spaces instead of 11 in order to indent the code consistently. (Indentation level is at 4.)(‰åÂ±ûÿÿÿÿ8›é¾ú1J$e38ecee3-28ab-4591-b3ba-dcf98b7c973b
+n	java:S116"RRename this field "TlbList" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‚àØ8ñÜƒú1
+	java:S116"WRename this field "TLB_MAX_SIZE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÈÑ¤üÿÿÿÿ8¥é¾ú1J$3cb9c930-da23-4acc-a2a0-fb2d3c7308d2
+i
+java:S1170"!Make this final field static too.(ÈÑ¤üÿÿÿÿ8§é¾ú1J$713cfe14-664f-4545-8dfd-d146cb27dd30
