@@ -1,4 +1,18 @@
 
-•	java:S116"NRename this field "TLB" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ö†¡Êøÿÿÿÿ8ö½™çù1J$d935788c-131a-4146-990c-693c6c483582
-o
-java:S1068"'Remove this unused "TLB" private field.(Ö†¡Êøÿÿÿÿ8’¾™çù1J$cb337374-d467-47a6-8527-e278ee28bf69
+o	java:S116"NRename this field "TLB" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ö†¡Êøÿÿÿÿ8÷ øù1
+_
+java:S1854'"=Remove this useless assignment to local variable "algorithm".(¤Œóùûÿÿÿÿ8Ÿ÷ øù1
+\
+java:S1854&":Remove this useless assignment to local variable "frames".(ËÊÿÄûÿÿÿÿ8¯÷ øù1
+M
+java:S1481&"+Remove this unused "frames" local variable.(ËÊÿÄûÿÿÿÿ8¿÷ øù1
+P
+java:S1481'".Remove this unused "algorithm" local variable.(¤Œóùûÿÿÿÿ8¿÷ øù1
+I
+java:S1068"'Remove this unused "TLB" private field.(Ö†¡Êøÿÿÿÿ8Ë÷ øù1
+J
+java:S1068"-Remove this unused "pageTable" private field.(Åò²¤8Ë÷ øù1
+J
+java:S1068"-Remove this unused "frameSize" private field.(æ‚‰Û8Ë÷ øù1
+Q
+java:S1068"/Remove this unused "physicalMem" private field.(Ê§†èıÿÿÿÿ8Ë÷ øù1
