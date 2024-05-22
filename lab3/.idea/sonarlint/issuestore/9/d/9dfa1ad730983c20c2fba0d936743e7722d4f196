@@ -1,18 +1,16 @@
 
+	java:S112J"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8û‘Ò”ú1J$17e1b1bd-ae70-4a78-9355-ce1fb46403ec
+	java:S112A"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ü‘Ò”ú1J$71e0f5e0-f1d1-4fba-8651-08f895c9ffaf
 ™
-java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8¶©¥‘ú1J$b09acfb3-7844-43a7-9d82-0bb2e0def742
+java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8“’Ò”ú1J$8c3bfd28-a599-454e-83c6-187f70dd37d1
 
-java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8º©¥‘ú1J$a0158d0c-b467-4d5d-a5c4-853822964259
-~
-java:S1854,"<Remove this useless assignment to local variable "filePath".(ªİ(8Ã©¥‘ú1J$f04c3ebf-b034-4b05-ac01-8d2c347aa440
-o
-java:S1481,"-Remove this unused "filePath" local variable.(ªİ(8Î©¥‘ú1J$152c4958-86d7-4cef-9f7f-f0dfe6bdac3c
-~	java:S125/"<This block of commented-out lines of code should be removed.(š¢öƒ8Ğ©¥‘ú1J$22f67305-18c8-4dfc-aab3-65f78a79890d
+java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8•’Ò”ú1J$1772dfdf-0e84-4dce-a145-1b11b99bd5b8
+~	java:S1254"<This block of commented-out lines of code should be removed.(š¢öƒ8 ’Ò”ú1J$49267e12-3812-4dba-8ef7-5d0df6671ee1
 p
-java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8î©¥‘ú1J$129f24f9-e607-4a0e-963f-bff2d86f3310
+java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8«’Ò”ú1J$364a3bc5-9d1c-4720-9a82-6eb4515de118
 x
-java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8ı©¥‘ú1J$9603d0b6-744c-4e41-acf5-134d630858b2
-r
-java:S1068"*Remove this unused "memory" private field.(ùÎˆÄşÿÿÿÿ8ş©¥‘ú1J$374a7f8a-90c2-40fe-9f97-4781df7b1367
-v
-java:S1144F".Remove this unused private "printData" method.(·Éıÿÿÿÿ8€ª¥‘ú1J$6356394b-99f1-4caf-95eb-faad25b0ee1f
+java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8«’Ò”ú1J$0dbbd458-11f9-475a-a5f9-cd7dac4f55df
+u
+java:S1068"-Remove this unused "PAGE_SIZE" private field.(à ¡ßøÿÿÿÿ8«’Ò”ú1J$359b2028-5935-4da2-8ede-30d131a4d755
+o
+java:S1068"'Remove this unused "tlb" private field.(„šÛ»ùÿÿÿÿ8«’Ò”ú1J$78d32871-9b22-4f38-a467-05efffc6a24b

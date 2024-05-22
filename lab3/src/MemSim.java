@@ -43,20 +43,36 @@ public class MemSim {
 
         String filePath = "./src/BACKING_STORE.bin";
 
+        int i = 0;
         for(int address : addresses) {
+            byte[] currentFrame = getBlockData(address, filePath);
+            memory.addFrame(currentFrame, i);
+            i++;
+
 //            printData(address, filePath);
-            Integer pageNumber = address / PAGE_SIZE;
-            Page page = new Page(pageNumber, null, null);
-
-            page.setTlbAccessed(1);
-            tlb.updateAllAccesses(page);
-
-            if (!tlb.containsPageNumber(pageNumber)) {
-                tlb.addPageToTLB(page);
-            }
+//            Integer pageNumber = address / PAGE_SIZE;
+//            Page page = new Page(pageNumber, null, null);
+//
+//            page.setTlbAccessed(1);
+//            tlb.updateAllAccesses(page);
+//
+//            if (!tlb.containsPageNumber(pageNumber)) {
+//                tlb.addPageToTLB(page);
+//            }
         }
+    }
 
-        tlb.printTLB();
+    private static byte[] getBlockData(int address, String filePath) throws RuntimeException {
+        byte[] blockData = new byte[BLOCK_SIZE];
+        try (RandomAccessFile raf = new RandomAccessFile(new File(filePath), "r")) {
+            int frameStartPos = (address / BLOCK_SIZE) * BLOCK_SIZE;
+            raf.seek(frameStartPos);
+            raf.read(blockData);
+
+            return blockData.clone();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -67,7 +83,7 @@ public class MemSim {
      * @param address The byte address to reference
      * @param filePath The string path of the backing store (always "./src/BACKING_STORE.bin")
      */
-    private void printData(int address, String filePath) {
+    public static void printData(int address, String filePath) {
 
         byte valueAtAddress = 0;
         byte[] frameData = new byte[BLOCK_SIZE];

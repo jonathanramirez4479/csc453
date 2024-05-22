@@ -1,17 +1,22 @@
 package src;
 
-import java.util.ArrayList;
 
 public class PhysicalMemory {
-    private ArrayList<Page> memory;
+    private byte[][] memory;
 
     public PhysicalMemory(int numOfFrames) {
-        this.memory = new ArrayList<>(numOfFrames);
+        this.memory = new byte[10][256];
     }
 
-    public Page getFrame(int index) {
-        return this.memory.get(index);
+    public byte[] getFrameData(int index) {
+        return this.memory[index];
     }
 
+    public void addFrame(byte[] data, int index) {
+        this.memory[index] = data;
+    }
 
+    public int getSegments() {
+        return this.memory.length;
+    }
 }
