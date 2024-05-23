@@ -9,7 +9,7 @@ import java.lang.Math;
 
 /**
  * This class represents a virtual memory simulator that contains a
- * TLB, Page Table, and Backing Store.  The simulator accepts a list of
+ * TLB, TlbEntry Table, and Backing Store.  The simulator accepts a list of
  * byte addresses and reports the value at that byte address, the frame number
  * where that address is located, and the entire frame data.  Lastly,
  * the simulator reports page fault statistics.
@@ -18,11 +18,9 @@ import java.lang.Math;
 public class MemSim {
 
     private static final int BLOCK_SIZE = 256;
-    private static final int TLB_LENGTH = 16;
-    private static final int PAGE_TABLE_LENGTH = (int) Math.pow(2, 8);
     private static final int PAGE_SIZE = 256;
 
-    private static TLB tlb = new TLB();
+    private static TLB tlb;
     private static PhysicalMemory memory;
 
     /**
@@ -35,7 +33,9 @@ public class MemSim {
         // divide to get page number
         int numOfFrames = 10;
 
-        memory = new PhysicalMemory(numOfFrames); // init memory structure with number of frames passed in
+        tlb = new TLB();
+        PageTable pageTable = new PageTable();
+        memory = new PhysicalMemory(numOfFrames);
 
         // read byte address accesses and store them in a list
         File file = new File(args[0]);
@@ -45,21 +45,32 @@ public class MemSim {
 
         int i = 0;
         for(int address : addresses) {
-            byte[] currentFrame = getBlockData(address, filePath);
-            memory.addFrame(currentFrame, i);
+            int pageNumber = address / PAGE_SIZE;
+
+            if (tlb.containsPageNumber(pageNumber)) {
+                TlbEntry tlbEntry = tlb.getTlbEntry(pageNumber);
+                if (tlbEntry != null) {
+                    tlb.updateAllAccesses(tlbEntry);
+                }
+                continue;
+            }
+
+            if (pageTable.containsPageNumber(pageNumber)) {
+                PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
+                tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
+                continue;
+            }
+
+            byte[] blockData = getBlockData(address, filePath);
+
+            int frameIndex = memory.addFrame(blockData, i);
             i++;
 
-//            printData(address, filePath);
-//            Integer pageNumber = address / PAGE_SIZE;
-//            Page page = new Page(pageNumber, null, null);
-//
-//            page.setTlbAccessed(1);
-//            tlb.updateAllAccesses(page);
-//
-//            if (!tlb.containsPageNumber(pageNumber)) {
-//                tlb.addPageToTLB(page);
-//            }
+            pageTable.populateEntry(pageNumber, new PageTableEntry(frameIndex, 1));
+            tlb.addTlbEntry(new TlbEntry(pageNumber, frameIndex));
         }
+
+        System.out.println("simulation finished");
     }
 
     private static byte[] getBlockData(int address, String filePath) throws RuntimeException {

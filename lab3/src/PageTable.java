@@ -1,21 +1,29 @@
 package src;
-public class PageTable
-{
-    // random comment
-    private byte pageSize = (byte) 256;
-    public int validBit = 0;
-    public int pageNumber;
-    
-public void setPage(int pageNumber)
-{
 
-}
-public void getPage(int pageNumber)
-{
-    // perform lookup in pageTable
-}
-public void loadPage(){
-    // load from backing store
-}
+import java.util.ArrayList;
+import java.util.HashMap;
 
+public class PageTable {
+
+    private PageTableEntry[] pageTable;
+
+    public PageTable() {
+        int pageTableSize = 256;
+        pageTable = new PageTableEntry[pageTableSize];
+    }
+
+    public boolean containsPageNumber(int pageNumberIndex) {
+        if (this.pageTable[pageNumberIndex] != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public void populateEntry(int pageNumberIndex, PageTableEntry entry) {
+        this.pageTable[pageNumberIndex] = entry;
+    }
+
+    public PageTableEntry getPageTableEntry(int pageNumberIndex) {
+        return this.pageTable[pageNumberIndex];
+    }
 }

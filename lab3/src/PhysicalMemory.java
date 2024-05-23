@@ -12,11 +12,23 @@ public class PhysicalMemory {
         return this.memory[index];
     }
 
-    public void addFrame(byte[] data, int index) {
+    public int addFrame(byte[] data, int index) {
         this.memory[index] = data;
+        return index;
     }
 
-    public int getSegments() {
-        return this.memory.length;
+    public void printFrameData(int frameIndex) {
+        System.out.println("Frame: " + frameIndex);
+        for(byte b : getFrameData(frameIndex)) {
+            String hexString = String.format("%02X", b);
+            System.out.print(hexString);
+        }
+        System.out.println();
+    }
+
+    public void printMemory() {
+        for (int i = 0; i < 10; i++) {
+            printFrameData(i);
+        }
     }
 }

@@ -1,16 +1,10 @@
 
-	java:S112J"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8û‘Ò”ú1J$17e1b1bd-ae70-4a78-9355-ce1fb46403ec
-	java:S112A"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ü‘Ò”ú1J$71e0f5e0-f1d1-4fba-8651-08f895c9ffaf
+	java:S112U"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ºœšºú1J$da296b50-bbf9-4421-9673-1ed9715fca8b
+	java:S112L"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ºœšºú1J$fec9b58b-4899-40f8-8612-2d9b4d779891
+u	java:S135/"YReduce the total number of break and continue statements in this loop to use at most one.(Ä¼ş¨8 Õúºú1
 ™
-java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8“’Ò”ú1J$8c3bfd28-a599-454e-83c6-187f70dd37d1
+java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8Ëœšºú1J$4c342dbf-f1a7-4977-9c95-349885ca87be
 
-java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8•’Ò”ú1J$1772dfdf-0e84-4dce-a145-1b11b99bd5b8
-~	java:S1254"<This block of commented-out lines of code should be removed.(š¢öƒ8 ’Ò”ú1J$49267e12-3812-4dba-8ef7-5d0df6671ee1
-p
-java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8«’Ò”ú1J$364a3bc5-9d1c-4720-9a82-6eb4515de118
-x
-java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8«’Ò”ú1J$0dbbd458-11f9-475a-a5f9-cd7dac4f55df
-u
-java:S1068"-Remove this unused "PAGE_SIZE" private field.(à ¡ßøÿÿÿÿ8«’Ò”ú1J$359b2028-5935-4da2-8ede-30d131a4d755
-o
-java:S1068"'Remove this unused "tlb" private field.(„šÛ»ùÿÿÿÿ8«’Ò”ú1J$78d32871-9b22-4f38-a467-05efffc6a24b
+java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8¹’áºú1J$883b0887-f820-4432-95e2-36c7a77b463e
+•
+java:S1450"RRemove the "tlb" field and declare it as a local variable in the relevant methods.(ÈŒíƒ8„Óàºú1J$6de50861-376b-41b9-af75-ee248d36609c

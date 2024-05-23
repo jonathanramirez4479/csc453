@@ -1,16 +1,23 @@
 
-	java:S112N"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ÏØ´”ú1J$707e9083-b895-463e-9de2-3e2dfa71d402
-	java:S112F"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ĞØ´”ú1J$14a41bac-0d64-418a-860b-8fa95224c098
-™
-java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8âØ´”ú1J$72b4a146-ef64-494b-8a8e-fc4914ded8f4
-
-java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8äØ´”ú1J$788f6630-2acf-4774-9764-2841fe28f6b6
-~	java:S1251"<This block of commented-out lines of code should be removed.(š¢öƒ8îØ´”ú1J$5bed2fdf-d88e-41b4-89d0-2d68b22943c6
-p
-java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8÷Ø´”ú1J$141b02ea-9524-455b-b315-32426c7449ac
-x
-java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8øØ´”ú1J$4275d89c-41f7-4b1c-8a9b-44e395be6a7f
-u
-java:S1068"-Remove this unused "PAGE_SIZE" private field.(à ¡ßøÿÿÿÿ8øØ´”ú1J$5f3a4eb5-ddd0-475b-9942-50256f1cfa65
-o
-java:S1068"'Remove this unused "tlb" private field.(„šÛ»ùÿÿÿÿ8øØ´”ú1J$498453b7-37c1-4627-b79f-725e9dd66203
+g	java:S112`"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ÙèŒ¹ú1
+g	java:S112W"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ÙèŒ¹ú1
+s
+java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8ğèŒ¹ú1
+Z
+java:S1854'"=Remove this useless assignment to local variable "pageTable".(à®°õ8øèŒ¹ú1
+]
+java:S18542"@Remove this useless assignment to local variable "currentFrame".(¿øáË8øèŒ¹ú1
+K
+java:S1481'".Remove this unused "pageTable" local variable.(à®°õ8úèŒ¹ú1
+N
+java:S14812"1Remove this unused "currentFrame" local variable.(¿øáË8şèŒ¹ú1
+]	java:S125<"<This block of commented-out lines of code should be removed.(êûÑúÿÿÿÿ8€éŒ¹ú1
+X	java:S125J"<This block of commented-out lines of code should be removed.(š¢öƒ8éŒ¹ú1
+J
+java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8éŒ¹ú1
+R
+java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8éŒ¹ú1
+I
+java:S1068"'Remove this unused "tlb" private field.(„šÛ»ùÿÿÿÿ8éŒ¹ú1
+L
+java:S1068"*Remove this unused "memory" private field.(ùÎˆÄşÿÿÿÿ8éŒ¹ú1

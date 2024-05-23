@@ -1,11 +1,4 @@
 
-¿
-java:S1120"wMake this line start after 8 spaces instead of 7 in order to indent the code consistently. (Indentation level is at 4.)(ğöû©üÿÿÿÿ8´ı„‘ú1J$87264ffc-887a-4c50-b9e2-9708ea7b692b
-Á
-java:S1120"yMake this line start after 12 spaces instead of 11 in order to indent the code consistently. (Indentation level is at 4.)(øÒ»ğşÿÿÿÿ8µı„‘ú1J$88cad92b-60c1-41b3-9b6e-ba359e437243
-„
-java:S4973"<Strings and Boxed types should be compared using "equals()".(øÒ»ğşÿÿÿÿ8Á®‘ú1J$89cd1f16-8a6d-4e74-9c0f-5d10126c2d70
-™	java:S116"RRename this field "TlbList" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(»‘™ßûÿÿÿÿ8Åı„‘ú1J$d9c2f850-1228-4226-b7a3-5617967ae52e
-	java:S116"WRename this field "TLB_MAX_SIZE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÈÑ¤üÿÿÿÿ8Åı„‘ú1J$62385722-11e2-490f-8e9b-26f87e5c0798
-i
-java:S1170"!Make this final field static too.(ÈÑ¤üÿÿÿÿ8Æı„‘ú1J$2c7523b9-7282-4c73-ab83-775d69994839
+™	java:S116"RRename this field "TlbList" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(æõ…¢ùÿÿÿÿ8‹ğÚºú1J$3e06afbc-1828-49a7-a352-89b9083a4042
+‹
+java:S1107-"HMove this "else" on the same line that the previous closing curly brace.(á¢–¬8’ğÚºú1J$8566b0ab-7332-4548-ad12-8eda935d2685
