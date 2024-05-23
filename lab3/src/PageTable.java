@@ -1,27 +1,29 @@
 package src;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class PageTable {
 
-    private static final int PAGE_TABLE_LENGTH = (int) Math.pow(2, 8);
-    public Page[] table;
+    private PageTableEntry[] pageTable;
 
     public PageTable() {
-        this.table = new Page[PAGE_TABLE_LENGTH];
+        int pageTableSize = 256;
+        pageTable = new PageTableEntry[pageTableSize];
     }
 
-    public void setPage(Page _page, int pageOffset) {
-        table[pageOffset] = _page;
-    }
-
-    public void createNewPage(Integer pageOffset, Integer pageNumber, Integer frameNumber, Integer tlbAccessed) {
-        table[pageOffset] = new Page(pageNumber, frameNumber, tlbAccessed);
-    }
-
-    public Page getPage(int pageNumber) {
-        if (pageNumber >= 0 && pageNumber < PAGE_TABLE_LENGTH) {
-            return table[pageNumber];
-        } else {
-            return null;
+    public boolean containsPageNumber(int pageNumberIndex) {
+        if (this.pageTable[pageNumberIndex] != null) {
+            return true;
         }
+        return false;
+    }
+
+    public void populateEntry(int pageNumberIndex, PageTableEntry entry) {
+        this.pageTable[pageNumberIndex] = entry;
+    }
+
+    public PageTableEntry getPageTableEntry(int pageNumberIndex) {
+        return this.pageTable[pageNumberIndex];
     }
 }

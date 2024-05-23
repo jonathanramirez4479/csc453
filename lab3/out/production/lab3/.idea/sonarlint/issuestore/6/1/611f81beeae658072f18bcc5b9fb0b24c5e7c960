@@ -1,18 +1,5 @@
 
-€
-java:S1105"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿJ$2f151758-31f8-44a7-9313-830a84b64340
-€
-java:S1105
-"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿJ$242febe9-48ba-4303-a722-b6fc49151163
-‡
-java:S1105"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8Ö™úèù1J$8379c04d-d6eb-4403-820c-adea17b0b582
-³
-java:S1120	"wMake this line start after 4 spaces instead of 0 in order to indent the code consistently. (Indentation level is at 4.)(½»¹åJ$9e3d05ef-aec9-4b3b-b7cf-f39f2a11f618
-•
-java:S1104"TMake validBit a static final constant or non-public and provide accessors if needed.(Ç…ÃªÿÿÿÿÿJ$1e13c20b-b594-491d-afaf-3837847a0279
-—
-java:S1104"VMake pageNumber a static final constant or non-public and provide accessors if needed.(üª€ÌıÿÿÿÿJ$a83acde9-676b-44fe-be10-318f475784fa
-½
-java:S1186	"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(½»¹åJ$eb08e274-46c4-4fca-b305-e7ab188aa21e
-m
-java:S1068",Remove this unused "pageSize" private field.(‚ÉìüÿÿÿÿJ$384062b3-ce52-4d3f-97cc-0ba290441244
+:
+java:S1700"Rename field "pageTable"(ğ´äşÿÿÿÿ8¦î‹¹ú1
+O
+java:S1068"-Remove this unused "pageTable" private field.(ğ´äşÿÿÿÿ8«î‹¹ú1

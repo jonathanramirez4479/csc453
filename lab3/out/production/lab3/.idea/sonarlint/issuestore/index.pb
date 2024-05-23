@@ -17,3 +17,7 @@ G
 src/PhysicalMemory.java,6\1\61977e3c84d0ddf9d2929697a374fa90afbce6b8
 =
 src/Page.java,0\6\06d7c78d6b42a52f0fb863ba227311b473add549
+A
+src/TlbEntry.java,b\4\b4b404b435057281b3c79fed6fa11362ff9d1907
+G
+src/PageTableEntry.java,3\d\3db4f3001dcf06c9053918393809eec03887f3be
