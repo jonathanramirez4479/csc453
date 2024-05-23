@@ -1,10 +1,8 @@
 
-g	java:S112U"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ş¬»ú1
-g	java:S112L"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ş¬»ú1
-u	java:S135/"YReduce the total number of break and continue statements in this loop to use at most one.(Ä¼ş¨8’ş¬»ú1
-s
-java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8Éş¬»ú1
-w
-java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8Ëş¬»ú1
-o
-java:S1450"RRemove the "tlb" field and declare it as a local variable in the relevant methods.(ÈŒíƒ8Ëş¬»ú1
+	java:S112T"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ş¬»ú1J$bcb29980-3583-4cd8-81df-98293406473a
+	java:S112K"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ş¬»ú1J$947eb8ed-7903-4a68-864a-5b3e81101cd7
+›	java:S135."YReduce the total number of break and continue statements in this loop to use at most one.(Ä¼ş¨8’ş¬»ú1J$a2673724-f14f-4c9c-8226-b445a8d0a433
+
+java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8Ëş¬»ú1J$a4fef3f5-cbbc-4622-9490-5ec551e36809
+•
+java:S1450"RRemove the "tlb" field and declare it as a local variable in the relevant methods.(ÈŒíƒ8Ëş¬»ú1J$60586fed-1a40-449b-9786-65488795b832
