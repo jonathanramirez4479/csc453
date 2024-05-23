@@ -1,9 +1,11 @@
 package src;
 
 public class Page {
+
+    private final int PAGE_SIZE = 256;
     private Integer pageNumber;
     private Integer frameNumber;
-    private Integer tlbAccessed;
+    private Integer tlbAccessed; //FIFO FOR TLB
 
     public Page(Integer pageNumber, Integer frameNumber, Integer tlbAccessed) {
         this.pageNumber = pageNumber;

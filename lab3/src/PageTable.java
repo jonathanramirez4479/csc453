@@ -1,21 +1,27 @@
 package src;
-public class PageTable
-{
-    // random comment
-    private byte pageSize = (byte) 256;
-    public int validBit = 0;
-    public int pageNumber;
-    
-public void setPage(int pageNumber)
-{
 
-}
-public void getPage(int pageNumber)
-{
-    // perform lookup in pageTable
-}
-public void loadPage(){
-    // load from backing store
-}
+public class PageTable {
 
+    private static final int PAGE_TABLE_LENGTH = (int) Math.pow(2, 8);
+    public Page[] table;
+
+    public PageTable() {
+        this.table = new Page[PAGE_TABLE_LENGTH];
+    }
+
+    public void setPage(Page _page, int pageOffset) {
+        table[pageOffset] = _page;
+    }
+
+    public void createNewPage(Integer pageOffset, Integer pageNumber, Integer frameNumber, Integer tlbAccessed) {
+        table[pageOffset] = new Page(pageNumber, frameNumber, tlbAccessed);
+    }
+
+    public Page getPage(int pageNumber) {
+        if (pageNumber >= 0 && pageNumber < PAGE_TABLE_LENGTH) {
+            return table[pageNumber];
+        } else {
+            return null;
+        }
+    }
 }

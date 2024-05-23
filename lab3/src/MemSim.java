@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.lang.Math;
 
@@ -18,19 +19,21 @@ import java.lang.Math;
 public class MemSim {
 
     private static final int BLOCK_SIZE = 256;
-    private static final int TLB_LENGTH = 16;
-    private static final int PAGE_TABLE_LENGTH = (int) Math.pow(2, 8);
-    private static final int PAGE_SIZE = 256;
+    private static final int FRAME_SIZE = 256;
+   // private static PageTable pageTable = new PageTable();
 
+    // page table hashmap with key value <Page # and valid bit>
     private static TLB tlb = new TLB();
     private static PhysicalMemory memory;
-
     /**
      * Driver function for virtual memory simulator
      *
      * @param args <reference-sequence-file.txt> <FRAMES> <PRA>
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException
+    {
+
+        HashMap<Integer, Integer> pageTable = new HashMap();
         // mod to get offset
         // divide to get page number
         int numOfFrames = 10;
@@ -38,16 +41,41 @@ public class MemSim {
         memory = new PhysicalMemory(numOfFrames); // init memory structure with number of frames passed in
 
         // read byte address accesses and store them in a list
-        File file = new File(args[0]);
-        ArrayList<Integer> addresses =  readAddresses(file);
+        try
+        {
+            File file = new File(args[0]);
+            ArrayList<Integer> addresses =  readAddresses(file);
+            // check TLB
 
-        String filePath = "./src/BACKING_STORE.bin";
+            for (int address : addresses) {
+                int pageNum = address / BLOCK_SIZE;
+                int page_offset = address % BLOCK_SIZE;
+                pageTable.put(pageNum, 0);
+                if (!tlb.containsPageNumber(pageNum))
+                {
+                    if (pageTable.containsKey(pageNum))
+                    {
 
-        int i = 0;
-        for(int address : addresses) {
-            byte[] currentFrame = getBlockData(address, filePath);
-            memory.addFrame(currentFrame, i);
-            i++;
+                    }
+                }
+            }
+            // go to page table (on miss)
+            // go to disk (backing store on miss)
+
+            String filePath = "./src/BACKING_STORE.bin";
+
+            int i = 0;
+            for(int address : addresses)
+            {
+                byte[] currentFrame = getBlockData(address, filePath);
+                memory.addFrame(currentFrame, i);
+                i++;
+            }
+        }
+        catch(Exception e)
+        {
+
+        }
 
 //            printData(address, filePath);
 //            Integer pageNumber = address / PAGE_SIZE;
@@ -60,7 +88,6 @@ public class MemSim {
 //                tlb.addPageToTLB(page);
 //            }
         }
-    }
 
     private static byte[] getBlockData(int address, String filePath) throws RuntimeException {
         byte[] blockData = new byte[BLOCK_SIZE];
@@ -107,7 +134,6 @@ public class MemSim {
             System.out.print(hexString);
         }
         System.out.println();
-
     }
     
     private static ArrayList<Integer> readAddresses(File file) throws FileNotFoundException {
