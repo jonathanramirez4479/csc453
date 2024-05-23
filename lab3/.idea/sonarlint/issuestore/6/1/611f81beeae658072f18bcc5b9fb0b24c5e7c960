@@ -1,9 +1,9 @@
 
-`
-java:S1700"Rename field "pageTable"(çŸ¥¡ûÿÿÿÿ8‚­Œºú1J$8fe4202b-2546-4299-b60e-ec24ae3c2481
-‰
-java:S1126"AReplace this if-then-else statement by a single return statement.(Èšíìıÿÿÿÿ8‹­Œºú1J$f4684ee0-bdff-451d-9443-fe184acf6a5c
-s
-java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8­Œºú1J$38f28101-902f-4871-a46f-0406279b1624
-v
-java:S1128".Remove this unused import 'java.util.HashMap'.(™˜”€ùÿÿÿÿ8­Œºú1J$f90e9620-1e65-42d0-98bb-fdd94c6cced9
+:
+java:S1700"Rename field "pageTable"(çŸ¥¡ûÿÿÿÿ8¹º»ú1
+c
+java:S1126"AReplace this if-then-else statement by a single return statement.(Èšíìıÿÿÿÿ8¿º»ú1
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8Àº»ú1
+P
+java:S1128".Remove this unused import 'java.util.HashMap'.(™˜”€ùÿÿÿÿ8Àº»ú1
