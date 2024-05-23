@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.lang.Math;
 
 /**
  * This class represents a virtual memory simulator that contains a
