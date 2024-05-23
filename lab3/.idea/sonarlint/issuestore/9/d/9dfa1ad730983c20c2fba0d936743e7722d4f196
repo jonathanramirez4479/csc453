@@ -1,16 +1,37 @@
 
-	java:S112J"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8û‘Ò”ú1J$17e1b1bd-ae70-4a78-9355-ce1fb46403ec
-	java:S112A"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ü‘Ò”ú1J$71e0f5e0-f1d1-4fba-8651-08f895c9ffaf
-™
-java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8“’Ò”ú1J$8c3bfd28-a599-454e-83c6-187f70dd37d1
-
-java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8•’Ò”ú1J$1772dfdf-0e84-4dce-a145-1b11b99bd5b8
-~	java:S1254"<This block of commented-out lines of code should be removed.(š¢öƒ8 ’Ò”ú1J$49267e12-3812-4dba-8ef7-5d0df6671ee1
-p
-java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8«’Ò”ú1J$364a3bc5-9d1c-4720-9a82-6eb4515de118
-x
-java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8«’Ò”ú1J$0dbbd458-11f9-475a-a5f9-cd7dac4f55df
-u
-java:S1068"-Remove this unused "PAGE_SIZE" private field.(à ¡ßøÿÿÿÿ8«’Ò”ú1J$359b2028-5935-4da2-8ede-30d131a4d755
-o
-java:S1068"'Remove this unused "tlb" private field.(„šÛ»ùÿÿÿÿ8«’Ò”ú1J$78d32871-9b22-4f38-a467-05efffc6a24b
+a
+java:S1105""?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8èÆ‡»ú1
+a
+java:S1105-"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8éÆ‡»ú1
+a
+java:S11057"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8éÆ‡»ú1
+a
+java:S11059"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8éÆ‡»ú1
+a
+java:S1105E"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8éÆ‡»ú1
+a
+java:S1105L"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8éÆ‡»ú1
+g	java:S112e"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8êÆ‡»ú1
+g	java:S112\"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8êÆ‡»ú1
+Q
+java:S3740$"/Provide the parametrized type for this generic.(å¤ƒ ûÿÿÿÿ8ìÆ‡»ú1
+L
+java:S10668"/Merge this if statement with the enclosing one.(ğÃ¹¹8ğÆ‡»ú1
+r	java:S1174"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”‚êıüÿÿÿÿ8ñÆ‡»ú1
+s
+java:S1128	"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8–Ç‡»ú1
+w
+java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8˜Ç‡»ú1
+W	java:S125"<This block of commented-out lines of code should be removed.(Ê¬”
+8ŸÇ‡»ú1
+a
+java:S18544"?Remove this useless assignment to local variable "page_offset".(”‚êıüÿÿÿÿ8¤Ç‡»ú1
+k
+java:S1107K"IMove this "catch" on the same line that the previous closing curly brace.(¼Ôîàùÿÿÿÿ8ºÇ‡»ú1
+R
+java:S14814"0Remove this unused "page_offset" local variable.(”‚êıüÿÿÿÿ8ÃÇ‡»ú1
+J	java:S1089")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ8ÅÇ‡»ú1
+J	java:S108L")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ8ÆÇ‡»ú1
+X	java:S125P"<This block of commented-out lines of code should be removed.(š¢öƒ8ÆÇ‡»ú1
+K
+java:S1068".Remove this unused "FRAME_SIZE" private field.(Î‹Î8ØÇ‡»ú1
