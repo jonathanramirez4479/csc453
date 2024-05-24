@@ -65,8 +65,9 @@ public class MemSim {
                     if (tlbEntry != null) {
                         tlb.updateAllAccesses(tlbEntry);
                     }
-                    byte valueAtAddress = memory.getFrameData(tlbEntry.getFrameNumber())[address % PAGE_SIZE];
-                    System.out.printf("%d, %b, %d,\n", address, valueAtAddress, tlbEntry.getFrameNumber());
+                    byte[] blockData = memory.getFrameData(tlbEntry.getFrameNumber());
+                    byte valueAtAddress = blockData[tlbEntry.getFrameNumber()];
+                    System.out.printf("%d, %d, %d,\n", address,valueAtAddress, tlbEntry.getFrameNumber());
                     memory.printFrameData(tlbEntry.getFrameNumber());
                     continue;
                 }
@@ -74,8 +75,9 @@ public class MemSim {
                 if (pageTable.containsPageNumber(pageNumber)) {
                     PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
                     tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
-                    byte valueAtAddress = memory.getFrameData(pageTableEntry.getFrameNumber())[address % PAGE_SIZE];
-                    System.out.printf("%d, %d, %d,\n", address, valueAtAddress, pageTableEntry.getFrameNumber());
+                    byte[] blockData = memory.getFrameData(pageTableEntry.getFrameNumber());
+                    byte valueAtAddress = blockData[pageTableEntry.getFrameNumber()];
+                    System.out.printf("%d, %d, %d,\n", address,valueAtAddress, pageTableEntry.getFrameNumber());
                     memory.printFrameData(pageTableEntry.getFrameNumber());
                     continue;
                 }
