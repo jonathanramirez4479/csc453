@@ -35,10 +35,19 @@ public class MemSim {
         // mod to get offset
         // divide to get page number
         int numOfFrames = 256;
+        String PRA = "FIFO";
+        if (args.length > 1)
+        {
+            numOfFrames = Integer.parseInt(args[1]);
+            if (args.length > 2)
+            {
+                PRA = args[2];
+            }
+        }
 
         tlb = new TLB();
         PageTable pageTable = new PageTable();
-        memory = new PhysicalMemory(numOfFrames);
+        memory = new PhysicalMemory(numOfFrames, PRA);
 
         // read byte address accesses and store them in a list
         File file = new File(args[0]);
@@ -56,8 +65,8 @@ public class MemSim {
                     if (tlbEntry != null) {
                         tlb.updateAllAccesses(tlbEntry);
                     }
-
-                    System.out.printf("%d, %b, %d,\n", address, Arrays.toString(memory.getFrameData(tlbEntry.getFrameNumber())), tlbEntry.getFrameNumber());
+                    byte valueAtAddress = memory.getFrameData(tlbEntry.getFrameNumber())[address % PAGE_SIZE];
+                    System.out.printf("%d, %b, %d,\n", address, valueAtAddress, tlbEntry.getFrameNumber());
                     memory.printFrameData(tlbEntry.getFrameNumber());
                     continue;
                 }
@@ -65,7 +74,8 @@ public class MemSim {
                 if (pageTable.containsPageNumber(pageNumber)) {
                     PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
                     tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
-                    System.out.printf("%d, %b, %d,\n", address, Arrays.toString(memory.getFrameData(pageTableEntry.getFrameNumber())), pageTableEntry.getFrameNumber());
+                    byte valueAtAddress = memory.getFrameData(pageTableEntry.getFrameNumber())[address % PAGE_SIZE];
+                    System.out.printf("%d, %d, %d,\n", address, valueAtAddress, pageTableEntry.getFrameNumber());
                     memory.printFrameData(pageTableEntry.getFrameNumber());
                     continue;
                 }

@@ -1,11 +1,21 @@
 package src;
 
 
+import java.util.ArrayDeque;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 public class PhysicalMemory {
     private byte[][] memory;
+    private String PRA;
+    private Queue<Integer> frameQueue;
+    private int numOfFrames;
 
-    public PhysicalMemory(int numOfFrames) {
+    public PhysicalMemory(int numOfFrames, String _PRA) {
         this.memory = new byte[numOfFrames][256];
+        this.PRA = _PRA;
+        this.numOfFrames = numOfFrames;
+        this.frameQueue = new ArrayDeque<>();
     }
 
     public byte[] getFrameData(int index) {
@@ -13,8 +23,30 @@ public class PhysicalMemory {
     }
 
     public int addFrame(byte[] data, int index) {
-        this.memory[index] = data;
-        return index;
+        if (frameQueue.size() >= numOfFrames) {
+            int evictedFrame = evictFrame();
+            this.memory[evictedFrame] = data;
+            frameQueue.add(evictedFrame);
+            return evictedFrame;
+        } else {
+            this.memory[index] = data;
+            frameQueue.add(index);
+            return index;
+        }
+    }
+
+    private int evictFrame() {
+        int evictedFrame = 0;
+        switch (PRA) {
+            case "LRU":
+                break;
+            case "OPT":
+                break;
+            default:
+                evictedFrame = frameQueue.poll();  // FIFO
+                break;
+        }
+        return evictedFrame;
     }
 
     public void printFrameData(int frameIndex) {
