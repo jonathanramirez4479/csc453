@@ -16,7 +16,7 @@ import java.util.Scanner;
  * the simulator reports page fault statistics.
  */
 
-public class MemSim {
+public class memSim {
 
     private static final int BLOCK_SIZE = 256;
     private static final int PAGE_SIZE = 256;
@@ -109,8 +109,8 @@ public class MemSim {
         }
         System.out.println("simulation finished, dumping TLB");
         tlb.printTLB();
-        float tlbHitRate = (float)(tlbNumHits / addresses.size());
-        float pageFaultRate = (float) (pageFaults / addresses.size());
+        float tlbHitRate = (float)tlbNumHits / addresses.size();
+        float pageFaultRate = (float) pageFaults / addresses.size();
         System.out.printf("Number of Translated Addresses %d" +
                 "\nPage Faults = %d\n" +
                 "Page Fault Rate = %.3f\n" +
