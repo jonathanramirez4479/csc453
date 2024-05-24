@@ -86,11 +86,6 @@ public class MemSim {
                         memory.printFrameData(pageTableEntry.getFrameNumber());
                         continue;
                     }
-                    else // soft miss
-                    {
-                        // load from backing store, update page table frame and valid bit, update tlb
-                        byte[] blockData = getBlockData(address, filePath);
-                    }
                 }
 
                 pageFaults+=1;
