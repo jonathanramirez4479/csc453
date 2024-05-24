@@ -3,7 +3,7 @@ JAVAC = javac
 JFLAGS = -g
 
 # Define the Java source files
-SOURCES = memSim.java PageTable.java PageTableEntry.java PhysicalMemory.java TLB.java TlbEntry.java TlbProcess.java
+SOURCES = src/memSim.java src/PageTable.java src/PageTableEntry.java src/PhysicalMemory.java src/TLB.java src/TlbEntry.java
 
 # Define the class files
 CLASSES = $(SOURCES:.java=.class)
