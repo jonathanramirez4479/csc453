@@ -1,5 +1,9 @@
 
 :
-java:S1700"Rename field "pageTable"(ğ´äşÿÿÿÿ8¦î‹¹ú1
-O
-java:S1068"-Remove this unused "pageTable" private field.(ğ´äşÿÿÿÿ8«î‹¹ú1
+java:S1700"Rename field "pageTable"(çŸ¥¡ûÿÿÿÿ8ãş¬»ú1
+c
+java:S1126"AReplace this if-then-else statement by a single return statement.(Èšíìıÿÿÿÿ8èş¬»ú1
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8êş¬»ú1
+P
+java:S1128".Remove this unused import 'java.util.HashMap'.(™˜”€ùÿÿÿÿ8êş¬»ú1

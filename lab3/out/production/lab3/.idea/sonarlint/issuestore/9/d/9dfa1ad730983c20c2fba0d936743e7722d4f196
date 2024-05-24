@@ -1,23 +1,8 @@
 
-g	java:S112`"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ÙèŒ¹ú1
-g	java:S112W"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ÙèŒ¹ú1
-s
-java:S1128"QRemove this unnecessary import: java.lang classes are always implicitly imported.(Š‘…ûıÿÿÿÿ8ğèŒ¹ú1
-Z
-java:S1854'"=Remove this useless assignment to local variable "pageTable".(à®°õ8øèŒ¹ú1
-]
-java:S18542"@Remove this useless assignment to local variable "currentFrame".(¿øáË8øèŒ¹ú1
-K
-java:S1481'".Remove this unused "pageTable" local variable.(à®°õ8úèŒ¹ú1
-N
-java:S14812"1Remove this unused "currentFrame" local variable.(¿øáË8şèŒ¹ú1
-]	java:S125<"<This block of commented-out lines of code should be removed.(êûÑúÿÿÿÿ8€éŒ¹ú1
-X	java:S125J"<This block of commented-out lines of code should be removed.(š¢öƒ8éŒ¹ú1
-J
-java:S1068".Remove this unused "TLB_LENGTH" private field.(–Û™A8éŒ¹ú1
-R
-java:S1068"5Remove this unused "PAGE_TABLE_LENGTH" private field.( Ë‰é8éŒ¹ú1
-I
-java:S1068"'Remove this unused "tlb" private field.(„šÛ»ùÿÿÿÿ8éŒ¹ú1
-L
-java:S1068"*Remove this unused "memory" private field.(ùÎˆÄşÿÿÿÿ8éŒ¹ú1
+	java:S112T"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ş¬»ú1J$ef2401b5-9ae7-4354-aebd-b68b1fa4417b
+	java:S112K"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8ş¬»ú1J$80c9de01-deee-4446-816f-6478ec1cb3c7
+›	java:S135."YReduce the total number of break and continue statements in this loop to use at most one.(Ä¼ş¨8’ş¬»ú1J$399adc07-3db1-4477-a689-2f3cce4233eb
+
+java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8Ëş¬»ú1J$73dd8178-1211-4a43-be26-3048d4ab9327
+•
+java:S1450"RRemove the "tlb" field and declare it as a local variable in the relevant methods.(ÈŒíƒ8Ëş¬»ú1J$7386c64c-c444-4372-9eab-984a1cc012d7

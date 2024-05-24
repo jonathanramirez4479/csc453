@@ -5,7 +5,7 @@ public class PhysicalMemory {
     private byte[][] memory;
 
     public PhysicalMemory(int numOfFrames) {
-        this.memory = new byte[10][256];
+        this.memory = new byte[numOfFrames][256];
     }
 
     public byte[] getFrameData(int index) {
@@ -18,7 +18,6 @@ public class PhysicalMemory {
     }
 
     public void printFrameData(int frameIndex) {
-        System.out.println("Frame: " + frameIndex);
         for(byte b : getFrameData(frameIndex)) {
             String hexString = String.format("%02X", b);
             System.out.print(hexString);

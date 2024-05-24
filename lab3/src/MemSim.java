@@ -1,4 +1,5 @@
 package src;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,7 +19,9 @@ public class MemSim {
 
     private static final int BLOCK_SIZE = 256;
     private static final int PAGE_SIZE = 256;
-
+    private static int tlbNumHits = 0;
+    private static int tlbNumMisses = 0;
+    private static int pageFaults = 0;
     private static TLB tlb;
     private static PhysicalMemory memory;
 
@@ -30,7 +33,7 @@ public class MemSim {
     public static void main(String[] args) throws IOException {
         // mod to get offset
         // divide to get page number
-        int numOfFrames = 10;
+        int numOfFrames = 256;
 
         tlb = new TLB();
         PageTable pageTable = new PageTable();
@@ -38,38 +41,62 @@ public class MemSim {
 
         // read byte address accesses and store them in a list
         File file = new File(args[0]);
-        ArrayList<Integer> addresses =  readAddresses(file);
+        ArrayList<Integer> addresses = readAddresses(file);
 
         String filePath = "./src/BACKING_STORE.bin";
 
         int i = 0;
-        for(int address : addresses) {
+        for (int address : addresses) {
             int pageNumber = address / PAGE_SIZE;
+            if (pageNumber <= PAGE_SIZE) {
+                if (tlb.containsPageNumber(pageNumber)) {
+                    tlbNumHits+=1;
+                    TlbEntry tlbEntry = tlb.getTlbEntry(pageNumber);
+                    if (tlbEntry != null) {
+                        tlb.updateAllAccesses(tlbEntry);
+                    }
 
-            if (tlb.containsPageNumber(pageNumber)) {
-                TlbEntry tlbEntry = tlb.getTlbEntry(pageNumber);
-                if (tlbEntry != null) {
-                    tlb.updateAllAccesses(tlbEntry);
+                    System.out.printf("%d, %b, %d,\n", address, memory.getFrameData(tlbEntry.getFrameNumber()), tlbEntry.getFrameNumber());
+                    memory.printFrameData(tlbEntry.getFrameNumber());
+                    continue;
                 }
-                continue;
+
+                if (pageTable.containsPageNumber(pageNumber)) {
+                    PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
+                    tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
+                    System.out.printf("%d, %b, %d,\n", address, memory.getFrameData(pageTableEntry.getFrameNumber()), pageTableEntry.getFrameNumber());
+                    memory.printFrameData(pageTableEntry.getFrameNumber());
+                    continue;
+                }
+
+
+                byte[] blockData = getBlockData(address, filePath);
+
+                int frameIndex = memory.addFrame(blockData, i);
+                i++;
+
+                pageTable.populateEntry(pageNumber, new PageTableEntry(frameIndex, 1));
+                tlb.addTlbEntry(new TlbEntry(pageNumber, frameIndex));
+
+                byte valueAtAddress = blockData[address % PAGE_SIZE];
+
+                System.out.printf("%d, %d, %d,\n", address, (int) valueAtAddress, frameIndex);
+                memory.printFrameData(frameIndex);
+            } else {
+                System.out.println("Virtual address is out of bounds");
             }
 
-            if (pageTable.containsPageNumber(pageNumber)) {
-                PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
-                tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
-                continue;
-            }
-
-            byte[] blockData = getBlockData(address, filePath);
-
-            int frameIndex = memory.addFrame(blockData, i);
-            i++;
-
-            pageTable.populateEntry(pageNumber, new PageTableEntry(frameIndex, 1));
-            tlb.addTlbEntry(new TlbEntry(pageNumber, frameIndex));
         }
-
-        System.out.println("simulation finished");
+        System.out.println("simulation finished, dumping TLB");
+        tlb.printTLB();
+        float tlbHitRate = (float)(tlbNumHits / addresses.size()) * 100;
+        float pageFaultRate = (float) (pageFaults / addresses.size() * 100);
+        System.out.printf("Number of Translated Addresses %d" +
+                "\nPage Faults = %d\n" +
+                "Page Fault Rate = %.3f\n" +
+                "TLB Hits = %d\n" +
+                "TLB Misses = %d\n" +
+                "TLB Hit Rate = %.3f", addresses.size(), pageFaults, pageFaultRate, tlbNumHits, tlbNumMisses, tlbHitRate);
     }
 
     private static byte[] getBlockData(int address, String filePath) throws RuntimeException {
@@ -90,7 +117,7 @@ public class MemSim {
      * Prints the data in the frame of the physical memory, formatted per the
      * assignment requirement
      *
-     * @param address The byte address to reference
+     * @param address  The byte address to reference
      * @param filePath The string path of the backing store (always "./src/BACKING_STORE.bin")
      */
     public static void printData(int address, String filePath) {
@@ -112,18 +139,18 @@ public class MemSim {
 
         System.out.println(address + ", " + valueAtAddress + ", " + 0);
 
-        for(byte b : frameData) {
+        for (byte b : frameData) {
             String hexString = String.format("%02X", b);
             System.out.print(hexString);
         }
         System.out.println();
 
     }
-    
+
     private static ArrayList<Integer> readAddresses(File file) throws FileNotFoundException {
         ArrayList<Integer> addresses = new ArrayList<>();
         Scanner fileRead = new Scanner(file);
-        while(fileRead.hasNext()) {
+        while (fileRead.hasNext()) {
             Integer i = fileRead.nextInt();
             addresses.add(i);
         }
