@@ -27,6 +27,10 @@ public class TLB {
         return false;
     }
 
+    public void removeTlbEntry(int frameNumber) {
+        TlbList.removeIf(entry -> entry.getFrameNumber() == frameNumber);
+    }
+
     public void addTlbEntry(TlbEntry tlbEntry) {
 
         if (this.TlbList.size() == tlbMaxSize) {
@@ -74,7 +78,7 @@ public class TLB {
 
     public void printTLB() {
         for (TlbEntry tlbEntry : this.TlbList) {
-            System.out.println("tlbEntry number: " + tlbEntry.getPageNumber() + ", access: " +
+            System.out.println("Page Table Number: " + tlbEntry.getPageNumber() + ", access: " +
                     tlbEntry.getTlbAccessed() + ", frame number: " + tlbEntry.getFrameNumber());
         }
     }

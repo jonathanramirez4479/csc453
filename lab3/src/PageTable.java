@@ -26,4 +26,12 @@ public class PageTable {
     public PageTableEntry getPageTableEntry(int pageNumberIndex) {
         return this.pageTable[pageNumberIndex];
     }
+    public PageTableEntry getPageTableEntryByFrame(int pageNumberFrame) {
+        for (PageTableEntry entry : pageTable) {
+            if (entry != null && entry.getFrameNumber() == pageNumberFrame) {
+                return entry;
+            }
+        }
+        return null; // Return null if no matching entry is found
+    }
 }

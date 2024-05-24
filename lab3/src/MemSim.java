@@ -47,7 +47,7 @@ public class MemSim {
 
         tlb = new TLB();
         PageTable pageTable = new PageTable();
-        memory = new PhysicalMemory(numOfFrames, PRA);
+        memory = new PhysicalMemory(numOfFrames, PRA, tlb, pageTable);
 
         // read byte address accesses and store them in a list
         File file = new File(args[0]);
@@ -58,6 +58,7 @@ public class MemSim {
         int i = 0;
         for (int address : addresses) {
             int pageNumber = address / PAGE_SIZE;
+            //entering tlb
             if (pageNumber <= PAGE_SIZE) {
                 if (tlb.containsPageNumber(pageNumber)) {
                     tlbNumHits+=1;
@@ -72,19 +73,30 @@ public class MemSim {
                     continue;
                 }
                 tlbNumMisses+=1;
+                //entering page table -> tlb
                 if (pageTable.containsPageNumber(pageNumber)) {
+                    //page table hit
                     PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
-                    tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
-                    byte[] blockData = memory.getFrameData(pageTableEntry.getFrameNumber());
-                    byte valueAtAddress = blockData[pageTableEntry.getFrameNumber()];
-                    System.out.printf("%d, %d, %d,\n", address,valueAtAddress, pageTableEntry.getFrameNumber());
-                    memory.printFrameData(pageTableEntry.getFrameNumber());
-                    continue;
+                    if (pageTableEntry.getValidBit() == 1)
+                    {
+                        tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
+                        byte[] blockData = memory.getFrameData(pageTableEntry.getFrameNumber());
+                        byte valueAtAddress = blockData[pageTableEntry.getFrameNumber()];
+                        System.out.printf("%d, %d, %d,\n", address,valueAtAddress, pageTableEntry.getFrameNumber());
+                        memory.printFrameData(pageTableEntry.getFrameNumber());
+                        continue;
+                    }
+                    else // soft miss
+                    {
+                        // load from backing store, update page table frame and valid bit, update tlb
+                        byte[] blockData = getBlockData(address, filePath);
+                    }
                 }
 
                 pageFaults+=1;
+                // hard miss
+                //entering backing store -> pagetable -> tlb
                 byte[] blockData = getBlockData(address, filePath);
-
                 int frameIndex = memory.addFrame(blockData, i);
                 i++;
 
