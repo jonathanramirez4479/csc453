@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -56,20 +57,20 @@ public class MemSim {
                         tlb.updateAllAccesses(tlbEntry);
                     }
 
-                    System.out.printf("%d, %b, %d,\n", address, memory.getFrameData(tlbEntry.getFrameNumber()), tlbEntry.getFrameNumber());
+                    System.out.printf("%d, %b, %d,\n", address, Arrays.toString(memory.getFrameData(tlbEntry.getFrameNumber())), tlbEntry.getFrameNumber());
                     memory.printFrameData(tlbEntry.getFrameNumber());
                     continue;
                 }
-
+                tlbNumMisses+=1;
                 if (pageTable.containsPageNumber(pageNumber)) {
                     PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
                     tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
-                    System.out.printf("%d, %b, %d,\n", address, memory.getFrameData(pageTableEntry.getFrameNumber()), pageTableEntry.getFrameNumber());
+                    System.out.printf("%d, %b, %d,\n", address, Arrays.toString(memory.getFrameData(pageTableEntry.getFrameNumber())), pageTableEntry.getFrameNumber());
                     memory.printFrameData(pageTableEntry.getFrameNumber());
                     continue;
                 }
 
-
+                pageFaults+=1;
                 byte[] blockData = getBlockData(address, filePath);
 
                 int frameIndex = memory.addFrame(blockData, i);
@@ -89,8 +90,8 @@ public class MemSim {
         }
         System.out.println("simulation finished, dumping TLB");
         tlb.printTLB();
-        float tlbHitRate = (float)(tlbNumHits / addresses.size()) * 100;
-        float pageFaultRate = (float) (pageFaults / addresses.size() * 100);
+        float tlbHitRate = (float)(tlbNumHits / addresses.size());
+        float pageFaultRate = (float) (pageFaults / addresses.size());
         System.out.printf("Number of Translated Addresses %d" +
                 "\nPage Faults = %d\n" +
                 "Page Fault Rate = %.3f\n" +
