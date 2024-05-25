@@ -3,10 +3,12 @@ package src;
 public class PageTableEntry {
     private int frameNumber;
     private int validBit;
+    private int accessTime;
 
     public PageTableEntry(int frameNumber, int validBit) {
         this.frameNumber = frameNumber;
         this.validBit = validBit;
+        this.accessTime = 0;
     }
 
     public void setFrameNumber(int frameNumber) {
@@ -23,5 +25,13 @@ public class PageTableEntry {
 
     public int getValidBit() {
         return this.validBit;
+    }
+
+    public void incrementAccessTime() {
+        this.accessTime++;
+    }
+
+    public int getAccessTime() {
+        return this.accessTime;
     }
 }

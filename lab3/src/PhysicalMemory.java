@@ -1,8 +1,7 @@
 package src;
-
-
 import java.util.ArrayDeque;
-import java.util.PriorityQueue;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 
 public class PhysicalMemory {
@@ -12,6 +11,7 @@ public class PhysicalMemory {
     public int numOfFrames;
     private TLB tlb;
     private PageTable pageTable;
+    private Map<Integer, Integer> accessTime;
 
     public PhysicalMemory(int numOfFrames, String _PRA, TLB _tlb, PageTable _pageTable) {
         this.memory = new byte[numOfFrames][256];
@@ -20,6 +20,7 @@ public class PhysicalMemory {
         this.frameQueue = new ArrayDeque<>();
         this.tlb = _tlb;
         this.pageTable = _pageTable;
+        this.accessTime = new HashMap<>();
     }
 
     public byte[] getFrameData(int index) {
@@ -30,17 +31,18 @@ public class PhysicalMemory {
 
         if (frameQueue.size() >= numOfFrames) {
             int evictedFrame = evictFrame();
-            //update page table entry == framenumber valid bit = 0
             PageTableEntry entry = pageTable.getPageTableEntryByFrame(evictedFrame);
             entry.setValidBit(0);
             tlb.removeTlbEntry(evictedFrame);
             this.memory[evictedFrame] = data;
             frameQueue.add(evictedFrame);
+            accessTime.put(evictedFrame, 0); // Reset access time for evicted frame
             return evictedFrame;
         }
         else {
             this.memory[index] = data;
             frameQueue.add(index);
+            accessTime.put(index, 0); // Reset access time for evicted frame
             return index;
         }
     }
@@ -49,6 +51,14 @@ public class PhysicalMemory {
         int evictedFrame = 0;
         switch (PRA) {
             case "LRU":
+                int minAccessTime = Integer.MAX_VALUE;
+                for (int frame : frameQueue) {
+                    if (accessTime.get(frame) < minAccessTime) {
+                        minAccessTime = accessTime.get(frame);
+                        evictedFrame = frame;
+                    }
+                }
+                frameQueue.remove(evictedFrame);
                 break;
             case "OPT":
                 break;

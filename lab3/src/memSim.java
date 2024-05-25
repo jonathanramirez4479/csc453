@@ -66,6 +66,11 @@ public class memSim {
                     if (tlbEntry != null) {
                         tlb.updateAllAccesses(tlbEntry);
                     }
+                    // Increment access time for the page table entry (LRU)
+                    PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
+                    if (pageTableEntry != null) {
+                        pageTableEntry.incrementAccessTime();
+                    }
                     byte[] blockData = memory.getFrameData(tlbEntry.getFrameNumber());
                     byte valueAtAddress = blockData[tlbEntry.getFrameNumber()];
                     System.out.printf("%d, %d, %d,\n", address,valueAtAddress, tlbEntry.getFrameNumber());
@@ -80,6 +85,7 @@ public class memSim {
                     if (pageTableEntry.getValidBit() == 1)
                     {
                         tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
+                        pageTableEntry.incrementAccessTime();  // Increment access time for page table hit (LRU)
                         byte[] blockData = memory.getFrameData(pageTableEntry.getFrameNumber());
                         byte valueAtAddress = blockData[pageTableEntry.getFrameNumber()];
                         System.out.printf("%d, %d, %d,\n", address,valueAtAddress, pageTableEntry.getFrameNumber());
