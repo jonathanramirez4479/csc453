@@ -66,10 +66,10 @@ public class memSim {
                     if (tlbEntry != null) {
                         tlb.updateAllAccesses(tlbEntry);
                     }
-                    // Increment access time for the page table entry (LRU)
                     PageTableEntry pageTableEntry = pageTable.getPageTableEntry(pageNumber);
-                    if (pageTableEntry != null) {
-                        pageTableEntry.incrementAccessTime();
+                    if (pageTableEntry != null) { // LRU
+                        pageTableEntry.resetAccessTime();
+                        memory.incrementOtherAccessTimes(pageTableEntry.getFrameNumber());
                     }
                     byte[] blockData = memory.getFrameData(tlbEntry.getFrameNumber());
                     byte valueAtAddress = blockData[tlbEntry.getFrameNumber()];
@@ -85,7 +85,10 @@ public class memSim {
                     if (pageTableEntry.getValidBit() == 1)
                     {
                         tlb.addTlbEntry(new TlbEntry(pageNumber, pageTableEntry.getFrameNumber()));
-                        pageTableEntry.incrementAccessTime();  // Increment access time for page table hit (LRU)
+
+                        pageTableEntry.resetAccessTime();// LRU
+                        memory.incrementOtherAccessTimes(pageTableEntry.getFrameNumber());
+
                         byte[] blockData = memory.getFrameData(pageTableEntry.getFrameNumber());
                         byte valueAtAddress = blockData[pageTableEntry.getFrameNumber()];
                         System.out.printf("%d, %d, %d,\n", address,valueAtAddress, pageTableEntry.getFrameNumber());
@@ -100,18 +103,15 @@ public class memSim {
                 byte[] blockData = getBlockData(address, filePath);
                 int frameIndex = memory.addFrame(blockData, i);
                 i++;
-
                 pageTable.populateEntry(pageNumber, new PageTableEntry(frameIndex, 1));
                 tlb.addTlbEntry(new TlbEntry(pageNumber, frameIndex));
-
                 byte valueAtAddress = blockData[address % PAGE_SIZE];
-
                 System.out.printf("%d, %d, %d,\n", address, (int) valueAtAddress, frameIndex);
                 memory.printFrameData(frameIndex);
             } else {
                 System.out.println("Virtual address is out of bounds");
             }
-
+            memory.printFrames();
         }
         System.out.println("simulation finished, dumping TLB");
         tlb.printTLB();

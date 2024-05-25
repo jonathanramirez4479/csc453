@@ -31,6 +31,11 @@ public class PageTableEntry {
         this.accessTime++;
     }
 
+    public void resetAccessTime()
+    {
+        this.accessTime = 0;
+    }
+
     public int getAccessTime() {
         return this.accessTime;
     }

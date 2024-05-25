@@ -11,7 +11,6 @@ public class PhysicalMemory {
     public int numOfFrames;
     private TLB tlb;
     private PageTable pageTable;
-    private Map<Integer, Integer> accessTime;
 
     public PhysicalMemory(int numOfFrames, String _PRA, TLB _tlb, PageTable _pageTable) {
         this.memory = new byte[numOfFrames][256];
@@ -20,7 +19,6 @@ public class PhysicalMemory {
         this.frameQueue = new ArrayDeque<>();
         this.tlb = _tlb;
         this.pageTable = _pageTable;
-        this.accessTime = new HashMap<>();
     }
 
     public byte[] getFrameData(int index) {
@@ -36,26 +34,28 @@ public class PhysicalMemory {
             tlb.removeTlbEntry(evictedFrame);
             this.memory[evictedFrame] = data;
             frameQueue.add(evictedFrame);
-            accessTime.put(evictedFrame, 0); // Reset access time for evicted frame
+            entry.resetAccessTime(); // LRU
+            incrementOtherAccessTimes(entry.getFrameNumber()); // LRU
             return evictedFrame;
         }
         else {
             this.memory[index] = data;
             frameQueue.add(index);
-            accessTime.put(index, 0); // Reset access time for evicted frame
+            incrementOtherAccessTimes(index);
             return index;
         }
     }
 
     public int evictFrame() {
         int evictedFrame = 0;
+        int leastRecentlyUsed = 0;
         switch (PRA) {
             case "LRU":
-                int minAccessTime = Integer.MAX_VALUE;
                 for (int frame : frameQueue) {
-                    if (accessTime.get(frame) < minAccessTime) {
-                        minAccessTime = accessTime.get(frame);
-                        evictedFrame = frame;
+                    PageTableEntry entry = pageTable.getPageTableEntryByFrame(frame);
+                    if (entry.getAccessTime() > leastRecentlyUsed) {
+                        leastRecentlyUsed = entry.getAccessTime();
+                        evictedFrame = entry.getFrameNumber();
                     }
                 }
                 frameQueue.remove(evictedFrame);
@@ -81,5 +81,29 @@ public class PhysicalMemory {
         for (int i = 0; i < 10; i++) {
             printFrameData(i);
         }
+    }
+
+    public void incrementOtherAccessTimes(int frameNumber) {
+        for (int frame : frameQueue) {
+            if (!(frame == frameNumber))
+            {
+                PageTableEntry entry = pageTable.getPageTableEntryByFrame(frame);
+                entry.incrementAccessTime();
+            }
+
+        }
+    }
+
+    public void printFrames()
+    {
+        for (int i = 0; i < frameQueue.size(); i++) {
+            PageTableEntry entry = pageTable.getPageTableEntryByFrame(i);
+            System.out.printf("Frame: %d, AccessTime: %d\n", i, entry.getAccessTime());
+        }
+//        for (int frame : frameQueue
+//             ) {
+//            PageTableEntry entry = pageTable.getPageTableEntryByFrame(frame);
+//            System.out.printf("Frame: %d, AccessTime: %d\n", frame, entry.getAccessTime());
+//        }
     }
 }

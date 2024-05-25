@@ -1,8 +1,4 @@
 package src;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class PageTable {
 
     private PageTableEntry[] pageTable;
