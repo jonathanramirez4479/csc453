@@ -1,0 +1,11 @@
+NAMES: Christian Bird, Johnathan Ramirez
+
+USAGE: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
+
+BACKING STORE INSTRUCTIONS: String filePath = "./src/BACKING_STORE.bin";
+
+WORKING: Implementation without any modifications from the book. (i.e. hard-coded 256 frames, and no replacement algorithm): 10 points
+         Support for a variable number of frames and FIFO page replacement algorithm: 4 points
+         Support for true LRU page replacement algorithms: 4 points
+
+NOT WORKING: Support for OPT (optimal) page replacement algorithm: 2 points

@@ -1,2 +1,32 @@
 
-	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(å¹ÃÓ8Ò¥ßÇ÷1J$dd1c3f57-d9ac-4050-9c99-1e29e831f9ae
+a
+java:S1105("?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8¿Òéú1
+a
+java:S1105+"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8ÁÒéú1
+a
+java:S1105V"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8ÂÒéú1
+	java:S112‰"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8´ªğİú1J$ad935acc-532c-4498-a572-06510de0ba1e
+	java:S112€"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8µªğİú1J$81c10d4d-2520-43ad-a2b3-6a23710b2384
+o
+java:S1192L"MDefine a constant instead of duplicating this literal "%d, %d, %d,
+" 3 times.(œò‰¡ıÿÿÿÿ8ÊÒéú1
+u	java:S135;"YReduce the total number of break and continue statements in this loop to use at most one.(Ä¼ş¨8ÍÒéú1
+l	java:S117&"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(µœß+8ĞÒéú1
+i	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(å¹ÃÓ8ŞÒéú1
+h
+java:S2259J"FA "NullPointerException" could be thrown; "tlbEntry" is nullable here.(êŒûĞøÿÿÿÿ8ï”Òéú1
+’	java:S103}"KSplit this 122 characters long line (which is greater than 120 authorized).(¹°µôûÿÿÿÿ8ü­ğİú1J$34b7ddda-fdfb-43fb-a5f5-3db7308592de
+w
+java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8ø”Òéú1
+o
+java:S1450"RRemove the "tlb" field and declare it as a local variable in the relevant methods.(ÈŒíƒ8ú”Òéú1
+o
+java:S3776""RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(œû¿Ø8…•Òéú1
+s
+java:S3457L"Q%n should be used in place of \n to produce the platform-specific line separator.(œò‰¡ıÿÿÿÿ8–•Òéú1
+s
+java:S3457["Q%n should be used in place of \n to produce the platform-specific line separator.(®šŠüÿÿÿÿ8œ•Òéú1
+s
+java:S3457m"Q%n should be used in place of \n to produce the platform-specific line separator.(‹Ôë‡úÿÿÿÿ8¡•Òéú1
+u
+java:S1128"-Remove this unused import 'java.util.Arrays'.(î–˜Éüÿÿÿÿ8‘ûòİú1J$01bf63a7-3326-4d7b-a61a-c93d02e94bbb
