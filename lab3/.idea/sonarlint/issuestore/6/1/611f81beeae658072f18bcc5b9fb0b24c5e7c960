@@ -1,6 +1,6 @@
 
-›	java:S135"YReduce the total number of break and continue statements in this loop to use at most one.(Åœ£é8†¯Ññú1J$e5c78983-c792-47d2-a6b2-ef3658f50187
-`
-java:S1700"Rename field "pageTable"(çŸ¥¡ûÿÿÿÿ8Û§ğú1J$00e39ff6-eb7c-476c-9552-ab955c05f8a9
-‰
-java:S1126"AReplace this if-then-else statement by a single return statement.(Èšíìıÿÿÿÿ8æ§ğú1J$5cdadde4-9f4f-47ea-a9db-1bf59de513e6
+u	java:S135"YReduce the total number of break and continue statements in this loop to use at most one.(Åœ£é8Á” óú1
+:
+java:S1700"Rename field "pageTable"(çŸ¥¡ûÿÿÿÿ8Ñ” óú1
+c
+java:S1126"AReplace this if-then-else statement by a single return statement.(Èšíìıÿÿÿÿ8ì” óú1
