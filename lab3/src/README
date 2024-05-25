@@ -1,6 +1,6 @@
 NAMES: Christian Bird, Jonathan Ramirez
 
-USAGE: ./memSim <reference-sequence-file.txt> <FRAMES> <PRA>
+USAGE: ./memSim.sh <reference-sequence-file.txt> <FRAMES> <PRA>
 
 BACKING STORE INSTRUCTIONS: String filePath = "./src/BACKING_STORE.bin";
 
