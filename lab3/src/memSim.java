@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -24,6 +25,7 @@ public class memSim {
     private static int pageFaults = 0;
     private static TLB tlb;
     private static PhysicalMemory memory;
+    private static HashMap<Integer, Integer> pageInstructionCounts; // page num -> count
 
     /**
      * Driver function for virtual memory simulator
@@ -52,11 +54,14 @@ public class memSim {
         File file = new File(args[0]);
         ArrayList<Integer> addresses = readAddresses(file);
 
+        pageInstructionCounts = getPageInstructionCounts(addresses);
+
         String filePath = "./src/BACKING_STORE.bin";
 
         int i = 0;
         for (int address : addresses) {
             int pageNumber = address / PAGE_SIZE;
+
             //entering tlb
             if (pageNumber <= PAGE_SIZE) {
                 if (tlb.containsPageNumber(pageNumber)) {
@@ -72,8 +77,13 @@ public class memSim {
                     }
                     byte[] blockData = memory.getFrameData(tlbEntry.getFrameNumber());
                     byte valueAtAddress = blockData[tlbEntry.getFrameNumber()];
+
+                    decrementPageInstructionCount(pageNumber);
+                    memory.updateFrameInstructionCount(tlbEntry.getFrameNumber(),
+                            pageInstructionCounts.get(pageNumber));
+
+
                     System.out.printf("%d, %d, %d,\n", address,valueAtAddress, tlbEntry.getFrameNumber());
-                    memory.printFrameData(tlbEntry.getFrameNumber());
                     continue;
                 }
                 tlbNumMisses+=1;
@@ -90,8 +100,12 @@ public class memSim {
 
                         byte[] blockData = memory.getFrameData(pageTableEntry.getFrameNumber());
                         byte valueAtAddress = blockData[pageTableEntry.getFrameNumber()];
+
+                        decrementPageInstructionCount(pageNumber);
+                        memory.updateFrameInstructionCount(pageTableEntry.getFrameNumber(),
+                            pageInstructionCounts.get(pageNumber));
+
                         System.out.printf("%d, %d, %d,\n", address,valueAtAddress, pageTableEntry.getFrameNumber());
-                        memory.printFrameData(pageTableEntry.getFrameNumber());
                         continue;
                     }
                 }
@@ -101,6 +115,10 @@ public class memSim {
                 //entering backing store -> pagetable -> tlb
                 byte[] blockData = getBlockData(address, filePath);
                 int frameIndex = memory.addFrame(blockData, i);
+
+                decrementPageInstructionCount(pageNumber);
+                memory.updateFrameInstructionCount(frameIndex, pageInstructionCounts.get(pageNumber));
+
                 i++;
                 pageTable.populateEntry(pageNumber, new PageTableEntry(frameIndex, 1));
                 tlb.addTlbEntry(new TlbEntry(pageNumber, frameIndex));
@@ -110,7 +128,7 @@ public class memSim {
             } else {
                 System.out.println("Virtual address is out of bounds");
             }
-            //memory.printFrames();
+//            memory.printFrames();
         }
 //        System.out.println("simulation finished, dumping TLB");
 //        tlb.printTLB();
@@ -121,7 +139,33 @@ public class memSim {
                 "Page Fault Rate = %.3f\n" +
                 "TLB Hits = %d\n" +
                 "TLB Misses = %d\n" +
-                "TLB Hit Rate = %.3f", addresses.size(), pageFaults, pageFaultRate, tlbNumHits, tlbNumMisses, tlbHitRate);
+                "TLB Hit Rate = %.3f\n", addresses.size(), pageFaults, pageFaultRate, tlbNumHits, tlbNumMisses,
+                tlbHitRate);
+
+    }
+
+    private static void printPageInstructionCounts() {
+        System.out.println(pageInstructionCounts);
+    }
+
+    private static void decrementPageInstructionCount(Integer pageNumber) {
+        Integer currentCount = pageInstructionCounts.get(pageNumber);
+        pageInstructionCounts.put(pageNumber, currentCount - 1);
+    }
+
+    private static HashMap<Integer, Integer> getPageInstructionCounts(ArrayList<Integer> addresses) {
+        HashMap<Integer, Integer> pageInstructionCounts = new HashMap<>();
+        for (Integer address : addresses) {
+            Integer pageNumber = address / PAGE_SIZE;
+            if (pageInstructionCounts.containsKey(pageNumber)) {
+                int currentValue = pageInstructionCounts.get(pageNumber);
+                pageInstructionCounts.put(pageNumber, currentValue + 1);
+            } else {
+                pageInstructionCounts.put(pageNumber, 1);
+            }
+        }
+
+        return pageInstructionCounts;
     }
 
     private static byte[] getBlockData(int address, String filePath) throws RuntimeException {

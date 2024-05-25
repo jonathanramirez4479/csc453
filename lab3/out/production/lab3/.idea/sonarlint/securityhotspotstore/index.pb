@@ -29,3 +29,11 @@ G
 	fifo4.txt,1\0\103712c6b033e0ecb4c5e0f87cdd19801c7dc899
 9
 	fifo5.txt,f\a\faeef82ea3dd5b5cf261bec1cf8a55bb39bcb545
+8
+lru1.txt,f\c\fcb7bd57c16a8a6d30103bf3d4153d3e2cceb5ca
+8
+lru2.txt,1\a\1a9c33ed35bc1a3e9a733faca95593b6a424e341
+8
+lru3.txt,4\a\4aad88e62326172649f6aa98d81fe11b3133aa37
+8
+opt1.txt,2\8\287599b6dfc8f21a59e5ccff0a5b938ecfdbd986

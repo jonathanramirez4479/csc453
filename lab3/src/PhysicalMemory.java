@@ -11,6 +11,7 @@ public class PhysicalMemory {
     public int numOfFrames;
     private TLB tlb;
     private PageTable pageTable;
+    private HashMap<Integer, Integer> frameInstructionCounts; // frame num -> count
 
     public PhysicalMemory(int numOfFrames, String _PRA, TLB _tlb, PageTable _pageTable) {
         this.memory = new byte[numOfFrames][256];
@@ -19,6 +20,12 @@ public class PhysicalMemory {
         this.frameQueue = new ArrayDeque<>();
         this.tlb = _tlb;
         this.pageTable = _pageTable;
+
+        this.frameInstructionCounts = new HashMap<>(numOfFrames);
+    }
+
+    public void updateFrameInstructionCount(int frameIndex, int newCount) {
+        this.frameInstructionCounts.put(frameIndex, newCount);
     }
 
     public byte[] getFrameData(int index) {
@@ -61,6 +68,16 @@ public class PhysicalMemory {
                 frameQueue.remove(evictedFrame);
                 break;
             case "OPT":
+                Integer frameNumberLeastUsed = frameQueue.element();
+                for (int frame : frameQueue) {
+                    PageTableEntry pageTableEntry = pageTable.getPageTableEntryByFrame(frame);
+                    Integer frameNumber = pageTableEntry.getFrameNumber();
+                    if (frameInstructionCounts.get(frameNumber) <= frameInstructionCounts.get(frameNumberLeastUsed)) {
+                        frameNumberLeastUsed = frameNumber;
+                    }
+                }
+                evictedFrame = frameNumberLeastUsed;
+                frameQueue.remove(frameNumberLeastUsed);
                 break;
             default:
                 evictedFrame = frameQueue.poll();  // FIFO
@@ -68,6 +85,7 @@ public class PhysicalMemory {
         }
         return evictedFrame;
     }
+
 
     public void printFrameData(int frameIndex) {
         for(byte b : getFrameData(frameIndex)) {
