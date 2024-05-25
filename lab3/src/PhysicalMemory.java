@@ -100,10 +100,5 @@ public class PhysicalMemory {
             PageTableEntry entry = pageTable.getPageTableEntryByFrame(i);
             System.out.printf("Frame: %d, AccessTime: %d\n", i, entry.getAccessTime());
         }
-//        for (int frame : frameQueue
-//             ) {
-//            PageTableEntry entry = pageTable.getPageTableEntryByFrame(frame);
-//            System.out.printf("Frame: %d, AccessTime: %d\n", frame, entry.getAccessTime());
-//        }
     }
 }

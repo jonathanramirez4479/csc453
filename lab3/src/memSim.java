@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -111,10 +110,10 @@ public class memSim {
             } else {
                 System.out.println("Virtual address is out of bounds");
             }
-            memory.printFrames();
+            //memory.printFrames();
         }
-        System.out.println("simulation finished, dumping TLB");
-        tlb.printTLB();
+//        System.out.println("simulation finished, dumping TLB");
+//        tlb.printTLB();
         float tlbHitRate = (float)tlbNumHits / addresses.size();
         float pageFaultRate = (float) pageFaults / addresses.size();
         System.out.printf("Number of Translated Addresses %d" +
