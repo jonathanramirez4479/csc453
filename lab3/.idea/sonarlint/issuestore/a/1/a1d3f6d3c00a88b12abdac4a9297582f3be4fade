@@ -1,32 +1,33 @@
 
-a
-java:S1105("?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8¿Òéú1
-a
-java:S1105+"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8ÁÒéú1
-a
-java:S1105V"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8ÂÒéú1
-	java:S112‰"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8´ªğİú1J$ad935acc-532c-4498-a572-06510de0ba1e
-	java:S112€"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8µªğİú1J$81c10d4d-2520-43ad-a2b3-6a23710b2384
-o
-java:S1192L"MDefine a constant instead of duplicating this literal "%d, %d, %d,
-" 3 times.(œò‰¡ıÿÿÿÿ8ÊÒéú1
-u	java:S135;"YReduce the total number of break and continue statements in this loop to use at most one.(Ä¼ş¨8ÍÒéú1
-l	java:S117&"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(µœß+8ĞÒéú1
-i	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(å¹ÃÓ8ŞÒéú1
-h
-java:S2259J"FA "NullPointerException" could be thrown; "tlbEntry" is nullable here.(êŒûĞøÿÿÿÿ8ï”Òéú1
-’	java:S103}"KSplit this 122 characters long line (which is greater than 120 authorized).(¹°µôûÿÿÿÿ8ü­ğİú1J$34b7ddda-fdfb-43fb-a5f5-3db7308592de
-w
-java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8ø”Òéú1
-o
-java:S1450"RRemove the "tlb" field and declare it as a local variable in the relevant methods.(ÈŒíƒ8ú”Òéú1
-o
-java:S3776""RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(œû¿Ø8…•Òéú1
-s
-java:S3457L"Q%n should be used in place of \n to produce the platform-specific line separator.(œò‰¡ıÿÿÿÿ8–•Òéú1
-s
-java:S3457["Q%n should be used in place of \n to produce the platform-specific line separator.(®šŠüÿÿÿÿ8œ•Òéú1
-s
-java:S3457m"Q%n should be used in place of \n to produce the platform-specific line separator.(‹Ôë‡úÿÿÿÿ8¡•Òéú1
-u
-java:S1128"-Remove this unused import 'java.util.Arrays'.(î–˜Éüÿÿÿÿ8‘ûòİú1J$01bf63a7-3326-4d7b-a61a-c93d02e94bbb
+‡
+java:S1105)"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8±±óñú1J$75ba551d-d69a-43ba-8113-a18533e66cdd
+‡
+java:S1105,"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8±±óñú1J$31cc76a4-9bd0-4c73-a574-fd0f76b235cd
+‡
+java:S1105_"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8±±óñú1J$ad373515-39b2-4f49-a6b2-fe7009d1af38
+	java:S112´"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8³±óñú1J$0686a082-af85-497a-bcc2-35b4c8ce4e04
+	java:S112«"FDefine and throw a dedicated exception instead of using a generic one.(˜ëŠßıÿÿÿÿ8³±óñú1J$833c6517-d22d-4804-b893-0cc0258b5bd7
+•
+java:S1192V"MDefine a constant instead of duplicating this literal "%d, %d, %d,
+" 3 times.(œò‰¡ıÿÿÿÿ8´±óñú1J$e8e75291-1c0c-46f7-9de1-8f452bf7f1cf
+›	java:S135>"YReduce the total number of break and continue statements in this loop to use at most one.(Ä¼ş¨8µ±óñú1J$a7544e42-a4af-4c08-b37b-8e347d176f26
+’	java:S117'"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(µœß+8¶±óñú1J$5a12c855-72fd-4b99-bbd9-dd514e70cfd4
+	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(å¹ÃÓ8¸±óñú1J$87646527-0e03-4c1c-9387-46316ac630c8
+
+java:S2259N"FA "NullPointerException" could be thrown; "tlbEntry" is nullable here.(êŒûĞøÿÿÿÿ8÷²óñú1J$5253c14b-cad2-4f00-8f19-40b6df6963eb
+
+java:S1450"URemove the "memory" field and declare it as a local variable in the relevant methods.(ùÎˆÄşÿÿÿÿ8ù²óñú1J$db76e101-6a96-43ac-8967-15a00187ed20
+•
+java:S1450"RRemove the "tlb" field and declare it as a local variable in the relevant methods.(ÈŒíƒ8ù²óñú1J$fbf7f9d9-fb11-44c1-bcba-9ab1d33e73e6
+•
+java:S3776#"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(œû¿Ø8ı²óñú1J$b3910697-ecf2-49f2-bec4-429d9b7c88f4
+™
+java:S3457V"Q%n should be used in place of \n to produce the platform-specific line separator.(œò‰¡ıÿÿÿÿ8ƒ³óñú1J$b6ee2d66-bc35-4c2a-8835-211ece6595f6
+™
+java:S3457l"Q%n should be used in place of \n to produce the platform-specific line separator.(®šŠüÿÿÿÿ8…³óñú1J$69e9075d-3a72-41f9-bb8d-128964285893
+™
+java:S3457~"Q%n should be used in place of \n to produce the platform-specific line separator.(‹Ôë‡úÿÿÿÿ8†³óñú1J$82cdc849-da74-4fbf-b6b8-ded81d7d90fb
+	java:S125ƒ"<This block of commented-out lines of code should be removed.(“è«8‡³óñú1J$27b1ae99-c144-4545-abc0-60fcaa02e71e
+	java:S125…"<This block of commented-out lines of code should be removed.(Æ›¾½8ˆ³óñú1J$83e99ef2-2b40-4b4d-a90e-d9913d3cf92b
+ˆ
+java:S1144“"?Remove this unused private "printPageInstructionCounts" method.(ˆÏƒïúÿÿÿÿ8óåòú1J$ab4b25fa-4d1f-4c89-a993-d49630d926b4

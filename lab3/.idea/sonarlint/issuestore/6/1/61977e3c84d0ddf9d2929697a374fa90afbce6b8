@@ -1,12 +1,22 @@
 
-r	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”§±´ıÿÿÿÿ8ó•Òéú1
-r	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”§±´ıÿÿÿÿ8ó•Òéú1
-r	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”§±´ıÿÿÿÿ8ó•Òéú1
-s
+‡
+java:S1105k"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8ëäƒòú1J$b0bf3bfe-c9b1-4334-81a0-a000443c1174
+‡
+java:S1105t"?Move this left curly brace to the end of previous line of code.(ÒÌâ–øÿÿÿÿ8ìäƒòú1J$35d7dc2d-e3c9-490b-ab12-128f2b5455ca
+˜	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”§±´ıÿÿÿÿ8îäƒòú1J$211ff232-e721-4c98-8aae-3052e3230b58
+˜	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”§±´ıÿÿÿÿ8îäƒòú1J$048bd7a2-42ce-4751-8eaa-f7abacb9b0a7
+˜	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”§±´ıÿÿÿÿ8îäƒòú1J$a1e26c23-eb2d-4469-af3c-bf8a8f947b47
+™
 java:S1104
-"VMake frameQueue a static final constant or non-public and provide accessors if needed.( ²Âù8÷•Òéú1
-y
-java:S1104"WMake numOfFrames a static final constant or non-public and provide accessors if needed.(óæÀĞşÿÿÿÿ8÷•Òéú1
-o	java:S116	"NRename this field "PRA" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(†¯Ö¸üÿÿÿÿ8š–Òéú1
-e
-java:S1107*"HMove this "else" on the same line that the previous closing curly brace.(á¢–¬8³–Òéú1
+"VMake frameQueue a static final constant or non-public and provide accessors if needed.( ²Âù8ïäƒòú1J$4d67260b-082d-402f-a382-7ba7e4230732
+Ÿ
+java:S1104"WMake numOfFrames a static final constant or non-public and provide accessors if needed.(óæÀĞşÿÿÿÿ8ğäƒòú1J$eb31ece4-4912-4e2a-bcd7-893d04277c4f
+•	java:S116	"NRename this field "PRA" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(†¯Ö¸üÿÿÿÿ8şäƒòú1J$e21dc5ce-cd8d-41d2-8454-2d91c3dee5d6
+‹
+java:S11070"HMove this "else" on the same line that the previous closing curly brace.(á¢–¬8†åƒòú1J$b5874bbc-affd-4b13-ab19-89064bca6b67
+l
+java:S1940j")Use the opposite operator ("!=") instead.(ÃÃ¢8’åƒòú1J$a021055c-ad12-418f-b614-689a722bac28
+™
+java:S3457w"Q%n should be used in place of \n to produce the platform-specific line separator.(»úÀšşÿÿÿÿ8•åƒòú1J$e628c261-6dfc-4754-a64a-97907ca1e7f3
+r
+java:S1128"*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ8ãı†òú1J$596fc412-1cfd-43d8-8e87-e644524bd220
