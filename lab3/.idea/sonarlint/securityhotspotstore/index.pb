@@ -19,15 +19,13 @@ A
 src/TlbEntry.java,b\4\b4b404b435057281b3c79fed6fa11362ff9d1907
 G
 src/PageTableEntry.java,3\d\3db4f3001dcf06c9053918393809eec03887f3be
-=
-addresses.txt,d\f\df8e9261800ddaed7b067cdf30c464eaf66bd646
-<
-src/Makefile,0\9\09a8e11089bd7b184c2ba7778565c1350e1c7e3a
-:
-
-src/MemSim,c\f\cf02dc11367d867fb3f640193556a81fe9642cb4
-:
-
-src/memSim,f\9\f9c96e2b8faba975d904671f2485e251b32df739
 6
 memSim,d\f\df29c3e919f026c7e76d7bf1994729ceeb0ba6d3
+9
+	fifo2.txt,0\f\0fd3a80e80d479bead388104bb4bbe3d7f35cc76
+9
+	fifo3.txt,d\3\d33878bb56132e2420c4027de90d31528cb7c94f
+9
+	fifo4.txt,1\0\103712c6b033e0ecb4c5e0f87cdd19801c7dc899
+9
+	fifo5.txt,f\a\faeef82ea3dd5b5cf261bec1cf8a55bb39bcb545
