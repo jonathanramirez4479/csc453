@@ -6,12 +6,7 @@
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
-      "args": [
-        "${workspaceFolder}/lab2/testSRTN.txt",
-        "-p",
-        "SRTN",
-        
-      ]
+      "args": ["${workspaceFolder}/lab2/jobs.txt", "-p", "SRTN"]
     },
     {
       "name": "C/C++: gcc build and debug active file",
