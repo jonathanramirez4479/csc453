@@ -103,11 +103,11 @@ def print_job_metrics(jobs):
         return
 
     for job in jobs:
-        print(f"Job {job.job_number} -- Turnaround {job.turnaround_time}" + 
-              f" Wait  {job.wait_time}")
+        print(f"Job {job.job_number:3d} -- Turnaround {job.turnaround_time:3.2f}" + 
+              f" Wait  {job.wait_time:3.2f}")
 
-    print(f"Average --  Turnaround {sum(job.turnaround_time for job in jobs) / len(jobs)}"
-          + f"  Wait {sum(job.wait_time for job in jobs) / len(jobs)}")
+    print(f"Average --  Turnaround {sum(job.turnaround_time for job in jobs) / len(jobs):3.2f}"
+          + f"  Wait {sum(job.wait_time for job in jobs) / len(jobs):3.2f}")
 
 
 def simulate_round_robin(jobs, quantum):
@@ -166,7 +166,6 @@ def simulate_srtn(jobs):
     jobs_started = []
     jobs_to_remove = []
     
-    cycle = 0
     i = 0
     while len(jobs_finished) < num_jobs:
         for job in jobs:
@@ -184,6 +183,14 @@ def simulate_srtn(jobs):
             continue
         
         job = min(jobs_started, key=get_shortest_time_remaining)
+
+        if job.burst_time == 0:  # if job original burst_time is 0
+            job.completion_time = i
+            job.turnaround_time = job.completion_time - job.arrival_time
+            jobs_finished.append(job)
+            jobs_started.remove(job)
+            continue
+
         job.burst_time -= 1
 
         if job.burst_time == 0:
@@ -192,8 +199,8 @@ def simulate_srtn(jobs):
             jobs_finished.append(job)
             jobs_started.remove(job)
         
-    
         i += 1
+
         update_wait_times(jobs=jobs_started, curr_job_num=job.job_number,
                           curr_burst=1, curr_cyle=i)
 
