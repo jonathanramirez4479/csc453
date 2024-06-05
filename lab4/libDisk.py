@@ -1,7 +1,8 @@
 import os
 from typing import BinaryIO, Union
 
-BLOCK_SIZE = 256
+BLOCK_SIZE = 256  # bytes
+
 
 class DiskErrorCodes:
     SUCCESS = 0  # operation successful
@@ -18,25 +19,7 @@ class DiskErrorCodes:
         WRITE_FAILURE: "Failed to write to disk",
         SEEK_FAILURE: "Failed to seek the specified block",
     }
-class SuperBlock:
-    def __init__(self):
-        initialized = 0 # bit to keep track if superblock has been initialized or not
-        size_of_free_space = 0 # could be free inodes or bytes
-        total_num_files = 0
-        magic_number = 0x5A
-        location_of_root = 0
-        list_of_unallocated_blocks = bytearray(BLOCK_SIZE // 8) # bitmap
 
-class INode:
-    def __init__(self, num, location, file_size, entries):
-        Inode_num = 0
-        location_of_data = 0
-        file_size = 0
-        allocated_entries = [BLOCK_SIZE]
-
-class Root_Directory:
-    def __init__(self):
-        INode_arr = []
 
 def get_error_message(error_code: int) -> str:
     """

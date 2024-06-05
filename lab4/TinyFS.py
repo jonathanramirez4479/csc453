@@ -1,34 +1,48 @@
 from libDisk import *
 
+DEFAULT_DISK_SIZE = 10240  # bytes = 40 blocks
+DEFAULT_DISK_NAME = "tinyFSDisk"
 
-def main():
-    buffer = bytearray(BLOCK_SIZE)
+class SuperBlock:
+    def __init__(self):
+        self.__magic_number = 0x5A
+        self.__root_dir_inode = {}
+        self.__free_block_bit_vector = '0' * (DEFAULT_DISK_SIZE // BLOCK_SIZE)
 
-    for i in range(BLOCK_SIZE):
-        buffer[i] = i % 256
+    def get_magic_number(self):
+        return self.__magic_number
 
-    data_from_disk = bytearray(BLOCK_SIZE)
+    def get_free_block_bit_vector(self):
+        return self.__free_block_bit_vector
 
-    disk = None
-    result = open_disk(filename="new_file", n_bytes=256)
 
-    if result is int:
-        print(get_error_message(result))
-        exit()
-    else:
-        disk = result
+class INode:
+    def __init__(self):
+        self.__file_size = 0
+        self.__blocks = []
 
-    result = write_block(disk=disk, b_num=0, block=buffer)
-    if result != DiskErrorCodes.SUCCESS:
-        print(get_error_message(result))
+    def get_file_size(self):
+        return self.__file_size
 
-    result = read_block(disk=disk, b_num=0, block=data_from_disk)
-    if result != DiskErrorCodes.SUCCESS:
-        print(get_error_message(result))
+class Data:
+    def __init__(self):
+        self.__data = bytearray()
 
-    print(data_from_disk)
 
-def tfs_mkfs(filename : char, nBytes : byte) -> int:
+class Disk:
+    def __init__(self):
+        self.__disk = [None] * (DEFAULT_DISK_SIZE // BLOCK_SIZE)
+
+    def add_block(self, block):
+        if isinstance(block, (SuperBlock, Data, INode)):
+            self.__disk.append(block)
+
+    def get_disk_state(self):
+        return self.__disk
+
+
+# TODO: FINISH THIS FUNCTION
+def tfs_mkfs(filename : str, n_bytes : int) -> int:
     """
     Makes an empty TinyFS file system of size nBytes on an emulated libDisk disk specified by ‘filename’.
     This function should use the emulated disk library to open the specified file, and upon success,
@@ -36,6 +50,11 @@ def tfs_mkfs(filename : char, nBytes : byte) -> int:
     initializing and writing the superblock and other metadata, etc. Must return a specified success/error code.
     int tfs_mkfs(char *filename, int nBytes);
     """
-    return 0
-if __name__ == "__main__":
-    main()
+    res = open_disk(filename=filename, n_bytes=n_bytes)
+
+    if (res == DiskErrorCodes.DISK_NOT_AVAILABLE):
+        return res
+
+
+
+    return res
