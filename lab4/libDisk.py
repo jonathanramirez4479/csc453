@@ -3,7 +3,6 @@ from typing import BinaryIO, Union
 
 BLOCK_SIZE = 256
 
-
 class DiskErrorCodes:
     SUCCESS = 0  # operation successful
     DISK_NOT_AVAILABLE = 1  # could not open/create/access disk (file)
@@ -29,15 +28,15 @@ class SuperBlock:
         list_of_unallocated_blocks = bytearray(BLOCK_SIZE // 8) # bitmap
 
 class INode:
-    def __init__(self):
+    def __init__(self, num, location, file_size, entries):
         Inode_num = 0
         location_of_data = 0
         file_size = 0
-        allocated_blocks = [BLOCK_SIZE]
+        allocated_entries = [BLOCK_SIZE]
+
 class Root_Directory:
     def __init__(self):
         INode_arr = []
-
 
 def get_error_message(error_code: int) -> str:
     """
@@ -142,10 +141,3 @@ def close_disk(disk: BinaryIO) -> Union[None, int]:
         disk.close()
     except OSError as e:
         return DiskErrorCodes.DISK_NOT_AVAILABLE
-
-def initialize_file_system():
-    # check superblock initialized bit
-    # if bit has not been initialized continue
-    # create the superblock
-    # create root directory
-    # preallocate Inodes??

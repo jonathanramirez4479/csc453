@@ -28,6 +28,14 @@ def main():
 
     print(data_from_disk)
 
-
+def tfs_mkfs(filename : char, nBytes : byte) -> int:
+    """
+    Makes an empty TinyFS file system of size nBytes on an emulated libDisk disk specified by ‘filename’.
+    This function should use the emulated disk library to open the specified file, and upon success,
+    format the file to be mountable. This includes initializing all data to 0x00, setting magic numbers,
+    initializing and writing the superblock and other metadata, etc. Must return a specified success/error code.
+    int tfs_mkfs(char *filename, int nBytes);
+    """
+    return 0
 if __name__ == "__main__":
     main()
