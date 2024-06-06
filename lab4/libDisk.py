@@ -4,6 +4,7 @@ from typing import BinaryIO, Union
 BLOCK_SIZE = 256  # bytes
 
 
+
 class DiskErrorCodes:
     SUCCESS = 0  # operation successful
     DISK_NOT_AVAILABLE = 1  # could not open/create/access disk (file)
