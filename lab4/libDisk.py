@@ -7,11 +7,11 @@ BLOCK_SIZE = 256  # bytes
 
 class DiskErrorCodes:
     SUCCESS = 0  # operation successful
-    DISK_NOT_AVAILABLE = 1  # could not open/create/access disk (file)
-    READ_FAILURE = 2  # could not read from disk (file)
-    WRITE_FAILURE = 3  # could not write to disk (file)
-    SEEK_FAILURE = 4  # could not move file seek pointer in disk (file)
-    SIZE_MISMATCH = 5  # size not integral to BLOCK_SIZE
+    DISK_NOT_AVAILABLE = -1  # could not open/create/access disk (file)
+    READ_FAILURE = -2  # could not read from disk (file)
+    WRITE_FAILURE = -3  # could not write to disk (file)
+    SEEK_FAILURE = -4  # could not move file seek pointer in disk (file)
+    SIZE_MISMATCH = -5  # size not integral to BLOCK_SIZE
 
     ERROR_MESSAGES = {
         SUCCESS: "Success",
@@ -58,22 +58,22 @@ def open_disk(filename: str, n_bytes: int) -> Union[BinaryIO, int]:
         return DiskErrorCodes.DISK_NOT_AVAILABLE
 
 
-def read_block(disk: BinaryIO, b_num: int, block: bytearray) -> int:
+def read_block(disk: BinaryIO, block_num: int, block_data: bytearray) -> int:
     """
     Reads an entire block of BLOCK_SIZE bytes from the open disk into the block.
 
     :param disk: The file object that was opened
-    :param b_num: The logical block number
-    :param block: The local buffer to store the disk data
+    :param block_num: The logical block number
+    :param block_data: The local buffer to store the disk data
     :return: 0 if successful
     """
-    if len(block) < BLOCK_SIZE:
+    if len(block_data) < BLOCK_SIZE:
         return DiskErrorCodes.SIZE_MISMATCH
 
     if disk is None:
         return DiskErrorCodes.DISK_NOT_AVAILABLE
 
-    byte_offset = b_num * BLOCK_SIZE
+    byte_offset = block_num * BLOCK_SIZE
 
     try:
         disk.seek(byte_offset)
@@ -81,34 +81,34 @@ def read_block(disk: BinaryIO, b_num: int, block: bytearray) -> int:
         return DiskErrorCodes.SEEK_FAILURE
 
     try:
-        block[:] = disk.read(BLOCK_SIZE)
+        block_data[:] = disk.read(BLOCK_SIZE)
     except OSError as e:
         return DiskErrorCodes.READ_FAILURE
 
     return DiskErrorCodes.SUCCESS
 
 
-def write_block(disk: BinaryIO, b_num: int, block: bytearray) -> int:
+def write_block(disk: BinaryIO, block_num: int, block_data: bytearray) -> int:
     """
     Writes a block of BLOCK_SIZE bytes from block to logical block number
     b_num from buffer 'block'
 
     :param disk: The file object that was opened
-    :param b_num: The logical block number
-    :param block: The local buffer to write from into disk
+    :param block_num: The logical block number
+    :param block_data: The local buffer to write from into disk
     :return: 0 if successful
     """
     if disk is None:
         return DiskErrorCodes.DISK_NOT_AVAILABLE
 
-    byte_offset = b_num * BLOCK_SIZE
+    byte_offset = block_num * BLOCK_SIZE
     try:
         disk.seek(byte_offset)
     except OSError as e:
         return DiskErrorCodes.SEEK_FAILURE
 
     try:
-        disk.write(block)
+        disk.write(block_data)
     except OSError as e:
         return DiskErrorCodes.WRITE_FAILURE
 
