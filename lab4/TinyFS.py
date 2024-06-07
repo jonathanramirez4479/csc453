@@ -1,113 +1,28 @@
 from libDisk import *
+from Disk import *
 
-DEFAULT_DISK_SIZE = 10240  # bytes = 40 blocks
+DEFAULT_DISK_SIZE = 10240  # bytes = 40 blocks; CAN CHANGE TO SUPPORT VARIABLE SIZE
 DEFAULT_DISK_NAME = "tinyFSDisk"
+NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
 
-mounted_disk = None
-mounted_superblock = None
-mounted_root_directory = None
+MOUNTED_DISK_BINARY_IO = None
+MOUNTED_DISK = None
 
-
-class SuperBlock:
-    def __init__(self, root_dir_block = 1):
-        self.__magic_number = 0x5A
-        self.__root_dir_block = root_dir_block
-        self.__free_block_bit_vector = b'0' * (DEFAULT_DISK_SIZE // BLOCK_SIZE)
-
-    def get_magic_number(self):
-        return self.__magic_number
-
-    def get_free_block_bit_vector(self):
-        return self.__free_block_bit_vector
-
-    def serialize(self) -> bytearray:
-        superblock_data = bytearray(BLOCK_SIZE)
-        superblock_data[0] = self.get_magic_number()
-        superblock_data[1:5] = self.__root_dir_block.to_bytes(4, 'little')
-        superblock_data[5:] = self.__free_block_bit_vector
-        return superblock_data
-
-    @staticmethod
-    def deserialize(data: bytearray) -> 'SuperBlock':
-        magic_number = data[0]
-        if magic_number != 0x5A:
-            raise ValueError("Invalid magic number")
-        root_inode_block = int.from_bytes(data[1:5], 'little')
-        free_block_bit_vector = data[5:]
-        sb = SuperBlock()
-        sb.free_block_bit_vector = free_block_bit_vector
-        return sb
+class FILE_TYPES:
+    ROOT_DIR_INODE = 1,
+    INODE = 2
+    DATA = 3
 
 
-class RootDirectory:
+class Block:
     def __init__(self):
-        self.entries = []
+        self.__data = bytes()
 
-    def add_entry(self, name: str, inode_number: int):
-        if len(name) <= 8:
-            entry = RootDirectoryEntry(name, inode_number)
-            self.entries.append(entry)
-        else:
-            print("Error: Name exceeds maximum length of 8 characters.")
+    def set_block_data(self, data: bytes):
+        self.__data = data
 
-    def serialize(self) -> bytearray:
-        data = bytearray(BLOCK_SIZE)
-        for entry in self.entries:
-            data += entry.serialize()
-        return data.ljust(BLOCK_SIZE, b'\0')
-
-    @staticmethod
-    def deserialize(data: bytearray) -> 'RootDirectory':
-        rd = RootDirectory()
-        offset = 0
-        while offset < len(data):
-            name = data[offset:offset + 8].rstrip('\0')
-            inode_number = struct.unpack('<I', data[offset + 8:offset + 12])[0]
-            if name:
-                rd.add_entry(name, inode_number)
-            offset += 12
-        return rd
-
-
-class RootDirectoryEntry:
-    def __init__(self, name: str, inode_number: int):
-        self.name = name
-        self.inode_number = inode_number
-
-    def serialize(self) -> bytearray:
-        name_bytes = self.name.ljust(8, b'\0')
-        inode_number_bytes = struct.pack('<I', self.inode_number)
-        return name_bytes + inode_number_bytes
-
-
-class INode:
-    def __init__(self, inode_number: int):
-        self.inode_number = inode_number
-        self.file_size = 0
-        self.blocks = []
-
-    def get_file_size(self):
-        return self.file_size
-
-    def add_block(self, block_number: int):
-        self.blocks.append(block_number)
-
-
-class Data:
-    def __init__(self):
-        self.__data = bytearray()
-
-
-class Disk:
-    def __init__(self):
-        self.__disk = [None] * (DEFAULT_DISK_SIZE // BLOCK_SIZE)
-
-    def add_block(self, block):
-        if isinstance(block, (SuperBlock, Data, INode)):
-            self.__disk.append(block)
-
-    def get_disk_state(self):
-        return self.__disk
+    def get_block_data(self) -> bytes:
+        return self.__data
 
 
 def tfs_mkfs(filename: str, n_bytes: int) -> int:
@@ -118,119 +33,77 @@ def tfs_mkfs(filename: str, n_bytes: int) -> int:
     initializing and writing the superblock and other metadata, etc. Must return a specified success/error code.
     int tfs_mkfs(char *filename, int nBytes);
     """
-
     disk = open_disk(filename=filename, n_bytes=n_bytes)
     if isinstance(disk, int):  # If the returned value is an error code
-        return disk
+        return disk  # return error code
 
-    # Initialize the disk with zeros
-    num_blocks = n_bytes // BLOCK_SIZE
-    empty_block = bytearray(BLOCK_SIZE)
-    for block_num in range(num_blocks):
-        result = write_block(disk, block_num, empty_block)
-        if result != DiskErrorCodes.SUCCESS:
-            close_disk(disk)
-            return result
+    super_block = SuperBlock(num_of_blocks=NUM_OF_BLOCKS)
 
-    # Serialize the superblock into a byte array
-    superblock = SuperBlock().serialize()
+    magic_num_bytes = super_block.get_magic_number().to_bytes()
+    root_dir_block = super_block.get_root_dir_block().to_bytes()
+    bitmap_vector = super_block.get_bitmap_vector_as_number().to_bytes()
 
-    # Write the superblock to the disk (block 0)
-    result = write_block(disk, 0, superblock)
-    if result != DiskErrorCodes.SUCCESS:
-        close_disk(disk)
-        return result
+    data_to_write = magic_num_bytes + root_dir_block + bitmap_vector
 
-    """
-    # Read back and print the superblock to verify
-        read_superblock_data = bytearray(BLOCK_SIZE)
-        result = read_block(disk, 0, read_superblock_data)
-        if result != DiskErrorCodes.SUCCESS:
-            close_disk(disk)
-            return result
-    print("Superblock after writing:", read_superblock_data)
-    """
+    write_block(disk=disk, block_num=0, block_data=bytearray(data_to_write))
 
-    # Initialize the root directory
-    root_directory = RootDirectory().serialize()
-    result = write_block(disk, 1, root_directory)
-    if result != DiskErrorCodes.SUCCESS:
-        close_disk(disk)
-        return result
-
-    """
-    # Read back and print the root directory to verify
-    read_root_directory_data = bytearray(BLOCK_SIZE)
-    result = read_block(disk, 1, read_root_directory_data)
-    if result != DiskErrorCodes.SUCCESS:
-        close_disk(disk)
-        return result
-    print("Root directory after writing:", read_root_directory_data)
-    """
-
-    close_disk(disk)
     return DiskErrorCodes.SUCCESS
 
 
 def tfs_mount(filename: str) -> int:
-    global mounted_disk, mounted_superblock, mounted_root_directory
+    """
+    tfs_mount(char *filename) “mounts” a TinyFS file system located within an emulated libDisk disk called ‘filename’.
+    tfs_mount should verify the file system is the correct type. Only one file system may be mounted at a time. Must
+    return a specified success/error code.
+    """
+    global MOUNTED_DISK_BINARY_IO
+    global DEFAULT_DISK_SIZE
+    global DEFAULT_DISK_NAME
+    global MOUNTED_DISK
 
-    if mounted_disk is not None:
-        print("Error: A filesystem is already mounted.")
-        return DiskErrorCodes.FAILURE
+    if MOUNTED_DISK is not None:
+        return DiskErrorCodes.DISK_ALREADY_MOUNTED
 
-    disk = open_disk(filename, DEFAULT_DISK_SIZE)
-    if isinstance(disk, int):  # If the returned value is an error code
-        return disk
+    with open(filename, 'rb') as f:
+        first_byte = f.read(1)
+        f.seek(0)
+        DEFAULT_DISK_SIZE = len(f.read())
+        DEFAULT_DISK_NAME = filename
 
-    # Read the superblock
-    superblock_data = bytearray(BLOCK_SIZE)
-    result = read_block(disk, 0, superblock_data)
-    if result != DiskErrorCodes.SUCCESS:
-        close_disk(disk)
-        return result
-    print("superblock from mount: ", superblock_data)
+        if int(first_byte.hex(), 16) != 0x5A:
+            return DiskErrorCodes.DISK_NOT_AVAILABLE
 
-    try:
-        superblock = SuperBlock.deserialize(superblock_data)
-    except ValueError as e:
-        print(e)
-        close_disk(disk)
-        return DiskErrorCodes.INVALID_FILESYSTEM
+        MOUNTED_DISK_BINARY_IO = f
 
-    # Read the root directory inode
-    root_inode_data = bytearray(BLOCK_SIZE)
-    result = read_block(disk, superblock.root_inode_block, root_inode_data)
-    if result != DiskErrorCodes.SUCCESS:
-        close_disk(disk)
-        return result
+        MOUNTED_DISK = Disk(disk_size=DEFAULT_DISK_SIZE, num_of_blocks=NUM_OF_BLOCKS, block_size=BLOCK_SIZE)
+        MOUNTED_DISK.mount_disk(disk=MOUNTED_DISK_BINARY_IO)
 
-    # Read the root directory data block
-    root_directory_data = bytearray(BLOCK_SIZE)
-    result = read_block(disk, struct.unpack('<I', root_inode_data[4:8])[0], root_directory_data)
-    if result != DiskErrorCodes.SUCCESS:
-        close_disk(disk)
-        return result
-
-    mounted_disk = disk
-    mounted_superblock = superblock
-    mounted_root_directory = RootDirectory.deserialize(root_directory_data)
+        print(MOUNTED_DISK.get_disk_state())
 
     return DiskErrorCodes.SUCCESS
 
 
 def tfs_unmount() -> int:
-    global mounted_disk, mounted_superblock, mounted_root_directory
+    """
+    tfs_unmount(void) “unmounts” the currently mounted file system. As part of the mount operation
+    Use tfs_unmount to cleanly unmount the currently mounted file system. Must return a specified success/error code.
+    """
+    global MOUNTED_DISK_BINARY_IO
+    global MOUNTED_DISK
 
-    if mounted_disk is None:
-        print("Error: No filesystem is currently mounted.")
-        return DiskErrorCodes.FAILURE
-
-    # Perform any necessary cleanup here
-
-    close_disk(mounted_disk)
-    mounted_disk = None
-    mounted_superblock = None
-    mounted_root_directory = None
+    MOUNTED_DISK = None
+    MOUNTED_DISK_BINARY_IO = None
 
     return DiskErrorCodes.SUCCESS
+
+
+def tfs_open(name: str) -> int:
+    """
+    Opens a file for reading and writing on the currently mounted file system. Creates a dynamic resource table entry
+    for the file (the structure that tracks open files, the internal file pointer, etc.), and returns a file descriptor
+    (integer) that can be used to reference this file while the filesystem is mounted.
+    """
+
+
+
+    return 1
