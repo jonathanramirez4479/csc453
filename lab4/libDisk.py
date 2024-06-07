@@ -4,7 +4,6 @@ from typing import BinaryIO, Union
 BLOCK_SIZE = 256  # bytes
 
 
-
 class DiskErrorCodes:
     SUCCESS = 0  # operation successful
     DISK_NOT_AVAILABLE = -1  # could not open/create/access disk (file)
@@ -12,6 +11,7 @@ class DiskErrorCodes:
     WRITE_FAILURE = -3  # could not write to disk (file)
     SEEK_FAILURE = -4  # could not move file seek pointer in disk (file)
     SIZE_MISMATCH = -5  # size not integral to BLOCK_SIZE
+    DISK_ALREADY_MOUNTED = -6  # disk is already mounted
 
     ERROR_MESSAGES = {
         SUCCESS: "Success",
@@ -19,6 +19,7 @@ class DiskErrorCodes:
         READ_FAILURE: "Failed to read from disk",
         WRITE_FAILURE: "Failed to write to disk",
         SEEK_FAILURE: "Failed to seek the specified block",
+        DISK_ALREADY_MOUNTED: "Disk already mounted",
     }
 
 
