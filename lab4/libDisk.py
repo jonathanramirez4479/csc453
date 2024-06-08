@@ -12,6 +12,7 @@ class DiskErrorCodes:
     SEEK_FAILURE = -4  # could not move file seek pointer in disk (file)
     SIZE_MISMATCH = -5  # size not integral to BLOCK_SIZE
     DISK_ALREADY_MOUNTED = -6  # disk is already mounted
+    NO_FREE_BLOCK = -7  # no free block to allocate
 
     ERROR_MESSAGES = {
         SUCCESS: "Success",
@@ -20,6 +21,7 @@ class DiskErrorCodes:
         WRITE_FAILURE: "Failed to write to disk",
         SEEK_FAILURE: "Failed to seek the specified block",
         DISK_ALREADY_MOUNTED: "Disk already mounted",
+        NO_FREE_BLOCK: "No free block available to allocate",
     }
 
 

@@ -3,7 +3,6 @@ from FileTypes import FileTypes
 from INode import INode
 from libDisk import *
 
-BLOCK_SIZE = 256  # bytes
 DEFAULT_DISK_SIZE = 10240  # bytes = 40 blocks; CAN CHANGE TO SUPPORT VARIABLE SIZE
 DEFAULT_DISK_NAME = "tinyFSDisk"
 NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
@@ -100,11 +99,27 @@ def tfs_open(name: str) -> int:
     """
 
     # create inode entry
-    # create data block entry
     # add entry to dynamic table entry
 
     new_inode = INode()
 
+    # look for free block
+    block_index = MOUNTED_DISK.get_free_block_index()
+    if block_index == DiskErrorCodes.NO_FREE_BLOCK:
+        return DiskErrorCodes.NO_FREE_BLOCK
+
+    # update disk array
+    MOUNTED_DISK.add_block(block=new_inode, block_index=block_index)
+
+    # update root dir inode
+    MOUNTED_DISK.get_root_dir_inode().add_name_inode(filename=name, inode=block_index)
+
+    # update dynamic table
+    MOUNTED_DISK.add_dynamic_table_entry(filename=name)
+
+    # update bitmap
+    MOUNTED_DISK.get_super_block().get_bitmap_obj().set_bit(block_index)
+
+    return block_index
 
 
-    return 1
