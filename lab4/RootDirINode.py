@@ -4,13 +4,13 @@ ENTRY_SIZE = MAX_NAME_LENGTH + INODE_SIZE
 
 class RootDirINode:
     def __init__(self, disk_size, block_size):
-        self.__root_inode = {}
-        self.__disk_size = disk_size
-        self.__block_size = block_size
-        self.__root_inode_limit = (disk_size // block_size) - 1
-        self.__inode_size = INODE_SIZE
-        self.__max_name_length = MAX_NAME_LENGTH
-        self.__entry_size = ENTRY_SIZE
+        self.__root_inode: dict = {}
+        self.__disk_size: int = disk_size
+        self.__block_size: int = block_size
+        self.__root_inode_limit: int = (disk_size // block_size) - 1
+        self.__inode_size: int = INODE_SIZE
+        self.__max_name_length: int = MAX_NAME_LENGTH
+        self.__entry_size: int = ENTRY_SIZE
 
     def get_root_inode_size(self):
         return len(self.__root_inode)

@@ -1,22 +1,15 @@
 from Disk import *
 from FileTypes import FileTypes
+from INode import INode
+from libDisk import *
 
+BLOCK_SIZE = 256  # bytes
 DEFAULT_DISK_SIZE = 10240  # bytes = 40 blocks; CAN CHANGE TO SUPPORT VARIABLE SIZE
 DEFAULT_DISK_NAME = "tinyFSDisk"
 NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
 
-MOUNTED_DISK_BINARY_IO = None
-MOUNTED_DISK = None
-
-class Block:
-    def __init__(self):
-        self.__data = bytes()
-
-    def set_block_data(self, data: bytes):
-        self.__data = data
-
-    def get_block_data(self) -> bytes:
-        return self.__data
+MOUNTED_DISK_BINARY_IO: Union[BinaryIO, None] = None
+MOUNTED_DISK: Union[Disk, None] = None
 
 
 def tfs_mkfs(filename: str, n_bytes: int) -> int:
@@ -56,11 +49,12 @@ def tfs_mount(filename: str) -> int:
     tfs_mount should verify the file system is the correct type. Only one file system may be mounted at a time. Must
     return a specified success/error code.
     """
-    global MOUNTED_DISK_BINARY_IO
     global DEFAULT_DISK_SIZE
     global DEFAULT_DISK_NAME
     global MOUNTED_DISK
     global NUM_OF_BLOCKS
+    global MOUNTED_DISK_BINARY_IO
+
 
     # check if a disk is already mounted
     if MOUNTED_DISK is not None:
@@ -68,25 +62,22 @@ def tfs_mount(filename: str) -> int:
 
     # read data from disk and construct Disk obj from it with proper block
     # construction and management
-    with open(filename, 'rb') as f:
-        # Superblock first byte
-        first_byte = f.read(1)
+    MOUNTED_DISK_BINARY_IO = open(filename, 'rb+')
+    # Superblock first byte
+    first_byte = MOUNTED_DISK_BINARY_IO.read(1)
 
-        # verify if the file system is the correct type
-        if int(first_byte.hex(), 16) != 0x5A:
-            return DiskErrorCodes.DISK_NOT_AVAILABLE
+    # verify if the file system is the correct type
+    if int(first_byte.hex(), 16) != 0x5A:
+        return DiskErrorCodes.DISK_NOT_AVAILABLE
 
-        # update global vars
-        f.seek(0)
-        DEFAULT_DISK_SIZE = len(f.read())  # get disk size
-        DEFAULT_DISK_NAME = filename
-        NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
-        MOUNTED_DISK_BINARY_IO = f
+    # update global vars
+    MOUNTED_DISK_BINARY_IO.seek(0)
+    DEFAULT_DISK_SIZE = len(MOUNTED_DISK_BINARY_IO.read())  # get disk size
+    DEFAULT_DISK_NAME = filename
+    NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
 
-        MOUNTED_DISK = Disk(disk_size=DEFAULT_DISK_SIZE, num_of_blocks=NUM_OF_BLOCKS, block_size=BLOCK_SIZE)
-        MOUNTED_DISK.mount_disk(disk=MOUNTED_DISK_BINARY_IO)
-
-        # print(MOUNTED_DISK.get_disk_state())
+    MOUNTED_DISK = Disk(disk_size=DEFAULT_DISK_SIZE, num_of_blocks=NUM_OF_BLOCKS, block_size=BLOCK_SIZE)
+    MOUNTED_DISK.mount_disk(disk=MOUNTED_DISK_BINARY_IO)
 
     return DiskErrorCodes.SUCCESS
 
@@ -96,11 +87,7 @@ def tfs_unmount() -> int:
     tfs_unmount(void) “unmounts” the currently mounted file system. As part of the mount operation
     Use tfs_unmount to cleanly unmount the currently mounted file system. Must return a specified success/error code.
     """
-    global MOUNTED_DISK_BINARY_IO
-    global MOUNTED_DISK
-
-    MOUNTED_DISK = None
-    MOUNTED_DISK_BINARY_IO = None
+    MOUNTED_DISK.unmount_disk(disk=MOUNTED_DISK_BINARY_IO)
 
     return DiskErrorCodes.SUCCESS
 
@@ -111,5 +98,13 @@ def tfs_open(name: str) -> int:
     for the file (the structure that tracks open files, the internal file pointer, etc.), and returns a file descriptor
     (integer) that can be used to reference this file while the filesystem is mounted.
     """
+
+    # create inode entry
+    # create data block entry
+    # add entry to dynamic table entry
+
+    new_inode = INode()
+
+
 
     return 1
