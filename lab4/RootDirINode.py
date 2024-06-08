@@ -15,7 +15,7 @@ class RootDirINode:
     def get_root_inode_size(self):
         return len(self.__root_inode)
 
-    def get_root_inode(self):
+    def get_root_inode_data(self):
         return self.__root_inode
 
     def add_name_inode(self, filename: str, inode: int):

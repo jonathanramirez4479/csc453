@@ -4,6 +4,7 @@ from DataBlock import DataBlock
 from FileTypes import FileTypes
 from INode import INode
 from typing import List, Union, BinaryIO
+from libDisk import DiskErrorCodes
 
 class Disk:
     __instance = None
@@ -27,6 +28,28 @@ class Disk:
 
     def get_disk_state(self):
         return self.__disk
+
+    def add_dynamic_table_entry(self, filename: str):
+        self.__dynamic_table_entry[filename] = 0
+
+    def remove_dynamic_table_entry(self, filename: str):
+        del self.__dynamic_table_entry[filename]
+
+    def get_dynamic_table_entry(self):
+        return self.__dynamic_table_entry
+
+
+    def get_free_block_index(self) -> int:
+        for i in range(2, len(self.__disk)):
+            if self.__disk[i] == FileTypes.FREE:
+                return i
+
+        return DiskErrorCodes.NO_FREE_BLOCK
+
+    def add_block(self, block: Union[INode, DataBlock], block_index: int):
+        assert self.__disk[block_index] == FileTypes.FREE
+        self.__disk[block_index] = block
+
 
     def get_super_block(self) -> SuperBlock:
         super_block: SuperBlock = self.__disk[0]
@@ -73,7 +96,6 @@ class Disk:
 
         self.__disk[1] = root_dir_inode
 
-
         for i in range(2, len(self.__disk)):
             disk.seek(i * self.__block_size)  # set to beginning of block
             first_byte = disk.read(1)  # read the first byte of the block (aka the file type)
@@ -118,3 +140,4 @@ class Disk:
             disk.write(root_dir_entry)
 
         disk.flush()
+
