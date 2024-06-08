@@ -18,3 +18,6 @@ class SuperBlock:
 
     def get_root_dir_block(self) -> int:
         return self.__root_dir_block
+
+    def get_bitmap_obj(self) -> Bitmap:
+        return self.__bitmap_vector
