@@ -1,7 +1,7 @@
 from SuperBlock import *
 from typing import BinaryIO
 from RootDirINode import *
-
+from DataBlock import *
 class Disk:
     __instance = None
 
@@ -30,4 +30,7 @@ class Disk:
 
         self.__disk[0] = super_block
         self.__disk[1] = RootDirINode(disk_size=self.__disk_size, block_size=self.__block_size)
+        for i in range(2, 40):
+            self.__disk[i] = DataBlock()
+
         # set rest of data

@@ -1,11 +1,10 @@
 from libDisk import *
 from TinyFS import *
 def main():
-    disk = tfs_mkfs(filename=DEFAULT_DISK_NAME, n_bytes=DEFAULT_DISK_SIZE)
-
-    tfs_mount(DEFAULT_DISK_NAME)
-
-
+    test_disk = tfs_mkfs(filename=DEFAULT_DISK_NAME, n_bytes=DEFAULT_DISK_SIZE)
+    tfs_mount(filename=DEFAULT_DISK_NAME)
+    test_mounted_disk = 'test_disk'
+    tfs_mount(filename=test_mounted_disk)
 
 
 if __name__ == "__main__":

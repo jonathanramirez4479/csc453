@@ -8,11 +8,6 @@ NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
 MOUNTED_DISK_BINARY_IO = None
 MOUNTED_DISK = None
 
-class FILE_TYPES:
-    ROOT_DIR_INODE = 1,
-    INODE = 2
-    DATA = 3
-
 
 class Block:
     def __init__(self):
@@ -65,6 +60,7 @@ def tfs_mount(filename: str) -> int:
         return DiskErrorCodes.DISK_ALREADY_MOUNTED
 
     with open(filename, 'rb') as f:
+        # Superblock first byte
         first_byte = f.read(1)
         f.seek(0)
         DEFAULT_DISK_SIZE = len(f.read())
@@ -103,7 +99,5 @@ def tfs_open(name: str) -> int:
     for the file (the structure that tracks open files, the internal file pointer, etc.), and returns a file descriptor
     (integer) that can be used to reference this file while the filesystem is mounted.
     """
-
-
 
     return 1
