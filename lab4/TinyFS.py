@@ -1,5 +1,5 @@
-from libDisk import *
 from Disk import *
+from FileTypes import FileTypes
 
 DEFAULT_DISK_SIZE = 10240  # bytes = 40 blocks; CAN CHANGE TO SUPPORT VARIABLE SIZE
 DEFAULT_DISK_NAME = "tinyFSDisk"
@@ -7,7 +7,6 @@ NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
 
 MOUNTED_DISK_BINARY_IO = None
 MOUNTED_DISK = None
-
 
 class Block:
     def __init__(self):
@@ -22,11 +21,13 @@ class Block:
 
 def tfs_mkfs(filename: str, n_bytes: int) -> int:
     """
-    Makes an empty TinyFS file system of size nBytes on an emulated libDisk disk specified by ‘filename’.
-    This function should use the emulated disk library to open the specified file, and upon success,
-    format the file to be mountable. This includes initializing all data to 0x00, setting magic numbers,
-    initializing and writing the superblock and other metadata, etc. Must return a specified success/error code.
-    int tfs_mkfs(char *filename, int nBytes);
+    This function opens a disk (creates a file) and initializes the disk
+    to have a super block, root directory inode, and free blocks up the
+    max number of possible blocks per the disk size
+
+    :param filename: string file name
+    :param n_bytes: number of bytes for disk initialization
+    :return: succss/error codes
     """
     disk = open_disk(filename=filename, n_bytes=n_bytes)
     if isinstance(disk, int):  # If the returned value is an error code
@@ -42,6 +43,10 @@ def tfs_mkfs(filename: str, n_bytes: int) -> int:
 
     write_block(disk=disk, block_num=0, block_data=bytearray(data_to_write))
 
+    for i in range(2, NUM_OF_BLOCKS):
+        free_block_indicator = bytearray((FileTypes.FREE).to_bytes())
+        write_block(disk=disk, block_num=i, block_data=free_block_indicator)
+
     return DiskErrorCodes.SUCCESS
 
 
@@ -55,26 +60,33 @@ def tfs_mount(filename: str) -> int:
     global DEFAULT_DISK_SIZE
     global DEFAULT_DISK_NAME
     global MOUNTED_DISK
+    global NUM_OF_BLOCKS
 
+    # check if a disk is already mounted
     if MOUNTED_DISK is not None:
         return DiskErrorCodes.DISK_ALREADY_MOUNTED
 
+    # read data from disk and construct Disk obj from it with proper block
+    # construction and management
     with open(filename, 'rb') as f:
         # Superblock first byte
         first_byte = f.read(1)
-        f.seek(0)
-        DEFAULT_DISK_SIZE = len(f.read())
-        DEFAULT_DISK_NAME = filename
 
+        # verify if the file system is the correct type
         if int(first_byte.hex(), 16) != 0x5A:
             return DiskErrorCodes.DISK_NOT_AVAILABLE
 
+        # update global vars
+        f.seek(0)
+        DEFAULT_DISK_SIZE = len(f.read())  # get disk size
+        DEFAULT_DISK_NAME = filename
+        NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
         MOUNTED_DISK_BINARY_IO = f
 
         MOUNTED_DISK = Disk(disk_size=DEFAULT_DISK_SIZE, num_of_blocks=NUM_OF_BLOCKS, block_size=BLOCK_SIZE)
         MOUNTED_DISK.mount_disk(disk=MOUNTED_DISK_BINARY_IO)
 
-        print(MOUNTED_DISK.get_disk_state())
+        # print(MOUNTED_DISK.get_disk_state())
 
     return DiskErrorCodes.SUCCESS
 
