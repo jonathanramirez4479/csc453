@@ -1,7 +1,8 @@
 from SuperBlock import *
-from typing import BinaryIO
 from RootDirINode import *
 from DataBlock import *
+from FileTypes import FileTypes
+
 class Disk:
     __instance = None
 
@@ -29,8 +30,31 @@ class Disk:
         super_block.set_bitmap_vector_number(bitmap_vector_num=bitmap_vector_num)
 
         self.__disk[0] = super_block
-        self.__disk[1] = RootDirINode(disk_size=self.__disk_size, block_size=self.__block_size)
-        for i in range(2, 40):
-            self.__disk[i] = DataBlock()
 
-        # set rest of data
+        # set root directory inode
+        root_dir_inode = RootDirINode(disk_size=self.__disk_size, block_size=self.__block_size)
+
+        disk.seek(BLOCK_SIZE) # set to root dir inode block
+        while disk.tell() < (BLOCK_SIZE * 2) - root_dir_inode.get_entry_size():
+            empty_file_name = b'\x00\x00\x00\x00\x00\x00\x00\x00'
+
+            entry = disk.read(root_dir_inode.get_entry_size())
+
+            filename = entry[:root_dir_inode.get_max_name_length()]
+
+            # check if the entry is empty
+            if filename == empty_file_name:
+                continue
+
+            filename = filename.decode('utf-8')
+
+            inode = entry[root_dir_inode.get_max_name_length():]
+            inode = int.from_bytes(inode)
+
+            # add name, inode pair
+            root_dir_inode.add_name_inode(filename=filename, inode=inode)
+
+        ### TODO: get blocks according to the disk on file
+        # set rest of data as free blocks
+        for i in range(2, len(self.__disk)):
+            self.__disk[i] = FileTypes.FREE
