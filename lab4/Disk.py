@@ -38,7 +38,7 @@ class Disk:
             if block_index == fd:
                 del self.__dynamic_table_entry[filename]
 
-    def get_dynamic_table_entry(self):
+    def get_dynamic_table_entries(self):
         return self.__dynamic_table_entry
 
     def get_free_block_index(self) -> int:

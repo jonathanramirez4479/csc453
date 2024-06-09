@@ -13,6 +13,8 @@ class DiskErrorCodes:
     SIZE_MISMATCH = -5  # size not integral to BLOCK_SIZE
     DISK_ALREADY_MOUNTED = -6  # disk is already mounted
     NO_FREE_BLOCK = -7  # no free block to allocate
+    INVALID_FILE_DESCRIPTOR = -8  # FD used by user in tfs_write is invalid
+    INODE_FAILURE = -9  # Either some kind of allocation or cleanup error on this Inode
 
     ERROR_MESSAGES = {
         SUCCESS: "Success",

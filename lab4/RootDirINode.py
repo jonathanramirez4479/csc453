@@ -1,6 +1,9 @@
+from typing import Union
+
 INODE_SIZE = 1
 MAX_NAME_LENGTH = 8
 ENTRY_SIZE = MAX_NAME_LENGTH + INODE_SIZE
+
 
 class RootDirINode:
     def __init__(self, disk_size, block_size):
@@ -25,14 +28,20 @@ class RootDirINode:
         if filename not in self.__root_inode and inode < self.__root_inode_limit:
             self.__root_inode[filename] = inode
 
-    def get_inode(self, filename: str):
-        return self.__root_inode[filename]
+    def get_inode(self, filename: str) -> Union[None, int]:
+        if filename in self.__root_inode:
+            return self.__root_inode[filename]
+        else:
+            return None
+
+    def get_inode_by_fd(self, fd: int) -> Union[None, int]:
+        for inode in self.__root_inode.values():
+            if inode == fd:
+                return inode
+        return None
 
     def get_inode_size(self):
         return self.__inode_size
-
-    def get_max_name_length(self):
-        return self.__max_name_length
 
     def get_entry_size(self):
         return self.__entry_size
