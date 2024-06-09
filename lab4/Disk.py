@@ -29,11 +29,16 @@ class Disk:
     def get_disk_state(self):
         return self.__disk
 
+
     def add_dynamic_table_entry(self, filename: str):
         self.__dynamic_table_entry[filename] = 0
 
-    def remove_dynamic_table_entry(self, filename: str):
-        del self.__dynamic_table_entry[filename]
+
+    def remove_dynamic_table_entry(self, fd: int):
+        for filename, block_index in self.get_root_dir_inode().get_root_inode_data().items():
+            if block_index == fd:
+                del self.__dynamic_table_entry[filename]
+
 
     def get_dynamic_table_entry(self):
         return self.__dynamic_table_entry
@@ -46,6 +51,7 @@ class Disk:
 
         return DiskErrorCodes.NO_FREE_BLOCK
 
+
     def add_block(self, block: Union[INode, DataBlock], block_index: int):
         assert self.__disk[block_index] == FileTypes.FREE
         self.__disk[block_index] = block
@@ -54,6 +60,7 @@ class Disk:
     def get_super_block(self) -> SuperBlock:
         super_block: SuperBlock = self.__disk[0]
         return super_block
+
 
     def get_root_dir_inode(self) -> RootDirINode:
         root_dir_block_index: int = self.get_super_block().get_root_dir_block()

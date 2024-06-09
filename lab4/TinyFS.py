@@ -123,3 +123,9 @@ def tfs_open(name: str) -> int:
     return block_index
 
 
+def tfs_close(fd: int) -> int:
+    # update dynamic table
+    MOUNTED_DISK.remove_dynamic_table_entry(fd=fd)
+
+
+def tfs_write(fd: int, buffer: str, size: int) -> int:

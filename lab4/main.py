@@ -9,6 +9,7 @@ def main():
     #     print(f.read(BLOCK_SIZE))
     #     print()
     tfs_open(name="foo.c")
+    tfs_close(2)
     # with open(DEFAULT_DISK_NAME, 'rb') as f:
     #     f.seek(0)
     #     print(f.read(BLOCK_SIZE))
