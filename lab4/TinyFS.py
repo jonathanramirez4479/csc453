@@ -1,6 +1,6 @@
 from Disk import *
 from FileTypes import FileTypes
-from INode import INode
+from Inode import INode
 from libDisk import *
 
 DEFAULT_DISK_SIZE = 10240  # bytes = 40 blocks; CAN CHANGE TO SUPPORT VARIABLE SIZE
@@ -128,4 +128,4 @@ def tfs_close(fd: int) -> int:
     MOUNTED_DISK.remove_dynamic_table_entry(fd=fd)
 
 
-def tfs_write(fd: int, buffer: str, size: int) -> int:
+# def tfs_write(fd: int, buffer: str, size: int) -> int:

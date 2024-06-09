@@ -2,7 +2,7 @@ from SuperBlock import SuperBlock
 from RootDirINode import RootDirINode
 from DataBlock import DataBlock
 from FileTypes import FileTypes
-from INode import INode
+from Inode import INode
 from typing import List, Union, BinaryIO
 from libDisk import DiskErrorCodes
 
