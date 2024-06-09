@@ -221,7 +221,7 @@ def tfs_readByte(fileDescriptor: int, offset: int) -> int:
     should return an error and not increment the file pointer. */
     """
     dynamic_table = MOUNTED_DISK.get_dynamic_table_entries()
-    # Check if the file descriptor is valid
+
     if fileDescriptor not in dynamic_table:
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
 
@@ -250,7 +250,6 @@ def tfs_readByte(fileDescriptor: int, offset: int) -> int:
     block_data = data_block.get_block_data()
     byte_value = block_data[block_offset]
 
-    # Increment the file pointer
     MOUNTED_DISK.set_file_pointer(fileDescriptor, file_pointer + 1)
 
     return byte_value
@@ -265,10 +264,8 @@ def tfs_seek(file_descriptor: int, offset: int) -> int:
     :param offset: The absolute offset to move the file pointer to.
     :return: Success/error code.
     """
-    # Get the current file pointer for the given file descriptor
     current_fp = MOUNTED_DISK.get_file_pointer(file_descriptor)
 
-    # Check if the file descriptor is valid
     if current_fp == -1:
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
 
