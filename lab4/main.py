@@ -7,25 +7,26 @@ def main():
     tfs_mount(filename=DEFAULT_DISK_NAME)
 
     with open(DEFAULT_DISK_NAME, 'rb') as f:
-
         first_file_descriptor = tfs_open(name="foo.c")
 
-        write_status = tfs_write(first_file_descriptor, "a"*257, 257)
+        write_status = tfs_write(first_file_descriptor, "a" * 257, 257)
         if write_status != DiskErrorCodes.SUCCESS:
             print(f"Write Error: {write_status}")
             return
 
-        tfs_seek(2, 0)  # reset file pointer
         # Read each byte from the file
-        read_bytes = []
-        for i in range(12):  # Length of "hello world!" is 12
-            byte_value = tfs_readByte(first_file_descriptor, i)
-            if byte_value < 0:
+        read_bytes = bytearray()
+        for i in range(12):
+            buffer = bytearray()
+            byte_value = tfs_readByte(first_file_descriptor, buffer)
+            if byte_value != DiskErrorCodes.SUCCESS:
                 print(f"Read Error at offset {i}: {byte_value}")
                 return
-            read_bytes.append(byte_value)
+            read_bytes.append(buffer[0])
 
-        print(f"Read Bytes: {read_bytes}")
+        print(f"Read Bytes: {read_bytes.decode('utf-8')}")
+
+    tfs_unmount()
 
 
     #     # test_write_error = tfs_write(0, "hello world!", 9) #FD error

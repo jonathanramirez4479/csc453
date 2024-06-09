@@ -200,7 +200,7 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
     return DiskErrorCodes.SUCCESS
 
 
-def tfs_readByte(fileDescriptor: int, offset: int) -> int:
+def tfs_readByte(fileDescriptor: int, buffer: bytearray) -> int:
     """
     /* reads one byte from the file and copies it to ‘buffer’,
     using the current file pointer location and incrementing it by one upon success.
@@ -237,19 +237,18 @@ def tfs_readByte(fileDescriptor: int, offset: int) -> int:
     block_data = data_block.get_block_data()
     byte_value = block_data[block_offset]
 
+    # Copy the byte to the buffer
+    buffer.append(byte_value)
+
     MOUNTED_DISK.set_file_pointer(fileDescriptor, file_pointer + 1)
 
-    return byte_value
+    return DiskErrorCodes.SUCCESS
 
 
 def tfs_seek(file_descriptor: int, offset: int) -> int:
     """
-    Changes the file pointer location to offset (absolute).
-    Returns success/error codes.
-
-    :param file_descriptor: The file descriptor of the file.
-    :param offset: The absolute offset to move the file pointer to.
-    :return: Success/error code.
+    /* change the file pointer location to offset (absolute).
+    Returns success/error codes.*/
     """
     current_fp = MOUNTED_DISK.get_file_pointer(file_descriptor)
 
