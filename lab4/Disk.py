@@ -25,13 +25,16 @@ class Disk:
         self.__num_of_blocks: int = num_of_blocks
         self.__disk_size: int = disk_size
         self.__block_size: int = block_size
-        self.__dynamic_table_entry: dict = {}  # keeps track of open files in (filename, fp) pairs
+        self.__dynamic_table_entry: dict = {}  # keeps track of open files in (filename, fp) pairs. Lets change this to (fd, fp pairs)
 
     def get_disk_state(self):
         return self.__disk
 
     def add_dynamic_table_entry(self, filename: str):
         self.__dynamic_table_entry[filename] = 0
+
+    def add_dynamic_table_entry_fd(self, fd: int):
+        self.__dynamic_table_entry[fd] = 0
 
     def remove_dynamic_table_entry(self, fd: int):
         for filename, block_index in self.get_root_dir_inode().get_root_inode_data().items():
@@ -59,6 +62,15 @@ class Disk:
     def get_root_dir_inode(self) -> RootDirINode:
         root_dir_block_index: int = self.get_super_block().get_root_dir_block()
         return self.__disk[root_dir_block_index]
+
+    def get_file_pointer(self, fd: int) -> int:
+        if fd in self.__dynamic_table_entry:
+            return self.get_dynamic_table_entries().get(fd)
+        return -1  # Or some error code indicating file not found
+
+    def set_file_pointer(self, fd: int, fp: int):
+        if fd in self.__dynamic_table_entry:
+            self.__dynamic_table_entry[fd] = fp
 
     def mount_disk(self, disk: BinaryIO):
         """TODO: correctly read inode and data blocks into self.__disk """

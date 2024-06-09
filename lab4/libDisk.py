@@ -15,6 +15,8 @@ class DiskErrorCodes:
     NO_FREE_BLOCK = -7  # no free block to allocate
     INVALID_FILE_DESCRIPTOR = -8  # FD used by user in tfs_write is invalid
     INODE_FAILURE = -9  # Either some kind of allocation or cleanup error on this Inode
+    FILE_POINTER_NOT_FOUND = -10  # General error for file pointer handling
+    END_OF_FILE = -11  # File pointer has reached end of file and is attempting to go beyond it
 
     ERROR_MESSAGES = {
         SUCCESS: "Success",
