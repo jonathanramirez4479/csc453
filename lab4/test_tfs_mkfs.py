@@ -9,14 +9,13 @@ def test_tfs_mkfs():
     # Create the file system
     result = tfs_mkfs(test_filename, DEFAULT_DISK_SIZE)
     assert result == DiskErrorCodes.SUCCESS, f"tfs_mkfs failed with error code {result}"
-    ###TODO: Making a file system seems to work with tfs_mkfs, however once we are outside of the function, the serialized data does not persist
-    ### Must figure out why the superblock is reset to all 0's after tfs_mkfs
+
     # Mount the file system
     mount = tfs_mount(test_filename)
     assert mount == DiskErrorCodes.SUCCESS, f"tfs_mount failed with error code {result}"
 
     # Verify the superblock initialization
-    assert mounted_superblock.get_magic_number() == 0x5A, "Superblock magic number is incorrect"
+    assert mount.get_magic_number() == 0x5A, "Superblock magic number is incorrect"
 
     root_inode_block = mounted_superblock.get_root_dir_block()
     assert root_inode_block == 1, "Superblock root directory block pointer is incorrect"
