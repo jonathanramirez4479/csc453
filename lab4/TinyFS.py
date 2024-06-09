@@ -62,8 +62,12 @@ def tfs_mount(filename: str) -> int:
     # read data from disk and construct Disk obj from it with proper block
     # construction and management
     MOUNTED_DISK_BINARY_IO = open(filename, 'rb+')
+
     # Superblock first byte
-    first_byte = MOUNTED_DISK_BINARY_IO.read(1)
+    super_block_data = bytearray(BLOCK_SIZE)
+    read_block(disk=MOUNTED_DISK_BINARY_IO, block_num=0, block_data=super_block_data)
+
+    first_byte = super_block_data[0].to_bytes()
 
     # verify if the file system is the correct type
     if int(first_byte.hex(), 16) != 0x5A:
@@ -129,3 +133,9 @@ def tfs_close(fd: int) -> int:
 
 
 # def tfs_write(fd: int, buffer: str, size: int) -> int:
+    # get inode
+    # check if inode has data blocks
+
+    # if it doesn't create one
+
+    # else, see if you can fit the buffer contents in one of them, per the fp
