@@ -6,6 +6,7 @@ from Inode import INode
 from typing import List, Union, BinaryIO
 from libDisk import *
 
+
 class Disk:
     __instance = None
 
@@ -29,20 +30,16 @@ class Disk:
     def get_disk_state(self):
         return self.__disk
 
-
     def add_dynamic_table_entry(self, filename: str):
         self.__dynamic_table_entry[filename] = 0
-
 
     def remove_dynamic_table_entry(self, fd: int):
         for filename, block_index in self.get_root_dir_inode().get_root_inode_data().items():
             if block_index == fd:
                 del self.__dynamic_table_entry[filename]
 
-
     def get_dynamic_table_entry(self):
         return self.__dynamic_table_entry
-
 
     def get_free_block_index(self) -> int:
         for i in range(2, len(self.__disk)):
@@ -51,21 +48,17 @@ class Disk:
 
         return DiskErrorCodes.NO_FREE_BLOCK
 
-
     def add_block(self, block: Union[INode, DataBlock], block_index: int):
         assert self.__disk[block_index] == FileTypes.FREE
         self.__disk[block_index] = block
-
 
     def get_super_block(self) -> SuperBlock:
         super_block: SuperBlock = self.__disk[0]
         return super_block
 
-
     def get_root_dir_inode(self) -> RootDirINode:
         root_dir_block_index: int = self.get_super_block().get_root_dir_block()
         return self.__disk[root_dir_block_index]
-
 
     def mount_disk(self, disk: BinaryIO):
         """TODO: correctly read inode and data blocks into self.__disk """
@@ -129,9 +122,6 @@ class Disk:
                     if block_location != 0:
                         inode.add_data_block_location(block_location)
 
-
-
-
     def unmount_disk(self, disk: BinaryIO):
         """ TODO: correctly read inode and data blocks into _disk """
 
@@ -153,14 +143,13 @@ class Disk:
 
         # write name, inode pairs to disk for root directory inode data
         for filename, inode in root_dir_inode_dict.items():
-
             entry = filename.encode('utf-8').ljust(root_dir_inode.get_max_name_length(), b'\x00')
             entry += inode.to_bytes(4, 'little')
             root_dir_inode_data.extend(entry)
 
-            # check if fp  out of bounds
-            if disk.tell() >= (self.__block_size * 2) - inode.get_entry_size():
-                break
+            # # check if fp  out of bounds
+            # if disk.tell() >= (self.__block_size * 2) - inode.get_entry_size():
+            #     break
 
             filename_bytes = filename.encode('utf-8')
             inode_bytes = inode.to_bytes()
@@ -171,9 +160,13 @@ class Disk:
         # Write all other blocks
         for i in range(2, len(self.__disk)):
             block = self.__disk[i]
-            block_data = bytearray(block)
-            if block is not None and block != FileTypes.FREE:
+            block_data = None
+            if block == FileTypes.DATA:
+                block_data = bytearray(block.get_block_data())
+            elif block == FileTypes.INODE:
+                block_data = bytearray(block.get_data_block_locations())
+
+            if block_data is not None and block != FileTypes.FREE:
                 write_block(disk=disk, block_num=i, block_data=block_data.ljust(BLOCK_SIZE, b'\x00'))
 
         disk.flush()
-
