@@ -103,7 +103,6 @@ def tfs_open(name: str) -> int:
     # Look for the file in the root directory inode
     root_inode = MOUNTED_DISK.get_root_dir_inode()
     inode_index = root_inode.get_inode(name)
-    print(f"inode index check on tfs open for file {name}: ", inode_index)
 
     if inode_index is None:
         # If file doesn't exist, create a new inode entry
@@ -111,7 +110,6 @@ def tfs_open(name: str) -> int:
 
         # Look for a free block
         block_index = MOUNTED_DISK.get_free_block_index()
-        print("block index for new inode: ", block_index)
         if block_index == DiskErrorCodes.NO_FREE_BLOCK:
             return DiskErrorCodes.NO_FREE_BLOCK
 
@@ -128,7 +126,7 @@ def tfs_open(name: str) -> int:
     # Create a file descriptor and update the dynamic resource table
     fd = inode_index  # Using the inode index as the file descriptor
     MOUNTED_DISK.add_dynamic_table_entry_fd(fd)
-    print(f"File descriptor for {name}: ", fd)
+
     return fd
 
 
@@ -154,12 +152,6 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
     if not isinstance(inode, INode):
         return DiskErrorCodes.INODE_FAILURE
 
-    print(MOUNTED_DISK.get_dynamic_table_entries())
-
-    inode = MOUNTED_DISK.get_disk_state()[inode_index]
-    if not isinstance(inode, INode):
-        return DiskErrorCodes.INODE_FAILURE
-
     # Split buffer into block-sized chunks
     blocks_needed = (size + BLOCK_SIZE - 1) // BLOCK_SIZE
     # Check and allocate additional blocks if necessary
@@ -171,7 +163,6 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
                 return DiskErrorCodes.NO_FREE_BLOCK
             # Set Inode data blocks and flip the bits for the bitmap
             inode.add_data_block_location(free_block_index)
-            print(f"inode {fd}'s data block locations: ", inode.get_data_block_locations())
             MOUNTED_DISK.add_block(block=DataBlock(), block_index=free_block_index)
             # print(MOUNTED_DISK.get_super_block().get_bitmap_obj())
             MOUNTED_DISK.get_super_block().get_bitmap_obj().set_bit(free_block_index)
@@ -179,7 +170,6 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
 
     # Get the current file pointer
     file_pointer = MOUNTED_DISK.get_file_pointer(fd)
-    print(f"file pointer for Inode {fd}: ", file_pointer)
 
     data_blocks = inode.get_data_block_locations()
     buffer_index = 0
@@ -197,7 +187,6 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
         current_pointer_pos = file_pointer % BLOCK_SIZE
         block_data = buffer[buffer_index:buffer_index + BLOCK_SIZE - current_pointer_pos] \
             .encode('utf-8').ljust(root_inode.get_max_name_length(), b'\x00')
-        print(f"printing from tfs_write", block_data)
         data_block.set_block_data(block_data)
 
         # Move to the next chunk of data
@@ -206,9 +195,7 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
         file_pointer += len(block_data)
 
     # Update the file pointer
-    MOUNTED_DISK.set_file_pointer(fd=fd, fp=file_pointer)
-    print(f"ending file pointer for Inode {fd}: ",
-          file_pointer)  # not resetting file pointer to 0 unless we want writes to overwrite
+    MOUNTED_DISK.set_file_pointer(fd=fd, fp=0)
 
     return DiskErrorCodes.SUCCESS
 

@@ -149,8 +149,6 @@ class Disk:
         root_dir_inode: RootDirINode = self.get_root_dir_inode()
         root_dir_inode_dict = root_dir_inode.get_root_dir_inode()
 
-        # set fp to root_dir_block + 1 byte (to account for file type byte)
-        disk.seek(super_block.get_root_dir_block() * self.__block_size + 1)
         root_dir_inode_data = bytearray()
 
         # write name, inode pairs to disk for root directory inode data
@@ -159,14 +157,6 @@ class Disk:
             entry += inode.to_bytes(4, 'little')
             root_dir_inode_data.extend(entry)
 
-            # # check if fp  out of bounds
-            # if disk.tell() >= (self.__block_size * 2) - inode.get_entry_size():
-            #     break
-
-            filename_bytes = filename.encode('utf-8')
-            inode_bytes = inode.to_bytes()
-
-            root_dir_entry = filename_bytes + inode_bytes
             write_block(disk=disk, block_num=1, block_data=root_dir_inode_data.ljust(BLOCK_SIZE, b'\x00'))
 
         # Write all other blocks
@@ -180,5 +170,3 @@ class Disk:
 
             if block_data is not None and block != FileTypes.FREE:
                 write_block(disk=disk, block_num=i, block_data=block_data.ljust(BLOCK_SIZE, b'\x00'))
-
-        disk.flush()
