@@ -1,0 +1,5 @@
+Names: Jonathan Ramirez, Christian Bird
+
+TinyFS implementation: Our TinyFS has all required core functions.  We were able to implement all additional functions from areas A and B.  The tfs_displayFragments() function simply shows the bitmap vector in big endian form to demonstrate the blocks in the disk.  The tfs_defrag manages to move all free blocks to the end of the disk in contiguous form.  Our tfs_rename() function renames a file by first renaming it in our root directory inode structure which is then written to file after unmounting the disk.  tfs_readdir() simply prints all the files in our disk, however, it being a flat file system, it only prints file names.
+
+As of now, there are no known bugs in our system.  Our only limitations are the fact that we have a flat file system and can't create new directories, and we only have a readByte rather than having a mechanism for reading more than one byte to a buffer.

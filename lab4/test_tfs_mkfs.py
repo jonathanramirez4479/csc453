@@ -1,5 +1,5 @@
 import os
-from TinyFS import *
+from libTinyFS import *
 from libDisk import *
 
 def test_tfs_mkfs():

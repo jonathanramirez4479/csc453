@@ -1,5 +1,5 @@
 import os
-from TinyFS import *
+from libTinyFS import *
 
 def test_tfs_mount():
     test_filename = "testDisk"
