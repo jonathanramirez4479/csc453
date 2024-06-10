@@ -57,6 +57,23 @@ def main():
 
     print(f"Read Bytes: {read_bytes.decode('utf-8')}")
 
+
+    # read_buffer = []
+    # tfs_readByte(fileDescriptor=foo_fd, buffer=read_buffer)
+    # tfs_readByte(fileDescriptor=foo_fd, buffer=read_buffer)
+    #
+    # tfs_seek(bar_fd, 6)
+    # tfs_readByte(fileDescriptor=bar_fd, buffer=read_buffer)
+    # tfs_readByte(fileDescriptor=bar_fd, buffer=read_buffer)
+    #
+    # tfs_seek(bar_fd, 255)
+    # tfs_readByte(fileDescriptor=bar_fd, buffer=read_buffer)
+    # tfs_readByte(fileDescriptor=bar_fd, buffer=read_buffer)
+    #
+    # print(read_buffer)
+    #
+    # f = open(DEFAULT_DISK_NAME, 'rb')
+    # print(len(f.read()))
     tfs_unmount()
 
 
