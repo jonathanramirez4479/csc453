@@ -260,3 +260,64 @@ def tfs_seek(file_descriptor: int, offset: int) -> int:
     MOUNTED_DISK.set_file_pointer(file_descriptor, new_fp)
 
     return DiskErrorCodes.SUCCESS
+
+
+def tfs_delete(fileDescriptor: int) -> int:
+    """
+    /* deletes a file and marks its blocks as free on disk. */
+    """
+    dynamic_table = MOUNTED_DISK.get_dynamic_table_entries()
+
+    if fileDescriptor not in dynamic_table:
+        return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
+
+    inode = MOUNTED_DISK.get_disk_state()[fileDescriptor]
+    if not isinstance(inode, INode):
+        return DiskErrorCodes.INODE_FAILURE
+
+    # Remove the file from the dynamic resource table
+    del dynamic_table[fileDescriptor]
+
+    # Get the root directory inode
+    root_dir_inode = MOUNTED_DISK.get_root_dir_inode()
+
+    # Find the filename in the root directory inode
+    filename_to_remove = None
+    for filename, inode_index in root_dir_inode.get_root_inode_data().items():
+        if inode_index == fileDescriptor:
+            filename_to_remove = filename
+            break
+
+    if filename_to_remove is None:
+        return DiskErrorCodes.FILE_NOT_FOUND
+
+    # Remove the file from the root directory inode
+    del root_dir_inode.get_root_inode_data()[filename_to_remove]
+
+    # Free its data blocks and inode
+    data_block_locations = inode.get_data_block_locations()
+    for block_index in data_block_locations:
+        MOUNTED_DISK.get_disk_state()[block_index] = FileTypes.FREE
+        MOUNTED_DISK.get_super_block().get_bitmap_obj().clear_bit(block_index)
+
+    # Free the inode block
+    MOUNTED_DISK.get_disk_state()[fileDescriptor] = FileTypes.FREE
+    MOUNTED_DISK.get_super_block().get_bitmap_obj().clear_bit(fileDescriptor)
+
+    return DiskErrorCodes.SUCCESS
+
+
+def tfs_displayFragments() -> int:
+    """
+    /* This function allows the user to see a map of all blocks with the non-free blocks clearly designated.
+     You can return this as a linked list or a bitmap which you can use to display the map with */
+    """
+    print(MOUNTED_DISK.get_super_block().get_bitmap_obj())
+    return DiskErrorCodes.SUCCESS
+
+
+def tfs_defrag():
+    """
+    /* moves blocks such that all free blocks are contiguous at the end of the disk.
+    This should be verifiable with the tfs_displayFraments() function */
+    """

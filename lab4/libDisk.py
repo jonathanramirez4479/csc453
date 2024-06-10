@@ -17,6 +17,7 @@ class DiskErrorCodes:
     INODE_FAILURE = -9  # Either some kind of allocation or cleanup error on this Inode
     FILE_POINTER_NOT_FOUND = -10  # General error for file pointer handling
     END_OF_FILE = -11  # File pointer has reached end of file and is attempting to go beyond it
+    FILE_NOT_FOUND = -12  # File to be deleted is not found based on FD
 
     ERROR_MESSAGES = {
         SUCCESS: "Success",
