@@ -68,6 +68,8 @@ def main():
 
     tfs_mount(filename=DEFAULT_DISK_NAME)
 
+    tfs_readdir()
+
 
 if __name__ == "__main__":
     main()
