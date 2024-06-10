@@ -292,10 +292,12 @@ def tfs_delete(fileDescriptor: int) -> int:
     """
     dynamic_table = MOUNTED_DISK.get_dynamic_table_entries()
     if fileDescriptor not in dynamic_table:
+        print(get_error_message(error_code=DiskErrorCodes.INVALID_FILE_DESCRIPTOR))
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
 
     inode = MOUNTED_DISK.get_disk_state()[fileDescriptor]
     if not isinstance(inode, INode):
+        print(get_error_message(DiskErrorCodes.INODE_FAILURE))
         return DiskErrorCodes.INODE_FAILURE
 
     # Remove the file from the dynamic resource table
@@ -312,6 +314,7 @@ def tfs_delete(fileDescriptor: int) -> int:
             break
 
     if filename_to_remove is None:
+        print(get_error_message(DiskErrorCodes.FILE_NOT_FOUND))
         return DiskErrorCodes.FILE_NOT_FOUND
     # Remove the file from the root directory inode
     del root_dir_inode.get_root_inode_data()[filename_to_remove]
@@ -327,11 +330,6 @@ def tfs_delete(fileDescriptor: int) -> int:
     MOUNTED_DISK.get_disk_state()[fileDescriptor] = FileTypes.FREE
     MOUNTED_DISK.get_super_block().get_bitmap_obj().clear_bit(fileDescriptor)
 
-    # print(f"current state of disk: {MOUNTED_DISK.get_disk_state()}")
-    # print(f"current state of bitmap: {MOUNTED_DISK.get_super_block().get_bitmap_obj()}")
-    # print(f"current state of root dir loc: {MOUNTED_DISK.get_super_block().get_root_dir_block()}")
-    # print(f"current state of root dir inode: {MOUNTED_DISK.get_root_dir_inode().get_root_inode_data()}")
-
     return DiskErrorCodes.SUCCESS
 
 
@@ -340,6 +338,10 @@ def tfs_displayFragments() -> int:
     /* This function allows the user to see a map of all blocks with the non-free blocks clearly designated.
      You can return this as a linked list or a bitmap which you can use to display the map with */
     """
+    bitmap = MOUNTED_DISK.get_super_block().get_bitmap_obj().__str__()
+    bitmap_reversed = bitmap[::-1]
+    print(bitmap_reversed)
+
     return DiskErrorCodes.SUCCESS
 
 
@@ -348,6 +350,7 @@ def tfs_defrag():
     /* moves blocks such that all free blocks are contiguous at the end of the disk.
     This should be verifiable with the tfs_displayFraments() function */
     """
+
     disk_state = MOUNTED_DISK.get_disk_state()
     super_block = MOUNTED_DISK.get_super_block()
     bitmap = super_block.get_bitmap_obj()
@@ -360,9 +363,6 @@ def tfs_defrag():
             occupied_blocks.append(block_index)
         else:
             free_blocks.append(block_index)
-
-    print(f"current occupied blocks", occupied_blocks)
-    print(f"current unoccupied blocks", free_blocks)
 
     # Move occupied blocks to the start of the disk
     next_free_index = 2
@@ -410,4 +410,28 @@ def tfs_defrag():
 
     print("Defragmentation complete.")
     tfs_displayFragments()
+
+def tfs_rename(old_file_name: str, new_file_name: str):
+    # check if valid filename
+    # go through root_dir_inode
+    # if you fine old_file_name, change it to new file name
+
+    root_dir_inode = MOUNTED_DISK.get_root_dir_inode()
+
+    for filename, block_index in root_dir_inode.get_root_inode_data().items():
+        if filename == old_file_name:
+            del root_dir_inode.get_root_inode_data()[filename]
+            root_dir_inode.get_root_inode_data()[new_file_name] = block_index
+            return DiskErrorCodes.SUCCESS
+
+    print(get_error_message(DiskErrorCodes.FILE_NOT_FOUND))
+    return DiskErrorCodes.FILE_NOT_FOUND
+
+
+def tfs_readdir():
+    print("Disk files:")
+    i = 1
+    for filename, block_index in MOUNTED_DISK.get_root_dir_inode().get_root_inode_data().items():
+        print(f"\t{i}) {filename}")
+        i += 1
 
