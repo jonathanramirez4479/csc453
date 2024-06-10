@@ -144,7 +144,6 @@ class Disk:
 
 
     def unmount_disk(self, disk: BinaryIO):
-        """ TODO: correctly read inode and data blocks into _disk """
 
         # write superblock to disk
         super_block: SuperBlock = self.__disk[0]
