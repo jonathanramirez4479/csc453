@@ -32,6 +32,7 @@ class DiskErrorCodes:
         FILE_POINTER_NOT_FOUND: "File pointer not found",
         END_OF_FILE: "End of file",
         SIZE_MISMATCH: "sizes don't match",
+        FILE_NOT_FOUND: "File not found"
     }
 
 
