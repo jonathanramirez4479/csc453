@@ -73,11 +73,13 @@ class Disk:
             self.__dynamic_table_entry[fd] = fp
 
     def mount_disk(self, disk: BinaryIO):
-        """TODO: correctly read inode and data blocks into self.__disk """
 
         # set superblock
         super_block_data = bytearray(BLOCK_SIZE)
-        read_block(disk=disk, block_num=0, block_data=super_block_data)
+        ret = read_block(disk=disk, block_num=0, block_data=super_block_data)
+        if ret != DiskErrorCodes.SUCCESS:
+            return ret
+
         bitmap_vector_int = super_block_data[2]
 
         super_block = SuperBlock(num_of_blocks=self.__num_of_blocks)
@@ -89,7 +91,9 @@ class Disk:
         root_dir_inode = RootDirINode(disk_size=self.__disk_size, block_size=self.__block_size)
 
         root_dir_inode_data = bytearray(BLOCK_SIZE)
-        read_block(disk=disk, block_num=1, block_data=root_dir_inode_data)
+        ret = read_block(disk=disk, block_num=1, block_data=root_dir_inode_data)
+        if ret != DiskErrorCodes.SUCCESS:
+            return ret
 
         for i in range(0, len(root_dir_inode_data) - root_dir_inode.get_entry_size(), root_dir_inode.get_entry_size()):
 
@@ -117,7 +121,11 @@ class Disk:
         # Load all other blocks
         for i in range(2, len(self.__disk)):
             block = bytearray(BLOCK_SIZE)
-            read_block(disk=disk, block_num=i, block_data=block)
+
+            ret = read_block(disk=disk, block_num=i, block_data=block)
+            if ret != DiskErrorCodes.SUCCESS:
+                return ret
+
             first_byte_int = block[0]
 
             # Check block type

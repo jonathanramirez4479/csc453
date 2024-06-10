@@ -3,37 +3,25 @@ from TinyFS import *
 
 
 def main():
-    test_disk = tfs_mkfs(filename=DEFAULT_DISK_NAME, n_bytes=DEFAULT_DISK_SIZE)
+    tfs_mkfs(filename=DEFAULT_DISK_NAME, n_bytes=DEFAULT_DISK_SIZE)
+
     tfs_mount(filename=DEFAULT_DISK_NAME)
 
-    with open(DEFAULT_DISK_NAME, 'rb') as f:
-        first_file_descriptor = tfs_open(name="foo.c")
+    foo_fd = tfs_open(name="foo.c")
 
-        write_status = tfs_write(first_file_descriptor, "a" * 257, 257)
-        if write_status != DiskErrorCodes.SUCCESS:
-            print(f"Write Error: {write_status}")
-            return
+    bar_fd = tfs_open(name="bar.c")
 
-        # Read each byte from the file
-        read_bytes = bytearray()
-        for i in range(12):
-            buffer = bytearray()
-            byte_value = tfs_readByte(first_file_descriptor, buffer)
-            if byte_value != DiskErrorCodes.SUCCESS:
-                print(f"Read Error at offset {i}: {byte_value}")
-                return
-            read_bytes.append(buffer[0])
+    buffer = "hello world"
+    buffer2 = "hello jonathan"
+    buffer3 = "hello christian"
 
-        print(f"Read Bytes: {read_bytes.decode('utf-8')}")
+    tfs_write(fd=foo_fd, buffer=buffer, size=len(buffer))
+    tfs_write(fd=foo_fd, buffer=buffer2, size=len(buffer2))
+    tfs_write(fd=bar_fd, buffer=buffer3, size=len(buffer3))
+    tfs_write(fd=foo_fd, buffer="a"*257, size=257)
+    tfs_write(fd=bar_fd, buffer=buffer, size=len(buffer))
 
-    tfs_unmount()
-
-
-    #     # test_write_error = tfs_write(0, "hello world!", 9) #FD error
-    #     # print(test_write_error) # -8 error code
-    #     tfs_open(name="bar.c")
-    #
-    # tfs_unmount()
+    f = open(DEFAULT_DISK_NAME, 'rb')
 
 
 if __name__ == "__main__":

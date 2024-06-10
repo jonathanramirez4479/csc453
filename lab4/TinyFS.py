@@ -21,9 +21,12 @@ def tfs_mkfs(filename: str, n_bytes: int) -> int:
     :param n_bytes: number of bytes for disk initialization
     :return: succss/error codes
     """
-    disk = open_disk(filename=filename, n_bytes=n_bytes)
-    if isinstance(disk, int):  # If the returned value is an error code
-        return disk  # return error code
+    ret = open_disk(filename=filename, n_bytes=n_bytes)
+
+    if ret != DiskErrorCodes.SUCCESS:
+        return ret
+
+    disk = open(filename, "rb+")
 
     super_block = SuperBlock(num_of_blocks=NUM_OF_BLOCKS)
 
@@ -33,11 +36,15 @@ def tfs_mkfs(filename: str, n_bytes: int) -> int:
 
     data_to_write = magic_num_bytes + root_dir_block + bitmap_vector
 
-    write_block(disk=disk, block_num=0, block_data=bytearray(data_to_write))
+    ret = write_block(disk=disk, block_num=0, block_data=bytearray(data_to_write))
+    if ret != DiskErrorCodes.SUCCESS:
+        return ret
 
     for i in range(2, NUM_OF_BLOCKS):
         free_block_indicator = bytearray((FileTypes.FREE).to_bytes())
-        write_block(disk=disk, block_num=i, block_data=free_block_indicator)
+        ret = write_block(disk=disk, block_num=i, block_data=free_block_indicator)
+        if ret != DiskErrorCodes.SUCCESS:
+            return ret
 
     return DiskErrorCodes.SUCCESS
 
@@ -56,6 +63,7 @@ def tfs_mount(filename: str) -> int:
 
     # check if a disk is already mounted
     if MOUNTED_DISK is not None:
+        print(get_error_message(DiskErrorCodes.DISK_ALREADY_MOUNTED))
         return DiskErrorCodes.DISK_ALREADY_MOUNTED
 
     # read data from disk and construct Disk obj from it with proper block
@@ -64,16 +72,18 @@ def tfs_mount(filename: str) -> int:
 
     # Superblock first byte
     super_block_data = bytearray(BLOCK_SIZE)
-    read_block(disk=MOUNTED_DISK_BINARY_IO, block_num=0, block_data=super_block_data)
+    ret = read_block(disk=MOUNTED_DISK_BINARY_IO, block_num=0, block_data=super_block_data)
+    if ret != DiskErrorCodes.SUCCESS:
+        return ret
 
     first_byte = super_block_data[0].to_bytes()
 
     # verify if the file system is the correct type
     if int(first_byte.hex(), 16) != 0x5A:
+        print(get_error_message(DiskErrorCodes.DISK_NOT_AVAILABLE))
         return DiskErrorCodes.DISK_NOT_AVAILABLE
 
     # update global vars
-    MOUNTED_DISK_BINARY_IO.seek(0)
     DEFAULT_DISK_SIZE = len(MOUNTED_DISK_BINARY_IO.read())  # get disk size
     DEFAULT_DISK_NAME = filename
     NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
@@ -141,10 +151,16 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
     to the file described by ‘FD’. Sets the file pointer to 0 (the start of the file)
     when done. Returns success/error codes.
     """
+
+    if len(buffer) != size:
+        print(get_error_message(DiskErrorCodes.SIZE_MISMATCH))
+        return DiskErrorCodes.SIZE_MISMATCH
+
     root_inode = MOUNTED_DISK.get_root_dir_inode()
     # Check if the file descriptor is valid
     inode_index = root_inode.get_inode_by_fd(fd)
     if inode_index is None:
+        print(get_error_message(error_code=DiskErrorCodes.INVALID_FILE_DESCRIPTOR))
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
 
     inode = MOUNTED_DISK.get_disk_state()[inode_index]
@@ -164,9 +180,7 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
             # Set Inode data blocks and flip the bits for the bitmap
             inode.add_data_block_location(free_block_index)
             MOUNTED_DISK.add_block(block=DataBlock(), block_index=free_block_index)
-            # print(MOUNTED_DISK.get_super_block().get_bitmap_obj())
             MOUNTED_DISK.get_super_block().get_bitmap_obj().set_bit(free_block_index)
-            # print(MOUNTED_DISK.get_super_block().get_bitmap_obj())
 
     # Get the current file pointer
     file_pointer = MOUNTED_DISK.get_file_pointer(fd)
@@ -197,10 +211,13 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
     # Update the file pointer
     MOUNTED_DISK.set_file_pointer(fd=fd, fp=0)
 
+    db_loc_1 = MOUNTED_DISK.get_disk_state()[fd].get_data_block_locations()[0]
+    data_block = MOUNTED_DISK.get_disk_state()[db_loc_1]
+
     return DiskErrorCodes.SUCCESS
 
 
-def tfs_readByte(fileDescriptor: int, buffer: bytearray) -> int:
+def tfs_readByte(fileDescriptor: int, buffer: str) -> int:
     """
     /* reads one byte from the file and copies it to ‘buffer’,
     using the current file pointer location and incrementing it by one upon success.
@@ -241,6 +258,13 @@ def tfs_readByte(fileDescriptor: int, buffer: bytearray) -> int:
     buffer.append(byte_value)
 
     MOUNTED_DISK.set_file_pointer(fileDescriptor, file_pointer + 1)
+
+    # print(f"current state of disk: {MOUNTED_DISK.get_disk_state()}")
+    # print(f"current state of bitmap: {MOUNTED_DISK.get_super_block().get_bitmap_obj()}")
+    # print(f"current state of root dir loc: {MOUNTED_DISK.get_super_block().get_root_dir_block()}")
+    # print(f"current state of root dir inode: {MOUNTED_DISK.get_root_dir_inode().get_root_inode_data()}")
+    # print(f"current fd inode: {MOUNTED_DISK.get_disk_state()[fd].get_data_block_locations()}")
+    # print(f"data: {data_block.get_block_data()}")
 
     return DiskErrorCodes.SUCCESS
 
