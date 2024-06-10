@@ -26,8 +26,7 @@ class Disk:
         self.__disk_size: int = disk_size
         self.__block_size: int = block_size
         self.__dynamic_table_entry: dict = {}  # keeps track of open files in (fd, fp) pairs. Lets change this to (fd, fp pairs)
-        self.__file_descriptor_table: dict = {} # fd -> block_index
-
+        self.__file_descriptor_table: dict = {}  # fd -> block_index
 
     def get_fd_table(self):
         return self.__file_descriptor_table
@@ -40,7 +39,6 @@ class Disk:
 
     def remove_fd_table_entry(self, fd: int) -> None:
         del self.__file_descriptor_table[fd]
-
 
     def get_disk_state(self):
         return self.__disk
