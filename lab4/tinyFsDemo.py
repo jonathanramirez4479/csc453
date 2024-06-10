@@ -1,5 +1,5 @@
 from libDisk import *
-from TinyFS import *
+from libTinyFS import *
 
 
 def main():
