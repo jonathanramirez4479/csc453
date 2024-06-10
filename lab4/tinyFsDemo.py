@@ -37,10 +37,9 @@ def main():
     #
     # print(read_buffer)
     #
-    # tfs_delete(foo_fd)
+    tfs_delete(foo_fd)
     #
-    # tfs_displayFragments()
-    # tfs_defrag()
+    tfs_defrag()
 
     # tfs_rename("bar.c", "foo.c")
 

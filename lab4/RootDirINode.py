@@ -34,11 +34,6 @@ class RootDirINode:
         else:
             return None
 
-    def get_inode_by_fd(self, fd: int) -> Union[None, int]:
-        for inode in self.__root_inode.values():
-            if inode == fd:
-                return inode
-        return None
 
     def get_inode_size(self):
         return self.__inode_size
