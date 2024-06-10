@@ -134,6 +134,7 @@ class Disk:
                     if block_location != 0:
                         inode.add_data_block_location(block_location)
 
+
     def unmount_disk(self, disk: BinaryIO):
         """ TODO: correctly read inode and data blocks into _disk """
 
@@ -141,7 +142,7 @@ class Disk:
         super_block: SuperBlock = self.__disk[0]
         magic_number_bytes = super_block.get_magic_number().to_bytes()
         root_dir_inode_block_num = super_block.get_root_dir_block().to_bytes()
-        bitmap_vector_bytes = super_block.get_bitmap_obj().get_bitmap_as_number().to_bytes()
+        bitmap_vector_bytes = super_block.get_bitmap_obj().get_bitmap_as_number().to_bytes(5, 'little', signed=False)
         super_block_data = bytearray(magic_number_bytes + root_dir_inode_block_num + bitmap_vector_bytes)
         write_block(disk=disk, block_num=0, block_data=super_block_data)
 

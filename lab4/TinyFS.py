@@ -148,7 +148,6 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
 
     inode = MOUNTED_DISK.get_disk_state()[inode_index]
-
     if not isinstance(inode, INode):
         return DiskErrorCodes.INODE_FAILURE
 
@@ -172,6 +171,7 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
     file_pointer = MOUNTED_DISK.get_file_pointer(fd)
 
     data_blocks = inode.get_data_block_locations()
+    print(f"data blocks for inode {inode_index}: ", data_blocks)
     buffer_index = 0
     # Write data to allocated blocks
     for block_index in data_blocks:
@@ -290,12 +290,13 @@ def tfs_delete(fileDescriptor: int) -> int:
 
     if filename_to_remove is None:
         return DiskErrorCodes.FILE_NOT_FOUND
-
+    print(f"Deleting File: {filename_to_remove}")
     # Remove the file from the root directory inode
     del root_dir_inode.get_root_inode_data()[filename_to_remove]
 
     # Free its data blocks and inode
     data_block_locations = inode.get_data_block_locations()
+    print(f"Data blocks to be deleted in inode {fileDescriptor}: ",data_block_locations)
     for block_index in data_block_locations:
         MOUNTED_DISK.get_disk_state()[block_index] = FileTypes.FREE
         MOUNTED_DISK.get_super_block().get_bitmap_obj().clear_bit(block_index)
