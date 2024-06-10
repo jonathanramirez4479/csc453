@@ -91,6 +91,10 @@ def tfs_mount(filename: str) -> int:
     MOUNTED_DISK = Disk(disk_size=DEFAULT_DISK_SIZE, num_of_blocks=NUM_OF_BLOCKS, block_size=BLOCK_SIZE)
     MOUNTED_DISK.mount_disk(disk=MOUNTED_DISK_BINARY_IO)
 
+    print(f"disk after mounting: {MOUNTED_DISK.get_disk_state()}")
+    print(f"bitmap after mounting: {MOUNTED_DISK.get_super_block().get_bitmap_obj()}")
+    print(f"root dir inode after mounting: {MOUNTED_DISK.get_root_dir_inode().get_root_inode_data()}")
+
     return DiskErrorCodes.SUCCESS
 
 
@@ -99,7 +103,10 @@ def tfs_unmount() -> int:
     tfs_unmount(void) “unmounts” the currently mounted file system. As part of the mount operation
     Use tfs_unmount to cleanly unmount the currently mounted file system. Must return a specified success/error code.
     """
+    global MOUNTED_DISK
+
     MOUNTED_DISK.unmount_disk(disk=MOUNTED_DISK_BINARY_IO)
+    MOUNTED_DISK = None
 
     return DiskErrorCodes.SUCCESS
 

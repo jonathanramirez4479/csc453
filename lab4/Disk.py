@@ -108,7 +108,6 @@ class Disk:
                 continue
 
             filename = filename.decode('utf-8')
-            print(filename)
 
             inode = entry[root_dir_inode.get_max_name_length():]
             inode = int.from_bytes(inode)
@@ -137,19 +136,20 @@ class Disk:
                 self.__disk[i] = data_block
             elif first_byte_int == FileTypes.INODE:
                 inode = INode()
-                for i in range(0, len(block), 4):
-                    block_location = int.from_bytes(block[i:i + 4], 'little')
+                for j in range(0, len(block), 4):
+                    block_location = int.from_bytes(block[j:j + 4], 'little')
                     if block_location != 0:
                         inode.add_data_block_location(block_location)
 
+                self.__disk[i] = inode
+
 
     def unmount_disk(self, disk: BinaryIO):
-
         # write superblock to disk
         super_block: SuperBlock = self.__disk[0]
         magic_number_bytes = super_block.get_magic_number().to_bytes()
         root_dir_inode_block_num = super_block.get_root_dir_block().to_bytes()
-        bitmap_vector_bytes = super_block.get_bitmap_obj().get_bitmap_as_number().to_bytes(5, 'little', signed=False)
+        bitmap_vector_bytes = super_block.get_bitmap_obj().get_bitmap_as_number().to_bytes()
         super_block_data = bytearray(magic_number_bytes + root_dir_inode_block_num + bitmap_vector_bytes)
         write_block(disk=disk, block_num=0, block_data=super_block_data)
 
@@ -162,7 +162,7 @@ class Disk:
         # write name, inode pairs to disk for root directory inode data
         for filename, inode in root_dir_inode_dict.items():
             entry = filename.encode('utf-8').ljust(root_dir_inode.get_max_name_length(), b'\x00')
-            entry += inode.to_bytes(4, 'little')
+            entry += inode.to_bytes()
             root_dir_inode_data.extend(entry)
 
             write_block(disk=disk, block_num=1, block_data=root_dir_inode_data.ljust(BLOCK_SIZE, b'\x00'))
@@ -171,10 +171,15 @@ class Disk:
         for i in range(2, len(self.__disk)):
             block = self.__disk[i]
             block_data = None
-            if block == FileTypes.DATA:
-                block_data = bytearray(block.get_block_data())
-            elif block == FileTypes.INODE:
-                block_data = bytearray(block.get_data_block_locations())
+            if isinstance(block, DataBlock):
+                block_data = bytearray(BLOCK_SIZE)
+                block_data[0] = FileTypes.DATA
+                block_data[1:] = bytearray(block.get_block_data())
+            elif isinstance(block, INode):
+                block_data = bytearray(BLOCK_SIZE)
+                block_data[0] = FileTypes.INODE
+                block_data[1:] = bytearray(block.get_data_block_locations())
+
 
             if block_data is not None and block != FileTypes.FREE:
                 write_block(disk=disk, block_num=i, block_data=block_data.ljust(BLOCK_SIZE, b'\x00'))
