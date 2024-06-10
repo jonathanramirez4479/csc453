@@ -33,23 +33,31 @@ def main():
     tfs_readByte(fileDescriptor=bar_fd, buffer=read_buffer)
     tfs_readByte(fileDescriptor=bar_fd, buffer=read_buffer)
 
-    tfs_readdir()
+    # tfs_readdir()
+    #
+    # print(read_buffer)
+    #
+    # tfs_delete(foo_fd)
+    #
+    # tfs_displayFragments()
+    # tfs_defrag()
 
-    print(read_buffer)
-
-    tfs_delete(foo_fd)
-
-    tfs_displayFragments()
-    tfs_defrag()
-
-    tfs_rename("bar.c", "foo.c")
+    # tfs_rename("bar.c", "foo.c")
 
     # tfs_delete(bar_fd)
 
     # tfs_displayFragments()
 
-    f = open(DEFAULT_DISK_NAME, 'rb')
-    print(len(f.read()))
+    # f = open(DEFAULT_DISK_NAME, 'rb')
+    # print(len(f.read()))
+
+    tfs_unmount()
+
+    tfs_mount(filename=DEFAULT_DISK_NAME)
+
+
+
+
 
     # tfs_displayFragments()
     # first_file_descriptor = tfs_open(name="foo.c")
