@@ -9,6 +9,7 @@ NUM_OF_BLOCKS = DEFAULT_DISK_SIZE // BLOCK_SIZE
 
 MOUNTED_DISK_BINARY_IO: Union[BinaryIO, None] = None
 MOUNTED_DISK: Union[Disk, None] = None
+GLOBAL_FD_COUNTER: int = 100
 
 
 def tfs_mkfs(filename: str, n_bytes: int) -> int:
@@ -91,9 +92,9 @@ def tfs_mount(filename: str) -> int:
     MOUNTED_DISK = Disk(disk_size=DEFAULT_DISK_SIZE, num_of_blocks=NUM_OF_BLOCKS, block_size=BLOCK_SIZE)
     MOUNTED_DISK.mount_disk(disk=MOUNTED_DISK_BINARY_IO)
 
-    print(f"disk after mounting: {MOUNTED_DISK.get_disk_state()}")
-    print(f"bitmap after mounting: {MOUNTED_DISK.get_super_block().get_bitmap_obj()}")
-    print(f"root dir inode after mounting: {MOUNTED_DISK.get_root_dir_inode().get_root_inode_data()}")
+    # print(f"disk after mounting: {MOUNTED_DISK.get_disk_state()}")
+    # print(f"bitmap after mounting: {MOUNTED_DISK.get_super_block().get_bitmap_obj()}")
+    # print(f"root dir inode after mounting: {MOUNTED_DISK.get_root_dir_inode().get_root_inode_data()}")
 
     return DiskErrorCodes.SUCCESS
 
@@ -118,6 +119,8 @@ def tfs_open(name: str) -> int:
     (integer) that can be used to reference this file while the filesystem is mounted.
     """
     # Look for the file in the root directory inode
+    global GLOBAL_FD_COUNTER
+
     root_inode = MOUNTED_DISK.get_root_dir_inode()
     inode_index = root_inode.get_inode(name)
 
@@ -140,9 +143,15 @@ def tfs_open(name: str) -> int:
         MOUNTED_DISK.get_super_block().get_bitmap_obj().set_bit(block_index)
 
         inode_index = block_index
+
     # Create a file descriptor and update the dynamic resource table
-    fd = inode_index  # Using the inode index as the file descriptor
+    fd = GLOBAL_FD_COUNTER  # Using the inode index as the file descriptor
     MOUNTED_DISK.add_dynamic_table_entry_fd(fd)
+    MOUNTED_DISK.add_fd_table_entry(fd, inode_index)
+
+    GLOBAL_FD_COUNTER += 1
+
+    print(f"disk after open: {MOUNTED_DISK.get_disk_state()}")
 
     return fd
 
@@ -150,6 +159,7 @@ def tfs_open(name: str) -> int:
 def tfs_close(fd: int) -> int:
     # update dynamic table
     MOUNTED_DISK.remove_dynamic_table_entry(fd=fd)
+    MOUNTED_DISK.remove_fd_table_entry(fd=fd)
 
 
 def tfs_write(fd: int, buffer: str, size: int) -> int:
@@ -163,9 +173,8 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
         print(get_error_message(DiskErrorCodes.SIZE_MISMATCH))
         return DiskErrorCodes.SIZE_MISMATCH
 
-    root_inode = MOUNTED_DISK.get_root_dir_inode()
     # Check if the file descriptor is valid
-    inode_index = root_inode.get_inode_by_fd(fd)
+    inode_index = MOUNTED_DISK.get_block_index_from_fd(fd=fd)
     if inode_index is None:
         print(get_error_message(error_code=DiskErrorCodes.INVALID_FILE_DESCRIPTOR))
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
@@ -207,7 +216,7 @@ def tfs_write(fd: int, buffer: str, size: int) -> int:
         # Calculate the amount of data to write in the current block
         current_pointer_pos = file_pointer % BLOCK_SIZE
         block_data = buffer[buffer_index:buffer_index + BLOCK_SIZE - current_pointer_pos] \
-            .encode('utf-8').ljust(root_inode.get_max_name_length(), b'\x00')
+            .encode('utf-8').ljust(MOUNTED_DISK.get_root_dir_inode().get_max_name_length(), b'\x00')
         data_block.set_block_data(block_data)
 
         # Move to the next chunk of data
@@ -229,12 +238,14 @@ def tfs_readByte(fileDescriptor: int, buffer: List[str]) -> int:
     should return an error and not increment the file pointer. */
     """
     dynamic_table = MOUNTED_DISK.get_dynamic_table_entries()
+    fd_table = MOUNTED_DISK.get_fd_table()
 
-    if fileDescriptor not in dynamic_table:
+    if fileDescriptor not in dynamic_table and fileDescriptor not in fd_table:
         print(get_error_message(DiskErrorCodes.INVALID_FILE_DESCRIPTOR))
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
 
-    inode = MOUNTED_DISK.get_disk_state()[fileDescriptor]
+    inode_block_index = MOUNTED_DISK.get_block_index_from_fd(fd=fileDescriptor)
+    inode = MOUNTED_DISK.get_disk_state()[inode_block_index]
     if not isinstance(inode, INode):
         print(get_error_message(DiskErrorCodes.INODE_FAILURE))
         return DiskErrorCodes.INODE_FAILURE
@@ -298,11 +309,13 @@ def tfs_delete(fileDescriptor: int) -> int:
     /* deletes a file and marks its blocks as free on disk. */
     """
     dynamic_table = MOUNTED_DISK.get_dynamic_table_entries()
-    if fileDescriptor not in dynamic_table:
+    fd_table = MOUNTED_DISK.get_fd_table()
+    if fileDescriptor not in dynamic_table and fileDescriptor not in fd_table:
         print(get_error_message(error_code=DiskErrorCodes.INVALID_FILE_DESCRIPTOR))
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
 
-    inode = MOUNTED_DISK.get_disk_state()[fileDescriptor]
+    inode_block_index = MOUNTED_DISK.get_block_index_from_fd(fd=fileDescriptor)
+    inode = MOUNTED_DISK.get_disk_state()[inode_block_index]
     if not isinstance(inode, INode):
         print(get_error_message(DiskErrorCodes.INODE_FAILURE))
         return DiskErrorCodes.INODE_FAILURE
@@ -316,7 +329,7 @@ def tfs_delete(fileDescriptor: int) -> int:
     # Find the filename in the root directory inode
     filename_to_remove = None
     for filename, inode_index in root_dir_inode.get_root_inode_data().items():
-        if inode_index == fileDescriptor:
+        if inode_index == fd_table[fileDescriptor]:
             filename_to_remove = filename
             break
 
@@ -328,14 +341,15 @@ def tfs_delete(fileDescriptor: int) -> int:
 
     # Free its data blocks and inode
     data_block_locations = inode.get_data_block_locations()
-    print(f"Data blocks to be deleted in inode {fileDescriptor}: ", data_block_locations)
     for block_index in data_block_locations:
         MOUNTED_DISK.get_disk_state()[block_index] = FileTypes.FREE
         MOUNTED_DISK.get_super_block().get_bitmap_obj().clear_bit(block_index)
 
     # Free the inode block
-    MOUNTED_DISK.get_disk_state()[fileDescriptor] = FileTypes.FREE
-    MOUNTED_DISK.get_super_block().get_bitmap_obj().clear_bit(fileDescriptor)
+    MOUNTED_DISK.get_disk_state()[fd_table[fileDescriptor]] = FileTypes.FREE
+    MOUNTED_DISK.get_super_block().get_bitmap_obj().clear_bit(fd_table[fileDescriptor])
+
+    MOUNTED_DISK.remove_fd_table_entry(fileDescriptor)
 
     return DiskErrorCodes.SUCCESS
 
@@ -348,6 +362,7 @@ def tfs_displayFragments() -> int:
     bitmap = MOUNTED_DISK.get_super_block().get_bitmap_obj().__str__()
     bitmap_reversed = bitmap[::-1]
     print(bitmap_reversed)
+    print(f"current fd table {MOUNTED_DISK.get_fd_table()}")
 
     return DiskErrorCodes.SUCCESS
 
@@ -414,9 +429,16 @@ def tfs_defrag():
     for filename, inode_block_index in root_dir_entries.items():
         if inode_block_index in inode_updates:
             root_dir_entries[filename] = inode_updates[inode_block_index]
+            for fd, block_index in MOUNTED_DISK.get_fd_table().items():
+                if block_index == inode_block_index:
+                    MOUNTED_DISK.remove_fd_table_entry(fd=fd)
+                    MOUNTED_DISK.add_fd_table_entry(fd=fd, block_index=inode_updates[inode_block_index])
+                    break
 
     print("Defragmentation complete.")
     tfs_displayFragments()
+    print(f"new fd table: {MOUNTED_DISK.get_fd_table()}")
+    print(f"new disk: {MOUNTED_DISK.get_disk_state()}")
 
 def tfs_rename(old_file_name: str, new_file_name: str):
     # check if valid filename
