@@ -27,6 +27,11 @@ class DiskErrorCodes:
         SEEK_FAILURE: "Failed to seek the specified block",
         DISK_ALREADY_MOUNTED: "Disk already mounted",
         NO_FREE_BLOCK: "No free block available to allocate",
+        INVALID_FILE_DESCRIPTOR: "Invalid file descriptor",
+        INODE_FAILURE: "INode failure",
+        FILE_POINTER_NOT_FOUND: "File pointer not found",
+        END_OF_FILE: "End of file",
+        SIZE_MISMATCH: "sizes don't match",
     }
 
 
@@ -60,9 +65,10 @@ def open_disk(filename: str, n_bytes: int) -> Union[BinaryIO, int]:
         else:
             disk_file = open(filename, "rb+")
 
-        return disk_file
+        return DiskErrorCodes.SUCCESS
 
     except OSError as error:
+        print(get_error_message(DiskErrorCodes.DISK_NOT_AVAILABLE))
         return DiskErrorCodes.DISK_NOT_AVAILABLE
 
 
@@ -76,9 +82,11 @@ def read_block(disk: BinaryIO, block_num: int, block_data: bytearray) -> int:
     :return: 0 if successful
     """
     if len(block_data) < BLOCK_SIZE:
+        print(get_error_message(DiskErrorCodes.SIZE_MISMATCH))
         return DiskErrorCodes.SIZE_MISMATCH
 
     if disk is None:
+        print(get_error_message(DiskErrorCodes.DISK_NOT_AVAILABLE))
         return DiskErrorCodes.DISK_NOT_AVAILABLE
 
     byte_offset = block_num * BLOCK_SIZE
@@ -86,11 +94,13 @@ def read_block(disk: BinaryIO, block_num: int, block_data: bytearray) -> int:
     try:
         disk.seek(byte_offset)
     except OSError as e:
+        print(get_error_message(DiskErrorCodes.SEEK_FAILURE))
         return DiskErrorCodes.SEEK_FAILURE
 
     try:
         block_data[:] = disk.read(BLOCK_SIZE)
     except OSError as e:
+        print(get_error_message(DiskErrorCodes.READ_FAILURE))
         return DiskErrorCodes.READ_FAILURE
 
     return DiskErrorCodes.SUCCESS
@@ -107,17 +117,20 @@ def write_block(disk: BinaryIO, block_num: int, block_data: bytearray) -> int:
     :return: 0 if successful
     """
     if disk is None:
+        print(get_error_message(DiskErrorCodes.DISK_NOT_AVAILABLE))
         return DiskErrorCodes.DISK_NOT_AVAILABLE
 
     byte_offset = block_num * BLOCK_SIZE
     try:
         disk.seek(byte_offset)
     except OSError as e:
+        print(get_error_message(DiskErrorCodes.SEEK_FAILURE))
         return DiskErrorCodes.SEEK_FAILURE
 
     try:
         disk.write(block_data)
     except OSError as e:
+        print(get_error_message(DiskErrorCodes.WRITE_FAILURE))
         return DiskErrorCodes.WRITE_FAILURE
 
     return DiskErrorCodes.SUCCESS
@@ -132,4 +145,5 @@ def close_disk(disk: BinaryIO) -> Union[None, int]:
     try:
         disk.close()
     except OSError as e:
+        print(get_error_message(DiskErrorCodes.DISK_NOT_AVAILABLE))
         return DiskErrorCodes.DISK_NOT_AVAILABLE
