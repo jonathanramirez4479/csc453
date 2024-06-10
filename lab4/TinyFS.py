@@ -291,7 +291,6 @@ def tfs_delete(fileDescriptor: int) -> int:
     /* deletes a file and marks its blocks as free on disk. */
     """
     dynamic_table = MOUNTED_DISK.get_dynamic_table_entries()
-
     if fileDescriptor not in dynamic_table:
         return DiskErrorCodes.INVALID_FILE_DESCRIPTOR
 
