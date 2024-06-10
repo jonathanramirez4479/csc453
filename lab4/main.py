@@ -25,6 +25,8 @@ def main():
     tfs_displayFragments()
     tfs_delete(4)
     tfs_displayFragments()
+    tfs_defrag()
+    tfs_displayFragments()
 
 
     if write_status != DiskErrorCodes.SUCCESS:

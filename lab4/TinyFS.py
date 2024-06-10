@@ -296,7 +296,7 @@ def tfs_delete(fileDescriptor: int) -> int:
 
     # Free its data blocks and inode
     data_block_locations = inode.get_data_block_locations()
-    print(f"Data blocks to be deleted in inode {fileDescriptor}: ",data_block_locations)
+    print(f"Data blocks to be deleted in inode {fileDescriptor}: ", data_block_locations)
     for block_index in data_block_locations:
         MOUNTED_DISK.get_disk_state()[block_index] = FileTypes.FREE
         MOUNTED_DISK.get_super_block().get_bitmap_obj().clear_bit(block_index)
@@ -322,3 +322,66 @@ def tfs_defrag():
     /* moves blocks such that all free blocks are contiguous at the end of the disk.
     This should be verifiable with the tfs_displayFraments() function */
     """
+    disk_state = MOUNTED_DISK.get_disk_state()
+    super_block = MOUNTED_DISK.get_super_block()
+    bitmap = super_block.get_bitmap_obj()
+
+    occupied_blocks = []
+    free_blocks = []
+
+    for block_index in range(2, len(disk_state)):
+        if bitmap.get_bit(block_index) == 1:
+            occupied_blocks.append(block_index)
+        else:
+            free_blocks.append(block_index)
+
+    print(f"current occupied blocks", occupied_blocks)
+    print(f"current unoccupied blocks", free_blocks)
+
+    # Move occupied blocks to the start of the disk
+    next_free_index = 2
+
+    inode_updates = {}
+
+    for original_index in occupied_blocks:
+        if original_index != next_free_index:
+            # Move the block
+            disk_state[next_free_index] = disk_state[original_index]
+            disk_state[original_index] = FileTypes.FREE
+
+            # Update the bitmap
+            bitmap.clear_bit(original_index)
+            bitmap.set_bit(next_free_index)
+
+            # If the block is an inode, record its new location
+            if isinstance(disk_state[next_free_index], INode):
+                inode_updates[original_index] = next_free_index
+
+            # Update inode data block locations
+            for inode in disk_state:
+                if isinstance(inode, INode):
+                    data_blocks = inode.get_data_block_locations()
+                    for i, block in enumerate(data_blocks):
+                        if block == original_index:
+                            data_blocks[i] = next_free_index
+
+            next_free_index += 1
+        else:
+            next_free_index += 1
+
+    # Clear the remaining blocks in the disk and bitmap
+    for free_index in range(next_free_index, len(disk_state)):
+        disk_state[free_index] = FileTypes.FREE
+        bitmap.clear_bit(free_index)
+
+    # Update the root directory inode to reflect any inode changes
+    root_dir_inode = MOUNTED_DISK.get_root_dir_inode()
+    root_dir_entries = root_dir_inode.get_root_inode_data()
+
+    for filename, inode_block_index in root_dir_entries.items():
+        if inode_block_index in inode_updates:
+            root_dir_entries[filename] = inode_updates[inode_block_index]
+
+    print("Defragmentation complete.")
+    tfs_displayFragments()
+
